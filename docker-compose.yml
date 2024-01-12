@@ -1,0 +1,28 @@
+services:
+  oxwall:
+    build:
+      dockerfile: ./Dockerfile
+    # image: isislab/oxwall:7.4
+    ports:
+      - '8080:80'
+    networks:
+      - oxwall
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - database
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: testing
+    ports:
+      - '3306:3306'
+    networks:
+      - oxwall
+    volumes:
+      - ow_mysql:/var/lib/mysql
+networks:
+  oxwall:
+volumes:
+  # ow_data:
+  ow_mysql:

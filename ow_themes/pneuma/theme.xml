@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<theme>
+    <name>Pneuma</name>
+    <key>pneuma</key>
+    <version>1.0</version>
+    <compatibility>1.8 and higher</compatibility>
+    <description>The Pneuma theme</description>
+    <author>EF Design</author>
+    <authorEmail>themes@oxwall.org</authorEmail>
+    <authorUrl>http://www.oxwall.org/foundation</authorUrl>
+    <developerKey>e547ebcf734341ec11911209d93a1054</developerKey>
+    <build>10000</build>
+    <copyright>(C) 2024 EF Design. All rights reserved.</copyright>
+    <license>The BSD License</license>
+    <licenseUrl>http://www.opensource.org/licenses/bsd-license.php</licenseUrl>
+</theme>

@@ -1,0 +1,19 @@
+{
+    "name": "oxwall/oxwall",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Oxwall Foundation"
+        }
+    ],
+    "config": {
+        "vendor-dir": "ow_libraries/vendor"
+    },
+    "require": {
+        "php": ">=8.3",
+        "smarty/smarty": "^4.3",
+        "guzzlehttp/guzzle": "^7.5",
+        "phpmailer/phpmailer": "^6.7",
+        "symfony/console": "^5.4"
+    }
+}
