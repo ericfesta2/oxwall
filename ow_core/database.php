@@ -47,7 +47,7 @@ final class OW_Database
 
     private bool $debugMode;
 
-    private bool $isProfilerEnabled;
+    private $isProfilerEnabled;
 
     private UTIL_Profiler $profiler;
 

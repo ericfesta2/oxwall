@@ -2,7 +2,7 @@
 
 class INSTALL_Application
 {
-    private static ?INSTALL_Application $classInstance;
+    private static $classInstance;
 
     public static function getInstance(): INSTALL_Application
     {

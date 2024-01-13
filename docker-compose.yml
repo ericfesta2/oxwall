@@ -2,7 +2,6 @@ services:
   oxwall:
     build:
       dockerfile: ./Dockerfile
-    # image: isislab/oxwall:7.4
     ports:
       - '8080:80'
     networks:

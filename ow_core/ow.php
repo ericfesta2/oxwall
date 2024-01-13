@@ -45,26 +45,17 @@ final class OW
 
         if ( defined('OW_USE_CONTEXT') )
         {
-            switch ( true )
-            {
-                case OW_USE_CONTEXT == 1:
-                    self::$context = self::CONTEXT_DESKTOP;
-                    return;
+            self::$context = match (OW_USE_CONTEXT) {
+                1 => self::CONTEXT_DESKTOP,
+                1 << 1 => self::CONTEXT_MOBILE,
+                1 << 2 => self::CONTEXT_API,
+                1 << 3 => self::CONTEXT_CLI
+            };
 
-                case OW_USE_CONTEXT == 1 << 1:
-                    self::$context = self::CONTEXT_MOBILE;
-                    return;
-
-                case OW_USE_CONTEXT == 1 << 2:
-                    self::$context = self::CONTEXT_API;
-                    return;
-
-                case OW_USE_CONTEXT == 1 << 3:
-                    self::$context = self::CONTEXT_CLI;
-                    return;
+            if (isset(self::$context)) {
+                return;
             }
         }
-
 
         $context = self::CONTEXT_DESKTOP;
 
@@ -133,72 +124,52 @@ final class OW
 
     /**
      * Returns autoloader object.
-     *
-     * @return OW_Autoload
      */
-    public static function getAutoloader()
+    public static function getAutoloader(): OW_Autoload
     {
         return OW_Autoload::getInstance();
     }
 
     /**
      * Returns front controller object.
-     *
-     * @return OW_Application
      */
-    public static function getApplication()
+    public static function getApplication(): OW_Application
     {
         self::detectContext();
 
-        switch ( self::$context )
-        {
-            case self::CONTEXT_MOBILE:
-                return OW_MobileApplication::getInstance();
-
-            case self::CONTEXT_API:
-                return OW_ApiApplication::getInstance();
-
-            case self::CONTEXT_CLI:
-                return OW_CliApplication::getInstance();
-
-            default:
-                return OW_Application::getInstance();
-        }
+        return match (self::$context) {
+            self::CONTEXT_MOBILE => OW_MobileApplication::getInstance(),
+            self::CONTEXT_API => OW_ApiApplication::getInstance(),
+            self::CONTEXT_CLI => OW_CliApplication::getInstance(),
+            default => OW_Application::getInstance()
+        };
     }
 
     /**
      * Returns global config object.
-     *
-     * @return OW_Config
      */
-    public static function getConfig()
+    public static function getConfig(): OW_Config
     {
         return OW_Config::getInstance();
     }
 
     /**
      * Returns session object.
-     *
-     * @return OW_Session
      */
-    public static function getSession()
+    public static function getSession(): OW_Session
     {
         return OW_Session::getInstance();
     }
 
     /**
      * Returns current web user object.
-     *
-     * @return OW_User
      */
-    public static function getUser()
+    public static function getUser(): OW_User
     {
         return OW_User::getInstance();
     }
     /**
      * Database object instance.
-     *
-     * @var OW_Database
      */
     private static $dboInstance;
 
@@ -207,16 +178,17 @@ final class OW
      *
      * @return OW_Database
      */
-    public static function getDbo()
+    public static function getDbo(): OW_Database
     {
         if ( self::$dboInstance === null )
         {
-            $params = array(
+            $params = [
                 'host' => OW_DB_HOST,
                 'username' => OW_DB_USER,
                 'password' => OW_DB_PASSWORD,
                 'dbname' => OW_DB_NAME
-            );
+            ];
+
             if ( defined('OW_DB_PORT') && (OW_DB_PORT !== null) )
             {
                 $params['port'] = OW_DB_PORT;
@@ -238,25 +210,22 @@ final class OW
 
             self::$dboInstance = OW_Database::getInstance($params);
         }
+
         return self::$dboInstance;
     }
 
     /**
      * Returns system mailer object.
-     *
-     * 	@return OW_Mailer
      */
-    public static function getMailer()
+    public static function getMailer(): OW_Mailer
     {
         return OW_Mailer::getInstance();
     }
 
     /**
      * Returns responded HTML document object.
-     *
-     * @return OW_HtmlDocument
      */
-    public static function getDocument()
+    public static function getDocument(): OW_HtmlDocument
     {
         return OW_Response::getInstance()->getDocument();
     }

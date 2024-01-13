@@ -48,164 +48,113 @@ class OW_HtmlDocument extends OW_Document
 
     /**
      * Included stylesheet file urls.
-     *
-     * @var array
      */
-    protected $styleSheets = array('added' => [], 'items' => []);
+    protected array $styleSheets = ['added' => [], 'items' => []];
 
     /**
      * Appended style declarations.
-     *
-     * @var array
      */
-    protected $styleDeclarations = array('hash' => [], 'items' => []);
+    protected array $styleDeclarations = ['hash' => [], 'items' => []];
 
     /**
      * Included javascript files.
-     *
-     * @var array
      */
-    protected $javaScripts = array('added' => [], 'items' => []);
+    protected array $javaScripts = ['added' => [], 'items' => []];
 
     /**
      * Appended javascript code.
-     *
-     * @var array
      */
-    protected $javaScriptDeclarations = array('hash' => [], 'items' => []);
+    protected array $javaScriptDeclarations = ['hash' => [], 'items' => []];
 
     /**
      * Javascript code added before script file includes.
-     *
-     * @var array
      */
-    protected $preIncludeJavaScriptDeclarations = [];
+    protected array $preIncludeJavaScriptDeclarations = [];
 
     /**
      * Appended onload javascript.
-     *
-     * @var array
      */
-    protected $onloadJavaScript = array('hash' => [], 'items' => []);
+    protected array $onloadJavaScript = ['hash' => [], 'items' => []];
 
     /**
      * Added head area links.
-     *
-     * @var array
      */
-    private $links = [];
+    private array $links = [];
 
     /**
      * Added meta tags.
-     *
-     * @var array
      */
     private $meta = [];
 
     /**
      * Custom head info.
-     *
-     * @var array
      */
-    private $customHeadInfo = [];
+    private array $customHeadInfo = [];
 
     /**
      * Document master page.
-     *
-     * @var OW_MasterPage
      */
-    private $masterPage;
+    private OW_MasterPage $masterPage;
 
     /**
      * Content area html code.
-     *
-     * @var string
      */
-    private $body = '';
+    private string $body = '';
 
     /**
      * HTML code to be appended after document was rendered.
-     *
-     * @var string
      */
-    private $appendCode = '';
+    private string $appendCode = '';
 
     /**
      * HTML code to be prepended after document was rendered.
-     *
-     * @var string
      */
-    private $prependCode = '';
+    private string $prependCode = '';
 
     /**
      * Document keywords for meta tags.
-     *
-     * @var string
      */
     private $keywords;
 
     /**
      * Document heading.
-     *
-     * @var string
      */
     private $heading;
 
     /**
      * Document heading icon class.
-     *
-     * @var string
      */
-    private $headingIconClass;
+    private string $headingIconClass = '';
 
-    /**
-     * @var string
-     */
-    private $bodyClass = "";
+    private string $bodyClass = '';
 
-    /**
-     * @var array
-     */
-    private $availableMetaAttrs = array('http-equiv', 'name', 'property', 'itemprop');
+    private array $availableMetaAttrs = ['http-equiv', 'name', 'property', 'itemprop'];
 
-    /**
-     * @return string
-     */
-    public function getBodyClass()
+    public function getBodyClass(): string
     {
         return $this->bodyClass;
     }
 
-    /**
-     * @param string $bodyClass
-     */
-    public function setBodyClass( $bodyClass )
+    public function setBodyClass( string $bodyClass )
     {
         $this->bodyClass = trim($bodyClass);
     }
 
-    /**
-     * @param string $class
-     */
-    public function addBodyClass( $class )
+    public function addBodyClass( string $class )
     {
-        $this->bodyClass .= " " . trim($class);
+        $this->bodyClass .= ' ' . trim($class);
     }
 
     /**
      * Returns all stylesheets.
-     *
-     * @return array
      */
-    public function getStyleSheets()
+    public function getStyleSheets(): array
     {
         return $this->styleSheets;
     }
 
     /**
      * Sets whole stylesheets array.
-     *
-     * @param array $styleSheets
      */
     public function setStyleSheets( array $styleSheets )
     {
@@ -214,18 +163,14 @@ class OW_HtmlDocument extends OW_Document
 
     /**
      * Returns all included javascript files.
-     *
-     * @return array
      */
-    public function getJavaScripts()
+    public function getJavaScripts(): array
     {
         return $this->javaScripts;
     }
 
     /**
      * Sets whole scripts array.
-     *
-     * @param array $javaScripts
      */
     public function setJavaScripts( array $javaScripts )
     {
@@ -234,18 +179,14 @@ class OW_HtmlDocument extends OW_Document
 
     /**
      * Returns all meta entries.
-     *
-     * @return array
      */
-    public function getMeta()
+    public function getMeta(): array
     {
         return $this->meta;
     }
 
     /**
      * Replaces all meta info.
-     *
-     * @param array $meta
      */
     public function setMeta( array $meta )
     {
@@ -254,8 +195,6 @@ class OW_HtmlDocument extends OW_Document
 
     /**
      * Constructor.
-     *
-     * @param array $params
      */
     public function __construct()
     {
@@ -264,20 +203,16 @@ class OW_HtmlDocument extends OW_Document
 
     /**
      * Returns document heading icon class.
-     *
-     * @return string
      */
-    public function getHeadingIconClass()
+    public function getHeadingIconClass(): string
     {
         return $this->headingIconClass;
     }
 
     /**
      * Sets document heading icon class.
-     *
-     * @param string $headingIcon
      */
-    public function setHeadingIconClass( $headingIconClass )
+    public function setHeadingIconClass( string $headingIconClass )
     {
         $this->headingIconClass = $headingIconClass;
     }
@@ -287,26 +222,21 @@ class OW_HtmlDocument extends OW_Document
      *
      * @param string $heading
      */
-    public function setHeading( $heading )
+    public function setHeading( string $heading )
     {
-        $this->throwEvent("core.set_document_heading", array("str" => $heading));
+        $this->throwEvent('core.set_document_heading', ['str' => $heading]);
         $this->heading = $heading;
     }
 
-    /**
-     * @return string $heading
-     */
-    public function getHeading()
+    public function getHeading(): ?string
     {
         return $this->heading;
     }
 
     /**
      * Returns HTML document keywords.
-     *
-     * @return string
      */
-    public function getKeywords()
+    public function getKeywords(): ?string
     {
         return $this->keywords;
     }
@@ -317,7 +247,7 @@ class OW_HtmlDocument extends OW_Document
      * @param mixed $keywords
      * @return OW_HtmlDocument
      */
-    public function setKeywords( $keywords )
+    public function setKeywords( $keywords ): OW_HtmlDocument
     {
         if ( is_array($keywords) )
         {
@@ -331,11 +261,8 @@ class OW_HtmlDocument extends OW_Document
 
     /**
      * Sets html document body code.
-     *
-     * @param string $code
-     * @return OW_HtmlDocument
      */
-    public function setBody( $code )
+    public function setBody( string $code ): OW_HtmlDocument
     {
         $this->body = $code;
 
@@ -344,19 +271,14 @@ class OW_HtmlDocument extends OW_Document
 
     /**
      * Returns html document body.
-     *
-     * @return string
      */
-    public function getBody()
+    public function getBody(): string
     {
         return $this->body;
     }
 
     /**
      * Sets master page in html document.
-     *
-     * @param OW_MasterPage $masterPage
-     * @return OW_HtmlDocument
      */
     public function setMasterPage( OW_MasterPage $masterPage )
     {
@@ -365,21 +287,16 @@ class OW_HtmlDocument extends OW_Document
 
     /**
      * Returns document master page.
-     *
-     * @return OW_MobileMasterPage
      */
-    public function getMasterPage()
+    public function getMasterPage(): OW_MasterPage
     {
         return $this->masterPage;
     }
 
     /**
      * Adds stylesheet file to document.
-     *
-     * @param string $url
-     * @return OW_HtmlDocument
      */
-    public function addStyleSheet( $url, $media = 'all', $priority = null )
+    public function addStyleSheet( string $url, string $media = 'all', ?int $priority = null ): OW_HtmlDocument
     {
         $url = trim($url);
 
@@ -401,11 +318,8 @@ class OW_HtmlDocument extends OW_Document
 
     /**
      * Adds head style declarations to document.
-     *
-     * @param string $style
-     * @return OW_HtmlDocument
      */
-    public function addStyleDeclaration( $style, $media = 'all', $priority = null )
+    public function addStyleDeclaration( string $style, string $media = 'all', ?int $priority = null ): OW_HtmlDocument
     {
         $media = trim(mb_strtolower($media));
 
@@ -427,12 +341,8 @@ class OW_HtmlDocument extends OW_Document
 
     /**
      * Adds javascript file to document.
-     *
-     * @param string $url
-     * @param string $type
-     * @return OW_HtmlDocument
      */
-    public function addScript( $url, $type = "text/javascript", $priority = null )
+    public function addScript( string $url, string $type = 'text/javascript', ?int $priority = null ): OW_HtmlDocument
     {
         $url = trim($url);
 
@@ -574,7 +484,7 @@ class OW_HtmlDocument extends OW_Document
      */
     public function setFavicon( $url )
     {
-        $attributes = array('rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => trim($url));
+        $attributes = ['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => trim($url)];
 
         $this->links[] = $attributes;
 
@@ -666,12 +576,12 @@ class OW_HtmlDocument extends OW_Document
         // META INFO
         if ( $this->getDescription() )
         {
-            $headData .= UTIL_HtmlTag::generateTag('meta', array("name" => "description", "content" => $this->getDescription())) . PHP_EOL;
+            $headData .= UTIL_HtmlTag::generateTag('meta', ['name' => 'description', 'content' => $this->getDescription()]) . PHP_EOL;
         }
 
         if ( $this->getKeywords() )
         {
-            $headData .= UTIL_HtmlTag::generateTag('meta', array("name" => "keywords", "content" => $this->getKeywords())) . PHP_EOL;
+            $headData .= UTIL_HtmlTag::generateTag('meta', ['name' => 'keywords', 'content' => $this->getKeywords()]) . PHP_EOL;
         }
 
         foreach ( $this->meta as $key => $value )
@@ -680,7 +590,7 @@ class OW_HtmlDocument extends OW_Document
             {
                 foreach ( $value as $name => $content )
                 {
-                    $attrs = array($key => $name, 'content' => $content);
+                    $attrs = [$key => $name, 'content' => $content];
                     $headData .= UTIL_HtmlTag::generateTag('meta', $attrs) . PHP_EOL;
                 }
             }
@@ -695,7 +605,7 @@ class OW_HtmlDocument extends OW_Document
             {
                 foreach ( $urls as $url )
                 {
-                    $attrs = array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => $url, 'media' => $media);
+                    $attrs = ['rel' => 'stylesheet', 'type' => 'text/css', 'href' => $url, 'media' => $media];
                     $headData .= UTIL_HtmlTag::generateTag('link', $attrs) . PHP_EOL;
                 }
             }
@@ -710,7 +620,7 @@ class OW_HtmlDocument extends OW_Document
             {
                 foreach ( $declarations as $declaration )
                 {
-                    $attrs = array('type' => $type);
+                    $attrs = ['type' => $type];
                     $jsData .= UTIL_HtmlTag::generateTag('script', $attrs, true, PHP_EOL . $declaration . PHP_EOL) . PHP_EOL;
                 }
             }
@@ -725,7 +635,7 @@ class OW_HtmlDocument extends OW_Document
             {
                 foreach ( $urls as $url )
                 {
-                    $attrs = array('type' => $type, 'src' => $url);
+                    $attrs = ['type' => $type, 'src' => $url];
 
                     //TODO remake temp fix - get JQUERY lib to the head area
                     if ( $priority == -100 )
@@ -747,7 +657,7 @@ class OW_HtmlDocument extends OW_Document
         {
             foreach ( $mediaTypes as $media => $declarations )
             {
-                $attrs = array('media' => $media);
+                $attrs = ['media' => $media];
                 $headData .= UTIL_HtmlTag::generateTag('style', $attrs, true, implode(' ', $declarations));
             }
         }
@@ -761,7 +671,7 @@ class OW_HtmlDocument extends OW_Document
             {
                 foreach ( $declarations as $declaration )
                 {
-                    $attrs = array('type' => $type);
+                    $attrs = ['type' => $type];
                     $jsData .= UTIL_HtmlTag::generateTag('script', $attrs, true,
                             PHP_EOL . '(function() {' . $declaration . '})();' . PHP_EOL) . PHP_EOL;
                 }
