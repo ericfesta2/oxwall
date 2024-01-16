@@ -94,7 +94,8 @@ class OW_AjaxDocument extends OW_HtmlDocument
         return $jsUrlList;
     }
 
-    public function getStyleSheets()
+    #[\Override]
+    public function getStyleSheets(): array
     {
         $cssFiles = [];
 

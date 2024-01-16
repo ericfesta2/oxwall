@@ -1,13 +1,13 @@
 {style}
     #console-notifications-wrapper {
-        position: absolute; 
-        z-index: 100; 
+        position: absolute;
+        z-index: 100;
         display: block;
     }
 
     #console-notifications-wrapper .console_tooltip {
-        opacity: 1; 
-        top: 22px !important; 
+        opacity: 1;
+        top: 22px !important;
         display: none;
     }
 
@@ -18,7 +18,7 @@
     #console-notifications-wrapper .ow_count_wrap .ow_count {
         right: 0px;
     }
-    
+
     #console-notifications-wrapper .ow_console_list li {
         margin: 0 0 4px;
         border: 1px solid #ececec;
@@ -52,7 +52,7 @@
                 {add_content key='admin.site_panel_left_content'}
                 <div class="ow_admin_console_update">
                     <a id="admin_console_update_link" class="ow_admin_console_update_link" href="#"></a>
-                    {if !empty($notifications)}           
+                    {if !empty($notifications)}
                         <span class="ow_count_wrap">
                             <span class="ow_count_bg">
                                 <span class="ow_count ow_count_active">{count($notifications)}</span>
@@ -104,7 +104,7 @@
         <!-- end of left menu wrapper -->
 
         <!-- content wrapper -->
-        <div class="ow_page_container ow_admin ">
+        <div class="ow_page_container ow_admin">
             <div class="ow_canvas">
                 <div class="ow_page">
                     {if !empty($heading)}

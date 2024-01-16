@@ -3,12 +3,12 @@
 		<div class="ow_menu_fullpage_wrap">{$main_menu}</div>
 	</div>
 	<div class="ow_site_panel clearfix">
-			<a class="ow_logo ow_left" href="{$siteUrl}"></a>
-			<div class="ow_nav_btn"></div>
-			<div class="ow_console_right">
-				{component class='BASE_CMP_Console'}
-			</div>
-			<div class="ow_menu_wrap">{component class='BASE_CMP_MainMenu' responsive=true}</div>
+		<a class="ow_logo ow_left" href="{$siteUrl}"></a>
+		<div class="ow_nav_btn"></div>
+		<div class="ow_console_right">
+			{component class='BASE_CMP_Console'}
+		</div>
+		<div class="ow_menu_wrap">{component class='BASE_CMP_MainMenu' responsive=true}</div>
 	</div>
 	<div class="ow_page_padding">
 		<div class="ow_page_container">
@@ -32,19 +32,19 @@
 			<div class="ow_copyright">
 				{text key='base+copyright'}
 			</div>
-			<div style="float:right;padding-bottom: 30px;">
+			<div style="float:right;padding-bottom:30px">
 				{$bottomPoweredByLink}
 			</div>
 		</div>
 	</div>
-</div>    
+</div>
 {decorator name='floatbox'}
 <script>
 	window.addEventListener('scroll', function() {
 		const menuWrapPos = $('.ow_menu_wrap').offset().top;
 		const pageWrapRef = document.querySelector('.ow_page_wrap');
 
-		if ($(this).scrollTop() > menuWrapPos) { 
+		if ($(this).scrollTop() > menuWrapPos) {
 			pageWrapRef.classList.add('ow_hidden_menu');
 		} else {
 			pageWrapRef.classList.remove('ow_hidden_menu');
