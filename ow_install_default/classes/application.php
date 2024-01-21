@@ -4,7 +4,11 @@ class INSTALL_Application
 {
     private static $classInstance;
 
-    public static function getInstance(): INSTALL_Application
+    /**
+     *
+     * @return INSTALL_Application
+     */
+    public static function getInstance()
     {
         if ( self::$classInstance === null )
         {
@@ -27,7 +31,7 @@ class INSTALL_Application
         $router->setBaseUrl(OW_URL_HOME);
         $uri = OW::getRequest()->getRequestUri();
         $router->setUri($uri);
-
+        
         $router->setDefaultRoute(new INSTALL_DefaultRoute());
         
         include INSTALL_DIR_ROOT . 'init.php';
@@ -48,7 +52,7 @@ class INSTALL_Application
             $params[] = $dispatchAttrs['vars'];
         }
 
-        call_user_func_array(array($controller, $dispatchAttrs['action']), $params);
+        call_user_func_array([$controller, $dispatchAttrs['action']], $params);
 
         $template = $controller->getTemplate();
         if ( empty($template) )
@@ -65,13 +69,13 @@ class INSTALL_Application
 
         $viewRenderer = INSTALL::getViewRenderer();
 
-        $viewRenderer->assignVars(array(
+        $viewRenderer->assignVars([
             'pageBody' => $content,
             'pageTitle' => $controller->getPageTitle(),
             'pageHeading' => $controller->getPageHeading(),
             'pageSteps' => INSTALL::getStepIndicator()->render(),
             'pageStylesheetUrl' => INSTALL_URL_VIEW . 'style.css'
-        ));
+        ]);
 
         echo $viewRenderer->render(INSTALL_DIR_VIEW . 'master_page.php');
     }
@@ -80,7 +84,7 @@ class INSTALL_Application
 
 class INSTALL_DefaultRoute extends OW_DefaultRoute
 {
-    public function getDispatchAttrs( $uri ): array
+    public function getDispatchAttrs( $uri )
     {
         return [
             'controller' => 'INSTALL_CTRL_Error',

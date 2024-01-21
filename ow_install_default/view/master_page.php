@@ -5,7 +5,7 @@
     <meta name="keywords" content="{$page_kw|default:$_var.page.keywords}" />
     <meta name="description" content="{$page_desc|default:$_var.page.description}" />
     <title><?php echo $_assign_vars['pageTitle']; ?></title>
-    <link rel="StyleSheet" type="text/css" href="<?php echo $_assign_vars['pageStylesheetUrl']; ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $_assign_vars['pageStylesheetUrl']; ?>" />
 </head>
 
 <body>

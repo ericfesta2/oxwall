@@ -3587,7 +3587,6 @@ span.ow_icon{
 .ow_message_cont .ow_message_node.info {
     background: #090;
     border: 1px solid #090;
-    border-radius: 4px;
 }
 /*warning*/
 .ow_message_cont .ow_message_node.warning {

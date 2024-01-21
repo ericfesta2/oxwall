@@ -23,10 +23,10 @@ class INSTALL_FeedBack
     protected function __construct()
     {
         $this->session = OW::getSession()->get('OW-INSTALL-FEEDBACK');
-        $this->session = empty($this->session) ? array(
+        $this->session = empty($this->session) ? [
             'message' => [],
             'flag' => []
-        ) : $this->session;
+        ] : $this->session;
     }
     
     public function __destruct()
@@ -36,10 +36,10 @@ class INSTALL_FeedBack
     
     public function errorMessage( $msg )
     {
-        $this->session['message'][] = array(
+        $this->session['message'][] = [
             'type' => 'error',
             'message' => $msg
-        ); 
+        ];
     }
     
     public function errorFlag( $flag )

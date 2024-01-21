@@ -2,11 +2,11 @@
 
 class INSTALL_Component extends INSTALL_Renderable
 {
-    public function __construct( ?string $template = null )
+    public function __construct( $template = null )
     {
         parent::__construct();
 
-        if ( $template === null )
+        if( $template === null )
         {
             $template = OW::getAutoloader()->classToFilename(get_class($this), false);
         }

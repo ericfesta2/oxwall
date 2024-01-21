@@ -2,38 +2,42 @@
 
 class INSTALL_ActionController extends INSTALL_Renderable
 {
-    private string $title = 'Install Oxwall';
-    private string $heading = 'Installation Process';
+    private $title = 'OW Install';
+    private $heading = 'Installation Process';
+    
+    private $navigation;
     
     public function __construct()
     {
         
     }
     
-    public function setPageTitle( string $title ): void
+    public function setPageTitle( $title )
     {
         $this->title = $title;
     }
     
-    public function getPageTitle(): string
+    public function getPageTitle()
     {
         return $this->title;
     }
     
-    public function setPageHeading( string $heading ): void
+    public function setPageHeading( $heading )
     {
         $this->heading = $heading;
     }
     
-    public function getPageHeading(): string
+    public function getPageHeading()
     {
         return $this->heading;
     }
 
     /**
      * Makes permanent redirect to provided URL or URI.
+     *
+     * @param string $redirectTo
      */
-    public function redirect( ?string $redirectTo = null ): void
+    public function redirect( $redirectTo = null )
     {
         // if empty redirect location -> current URI is used
         if ( $redirectTo === null )
@@ -54,7 +58,7 @@ class INSTALL_ActionController extends INSTALL_Renderable
      * Optional method for override.
      * Called before action is called.
      */
-    public function init( array $dispatchAttrs = [], bool $dbReady = false ): void
+    public function init( $dispatchAttrs = null, $dbReady = null )
     {
     }
 }

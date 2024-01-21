@@ -28,7 +28,7 @@ ul li
 	margin-bottom: 15px;
 }
 
-input[type=text]
+input[type=text], input[type=password]
 {
     font-size: 18px;
     color: #4d4d4d;
@@ -99,7 +99,7 @@ div.logo_container {
 }
 
 
-div.body_top h1
+.body_top h1
 {
 	margin-top: 30px;
 	left: 115px;
@@ -107,7 +107,7 @@ div.body_top h1
     text-align: center;
 }
 
-div.body
+.body
 {
     background-color: #FFF;
     padding: 0px 17px 17px 17px;
@@ -118,13 +118,13 @@ div.body
     margin: auto;
 }
 
-div.body_bottom
+.body_bottom
 {
     background: transparent url('x') no-repeat center top;
     height: 69px;
 }
 
-div.steps
+.steps
 {
     top: 10px;
     padding-top: 10px;
@@ -138,49 +138,41 @@ div.steps
     margin: auto;
 }
 
-div.steps span.activepointer
+.steps .activepointer
 {
     height: 50px;
     /*padding-top: 14px;*/
     display: inline-block;
 }
 
-div.steps span.item
+.steps .item
 {
     margin: 0 30px 0 35px;
     padding-right: 18px;
     background: transparent url('img/arrow.png') no-repeat right 70%;
 }
 
-div.steps span.borderleft
-{
-}
-
-div.steps span.borderright
-{
-}
-
-div.steps span.active
+.steps .active
 {
     color: #f93;
     background-image: url('img/arrow-active.png');
 }
 
-table.form
+.form
 {
     border-spacing: 8px;
     width: 100%;
     padding-top: 27px;
 }
 
-table.form td
+.form td
 {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
 }
 
-table.form td.error {
+.form td.error {
     background-color: #ff6e44;
 }
 
@@ -288,7 +280,7 @@ table.plugin_table
     display: inline-block;
 }
 
-html[xmlns] .clearfix {
+.clearfix {
     display: block;
 }
 

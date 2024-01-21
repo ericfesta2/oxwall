@@ -67,10 +67,10 @@ class INSTALL
                 continue;
             }
 
-            $resultPluginList[] = array(
+            $resultPluginList[] = [
                 'plugin' => $plInfo[0],
-                'auto' =>  $isAutoInstall
-            );
+                'auto' => $isAutoInstall
+            ];
         }
 
         return $resultPluginList;

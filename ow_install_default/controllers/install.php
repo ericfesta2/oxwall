@@ -2,7 +2,7 @@
 
 class INSTALL_CTRL_Install extends INSTALL_ActionController
 {
-    public function init( array $dispatchAttrs = [], bool $dbReady = false ): void
+    public function init( $dispatchAttrs = null, $dbReady = null )
     {
         if ( $dbReady && $dispatchAttrs['action'] !== 'finish' )
         {
@@ -10,7 +10,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         }
     }
 
-    public function requirements(): void
+    public function requirements()
     {
         $this->setPageHeading('Install Oxwall');
         
@@ -98,7 +98,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
                     $gdOption = substr($config, 3);
                     $fails['gd'] = empty($fails['gd']) ? null : $fails['gd'];
                     
-                    if ( !function_exists("gd_info") )
+                    if ( !function_exists('gd_info') )
                     {
                         break;
                     }
@@ -141,16 +141,15 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         }
     }
 
-    public function site(): void
+    public function site()
     {
         $this->setPageHeading('Install Oxwall');
-        $this->setPageTitle('Install Oxwall');
+        $this->setPageTitle('Site');
         INSTALL::getStepIndicator()->activate('site');
 
-        $fieldData = [
-            'site_url' => OW_URL_HOME,
-            'site_path' => OW_DIR_ROOT
-        ];
+        $fieldData = [];
+        $fieldData['site_url'] = OW_URL_HOME;
+        $fieldData['site_path'] = OW_DIR_ROOT;
 
         $sessionData = INSTALL::getStorage()->getAll();
         $fieldData = array_merge($fieldData, $sessionData);
@@ -210,14 +209,13 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         }
     }
 
-    public function db(): void
+    public function db()
     {
-        $this->setPageTitle('Database Settings');
+        $this->setPageTitle('Database');
         INSTALL::getStepIndicator()->activate('db');
 
-        $fieldData = [
-            'db_prefix' => 'ow_'
-        ];
+        $fieldData = [];
+        $fieldData['db_prefix'] = 'ow_';
 
         $sessionData = INSTALL::getStorage()->getAll();
         $fieldData = array_merge($fieldData, $sessionData);
@@ -230,6 +228,8 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         {
             $data = $_POST;
             $data = array_filter($data, 'trim');
+
+            $success = true;
 
             if ( empty($data['db_host']) || !preg_match('/^[^:]+?(\:\d+)?$/', $data['db_host']))
             {
@@ -271,18 +271,14 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
 
                     if ( !empty($existingTables) )
                     {
-                        INSTALL::getFeedback()->errorMessage(
-                            'This database should be empty _especially_ if you try to reinstall Oxwall.'
-                        );
+                        INSTALL::getFeedback()->errorMessage('This database should be empty _especially_ if you try to reinstall Oxwall.');
 
                         $this->redirect();
                     }
                 }
                 catch ( InvalidArgumentException $e )
                 {
-                    INSTALL::getFeedback()->errorMessage(
-                        'Could not connect to Database<div class="feedback_error">Error: ' . $e->getMessage() . '</div>'
-                    );
+                    INSTALL::getFeedback()->errorMessage('Could not connect to Database<div class="feedback_error">Error: ' . $e->getMessage() . '</div>');
 
                     $this->redirect();
                 }
@@ -302,8 +298,10 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         }
     }
 
-    public function install(array $params = []): void
+    public function install( $params = [] )
     {
+        $success = true;
+
         $configFile = OW_DIR_INC . 'config.php';
 
         $dirs = [
@@ -324,7 +322,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
             if ( !empty($_POST['isConfigWritable']) )
             {
                 @file_put_contents($configFile, $_POST['configContent']);
-
+                
                 $this->redirect(OW::getRouter()->urlForRoute('install-action', [
                     'action' => 'install'
                 ]));
@@ -342,9 +340,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
             }
             catch ( InvalidArgumentException $e )
             {
-                INSTALL::getFeedback()->errorMessage(
-                    '<b>ow_includes/config.php</b> file is incorrect. Update it with details provided below.'
-                );
+                INSTALL::getFeedback()->errorMessage('<b>ow_includes/config.php</b> file is incorrect. Update it with details provided below.');
 
                 $this->redirect(OW::getRouter()->urlForRoute('install'));
             }
@@ -378,9 +374,14 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
                 }
                 else
                 {
-                    $this->installComplete(array_map(function(array $pluginData) {
-                        return $pluginData['plugin'];
-                    }, $this->getPluginsForInstall()));
+                    // there are no any additional plugins
+                    $installPlugins = [];
+                    foreach ( $this->getPluginsForInstall() as $pluginKey => $pluginData )
+                    {
+                        $installPlugins[$pluginKey] = $pluginData['plugin'];
+                    }
+
+                    $this->installComplete($installPlugins);
 
                     return;
                 }
@@ -447,7 +448,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         }
     }
 
-    public function plugins(): void
+    public function plugins()
     {
         // get all plugin list
         $avaliablePlugins = $this->getPluginsForInstall();
@@ -480,7 +481,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         $this->assign('plugins', $avaliablePlugins);
     }
 
-    public function finish(): void
+    public function finish()
     {
         INSTALL::getStepIndicator()->add('finish', 'Security', true);
     }
@@ -496,7 +497,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         $user = BOL_UserService::getInstance()->createUser($username, $password, $email, null, true);
 
         $realName = ucfirst($username);
-        BOL_QuestionService::getInstance()->saveQuestionsData(array( 'realname' => $realName ), $user->id);
+        BOL_QuestionService::getInstance()->saveQuestionsData(['realname' => $realName], $user->id);
 
         BOL_AuthorizationService::getInstance()->addAdministrator($user->id);
         OW::getUser()->login($user->id);
@@ -534,7 +535,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         OW::getConfig()->saveConfig('base', 'site_installed', 1);
         OW::getConfig()->saveConfig('base', 'dev_mode', 1);
 
-        @UTIL_File::removeDir(OW_DIR_ROOT . "ow_install");
+        @UTIL_File::removeDir(OW_DIR_ROOT . 'ow_install');
 
         $this->redirect(OW_URL_HOME);
     }
@@ -545,7 +546,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
      * @param boolean $onlyOptional
      * @return array
      */
-    private function getPluginsForInstall(bool $onlyOptional = false): array
+    private function getPluginsForInstall($onlyOptional = false)
     {
         $pluginForInstall = INSTALL::getPredefinedPluginList();
         $plugins = BOL_PluginService::getInstance()->getAvailablePluginsList();
@@ -562,7 +563,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
 
             $resultPluginList[$pluginData['plugin']] = [
                 'plugin' => $plugins[$pluginData['plugin']],
-                'auto' =>  $pluginData['auto']
+                'auto' => $pluginData['auto']
             ];
         }
 
@@ -574,7 +575,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
      *
      * @param string $sql_file path to file
      */
-    private static function sqlImport( $sqlFile ): bool
+    private static function sqlImport( $sqlFile )
     {
         if ( !($fd = @fopen($sqlFile, 'rb')) ) {
             throw new LogicException('SQL dump file `'.$sqlFile.'` not found');
@@ -587,14 +588,14 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
             $lineNo++;
 
             if ( !strlen(($line = trim($line)))
-                || $line[0] == '#' || $line[0] == '-'
+                || $line[0] === '#' || $line[0] === '-'
                 || preg_match('~^/\*\!.+\*/;$~siu', $line) ) {
                 continue;
             }
 
             $query .= $line;
 
-            if ( $line[strlen($line) - 1] != ';' ) {
+            if ( $line[strlen($line)-1] !== ';' ) {
                 continue;
             }
 
