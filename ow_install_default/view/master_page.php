@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="keywords" content="{$page_kw|default:$_var.page.keywords}" />
     <meta name="description" content="{$page_desc|default:$_var.page.description}" />
     <title><?php echo $_assign_vars['pageTitle']; ?></title>
     <link rel="stylesheet" type="text/css" href="<?php echo $_assign_vars['pageStylesheetUrl']; ?>" />

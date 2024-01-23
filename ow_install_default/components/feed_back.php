@@ -1,6 +1,6 @@
 <?php
 
-class INSTALL_CMP_FeedBack extends INSTALL_Component
+final class INSTALL_CMP_FeedBack extends INSTALL_Component
 {
     public function __construct()
     {

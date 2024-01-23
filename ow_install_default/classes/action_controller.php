@@ -5,8 +5,6 @@ class INSTALL_ActionController extends INSTALL_Renderable
     private string $title = 'OW Install';
     private string $heading = 'Installation Process';
 
-    public function __construct() {}
-
     public function setPageTitle( string $title )
     {
         $this->title = $title;

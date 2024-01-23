@@ -1,6 +1,6 @@
 <?php
 
-class INSTALL_CTRL_Install extends INSTALL_ActionController
+final class INSTALL_CTRL_Install extends INSTALL_ActionController
 {
     public function init( $dispatchAttrs = null, $dbReady = null )
     {
@@ -298,10 +298,8 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         }
     }
 
-    public function install( $params = [] )
+    public function install( array $params = [] )
     {
-        $success = true;
-
         $configFile = OW_DIR_INC . 'config.php';
 
         $dirs = [
@@ -546,7 +544,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
      * @param boolean $onlyOptional
      * @return array
      */
-    private function getPluginsForInstall($onlyOptional = false)
+    private function getPluginsForInstall(bool $onlyOptional = false)
     {
         $pluginForInstall = INSTALL::getPredefinedPluginList();
         $plugins = BOL_PluginService::getInstance()->getAvailablePluginsList();

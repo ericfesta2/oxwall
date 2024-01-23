@@ -2,8 +2,6 @@
 
 final readonly class INSTALL_Application
 {
-    public function __construct() {}
-
     public function init()
     {
         OW_Auth::getInstance()->setAuthenticator(new OW_SessionAuthenticator());

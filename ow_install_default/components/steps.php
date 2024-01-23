@@ -1,8 +1,8 @@
 <?php
 
-class INSTALL_CMP_Steps extends INSTALL_Component
+final class INSTALL_CMP_Steps extends INSTALL_Component
 {
-    private $steps = [];
+    private array $steps = [];
 
     /**
      * Constructor
@@ -24,7 +24,7 @@ class INSTALL_CMP_Steps extends INSTALL_Component
         }
     }
 
-    public function add($key, $label, $active = false)
+    public function add($key, $label, bool $active = false)
     {
         $this->steps[$key] = [ 
             'label' => $label,

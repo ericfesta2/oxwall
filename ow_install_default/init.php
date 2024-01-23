@@ -10,7 +10,7 @@ OW::getRouter()->addRoute(new OW_Route('install-action', 'install/installation/:
 OW::getRouter()->addRoute(new OW_Route('plugins', 'install/plugins', 'INSTALL_CTRL_Install', 'plugins'));
 OW::getRouter()->addRoute(new OW_Route('finish', 'install/security', 'INSTALL_CTRL_Install', 'finish'));
 
-function install_tpl_feedback_flag($flag, $class = 'error')
+function install_tpl_feedback_flag($flag, string $class = 'error'): string
 {
     if ( INSTALL::getFeedback()->getFlag($flag) )
     {
@@ -20,7 +20,7 @@ function install_tpl_feedback_flag($flag, $class = 'error')
     return '';
 }
 
-function install_tpl_feedback()
+function install_tpl_feedback(): string
 {
     $feedBack = new INSTALL_CMP_FeedBack();
 

@@ -1,5 +1,5 @@
 <h2 class="setupSectHeading">Finalize Installation</h2>
-<?php echo install_tpl_feedback(); ?>
+<?php echo install_tpl_feedback() ?>
 
 <?php if ( $_assign_vars['dirs'] ): ?>
     <div class="feedback_msg error">
@@ -8,7 +8,7 @@
 
     <ul class="directories">
         <?php foreach ($_assign_vars['dirs'] as $dir): ?>
-            <li><?php echo $dir; ?></li>
+            <li><?php echo $dir ?></li>
         <?php endforeach ?>
     </ul>
 
