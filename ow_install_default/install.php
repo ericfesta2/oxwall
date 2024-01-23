@@ -68,9 +68,9 @@ if ( !$installComplete || ( defined('OW_INSTALL_DEV') && OW_INSTALL_DEV ) )
 
     OW::getSession()->start();
 
-    $application = INSTALL_Application::getInstance();
+    $application = new INSTALL_Application();
 
-    $application->init($dbReady);
+    $application->init();
 
     $application->display($dbReady);
 

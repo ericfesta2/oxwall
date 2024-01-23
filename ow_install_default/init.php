@@ -16,13 +16,13 @@ function install_tpl_feedback_flag($flag, $class = 'error')
     {
         return $class;
     }
-    
+
     return '';
 }
 
 function install_tpl_feedback()
 {
     $feedBack = new INSTALL_CMP_FeedBack();
-    
+
     return $feedBack->render();
 }

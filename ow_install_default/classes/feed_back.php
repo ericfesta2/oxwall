@@ -1,65 +1,48 @@
 <?php
 
-class INSTALL_FeedBack
+final class INSTALL_FeedBack
 {
-    private static $classInstance;
-    
-    /**
-     *
-     * @return INSTALL_FeedBack
-     */
-    public static function getInstance()
-    {
-        if ( self::$classInstance === null )
-        {
-            self::$classInstance = new self();
-        }
+    private array $session;
 
-        return self::$classInstance;
-    }
-    
-    private $session;
-    
-    protected function __construct()
+    public function __construct()
     {
-        $this->session = OW::getSession()->get('OW-INSTALL-FEEDBACK');
-        $this->session = empty($this->session) ? [
+        $this->session = OW::getSession()->get('OW-INSTALL-FEEDBACK') ?? [
             'message' => [],
             'flag' => []
-        ] : $this->session;
+        ];
     }
-    
+
     public function __destruct()
     {
         OW::getSession()->set('OW-INSTALL-FEEDBACK', $this->session);
     }
-    
-    public function errorMessage( $msg )
+
+    public function errorMessage( string $msg )
     {
         $this->session['message'][] = [
             'type' => 'error',
             'message' => $msg
         ];
     }
-    
-    public function errorFlag( $flag )
+
+    public function errorFlag( string $flag )
     {
         $this->session['flag'][$flag] = true;
     }
-    
-    public function getFlag( $flag )
+
+    public function getFlag( string $flag ): bool
     {
         $out = !empty($this->session['flag'][$flag]);
         unset($this->session['flag'][$flag]);
-        
+
         return $out;
     }
-    
-    public function getMessages()
+
+    public function getMessages(): array
     {
         $msgs = $this->session['message'];
         $this->session['message'] = [];
-        
+
         return $msgs;
     }
 }

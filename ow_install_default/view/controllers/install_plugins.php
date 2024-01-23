@@ -17,7 +17,7 @@
                         <div class="plugin_title">
                             <label for="<?php echo $plugin['key']; ?>"><?php echo $plugin['title']; ?></label>
                         </div>
-                        
+
                         <div class="plugin_desc">
                             <label for="<?php echo $plugin['key']; ?>"><?php echo $plugin['description']; ?></label>
                         </div>

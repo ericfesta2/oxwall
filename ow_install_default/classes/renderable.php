@@ -4,10 +4,8 @@ class INSTALL_Renderable extends OW_Renderable
 {
     /**
      * Returns rendered markup
-     *
-     * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->onBeforeRender();
 
@@ -21,7 +19,7 @@ class INSTALL_Renderable extends OW_Renderable
 
         $viewRenderer->clearAssignedVars();
         $viewRenderer->assignVars($this->assignedVars);
-        
+
         $renderedMarkup = $viewRenderer->render($this->template);
 
         $viewRenderer->clearAssignedVars();

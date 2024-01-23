@@ -30,7 +30,7 @@
             <span class="small">(currently <b><?php echo $_assign_vars['current']['ini'][$iniName] ? 'on' : 'off'; ?></b>)</span>
         </li>
     <?php endforeach ?>
-    
+
 <?php endif ?>
 
 <!-- GD version -->

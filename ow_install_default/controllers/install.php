@@ -13,7 +13,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
     public function requirements()
     {
         $this->setPageHeading('Install Oxwall');
-        
+
         $lines = file(INSTALL_DIR_FILES . 'requirements.txt');
         $ruleLines = [];
 
@@ -97,12 +97,12 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
                 case strpos($config ,'gd.') === 0:
                     $gdOption = substr($config, 3);
                     $fails['gd'] = empty($fails['gd']) ? null : $fails['gd'];
-                    
+
                     if ( !function_exists('gd_info') )
                     {
                         break;
                     }
-                    
+
                     $gdInfo = gd_info();
 
                     switch ($gdOption)
@@ -316,13 +316,13 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         $this->checkWritable($dirs, $errorDirs);
 
         $doInstall = isset($params['action']);
-        
+
         if ( OW::getRequest()->isPost() || $doInstall )
         {
             if ( !empty($_POST['isConfigWritable']) )
             {
                 @file_put_contents($configFile, $_POST['configContent']);
-                
+
                 $this->redirect(OW::getRouter()->urlForRoute('install-action', [
                     'action' => 'install'
                 ]));
@@ -511,7 +511,7 @@ class INSTALL_CTRL_Install extends INSTALL_ActionController
         if ( !empty($installPlugins) )
         {
             OW::getPluginManager()->initPlugins(); // Init installed plugins ( base, admin ), to insure that all of their package pointers are added
-            
+
             foreach ( $installPlugins as $plugin )
             {
                 try

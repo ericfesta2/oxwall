@@ -62,7 +62,7 @@ class INSTALL_ViewRenderer
      */
     public function render( $template )
     {
-        
+
         if( empty($template) )
         {
             throw new LogicException('No template was provided for render!');

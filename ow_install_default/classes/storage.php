@@ -3,7 +3,7 @@
 class INSTALL_Storage 
 {
     private static $classInstance;
-    
+
     /**
      *
      * @return INSTALL_Storage
@@ -17,16 +17,16 @@ class INSTALL_Storage
 
         return self::$classInstance;
     }
-    
+
     private $storage = [];
-    
+
     protected function __construct()
     {
         $this->storage = OW::getSession()->get('OW-INSTALL-DATA');
-        
+
         $this->storage = empty($this->storage) ? [] : $this->storage;
     }
-    
+
     public function __destruct()
     {
         if ( empty($this->storage) )
@@ -37,24 +37,24 @@ class INSTALL_Storage
         {
             OW::getSession()->set('OW-INSTALL-DATA', $this->storage);
         }
-        
+
     }
-    
+
     public function set($name, $value)
     {
         $this->storage[$name] = $value;
     }
-    
+
     public function get($name)
     {
         return $this->storage[$name];
     }
-    
+
     public function getAll()
     {
         return empty($this->storage) ? [] : $this->storage;
     }
-    
+
     public function clear()
     {
         $this->storage = null;

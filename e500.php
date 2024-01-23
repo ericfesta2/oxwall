@@ -40,32 +40,32 @@ if ( $session->isKeySet('errorData') )
     if ( !empty($errorData['trace']) )
     {
         $trace = '<tr>
-                        <td class="lbl">Trace:</td>
-                        <td class="cnt">' . $errorData['trace'] . '</td>
-                </tr>';
+                <td class="lbl">Trace:</td>
+                <td class="cnt">' . $errorData['trace'] . '</td>
+        </tr>';
     }
 
     $errorDetails = '<div style="margin-top: 30px;">
-            <b>Error details</b>:
-            <table style="font-size: 13px;">
-                <tbody>
-                <tr>
-                        <td class="lbl">Type:</td>
-                        <td class="cnt">' . $errorData['type'] . '</td>
-                </tr>
-                <tr>
-                        <td class="lbl">Message:</td>
-                        <td class="cnt">' . $errorData['message'] . '</td>
-                </tr>
-                <tr>
-                        <td class="lbl">File:</td>
-                        <td class="cnt">' . $errorData['file'] . '</td>
-                </tr>
-                <tr>
-                        <td class="lbl">Line:</td>
-                        <td class="cnt">' . $errorData['line'] . '</td>
-                </tr>
-                ' . $trace . '
+        <b>Error details</b>:
+        <table style="font-size: 13px;">
+            <tbody>
+            <tr>
+                    <td class="lbl">Type:</td>
+                    <td class="cnt">' . $errorData['type'] . '</td>
+            </tr>
+            <tr>
+                    <td class="lbl">Message:</td>
+                    <td class="cnt">' . $errorData['message'] . '</td>
+            </tr>
+            <tr>
+                    <td class="lbl">File:</td>
+                    <td class="cnt">' . $errorData['file'] . '</td>
+            </tr>
+            <tr>
+                    <td class="lbl">Line:</td>
+                    <td class="cnt">' . $errorData['line'] . '</td>
+            </tr>
+            ' . $trace . '
         </tbody></table>
         </div>';
 }

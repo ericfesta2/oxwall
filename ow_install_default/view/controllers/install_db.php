@@ -25,7 +25,7 @@
             </td>
             <td class="description"> </td>
         </tr>
-        
+
         <tr>
             <td class="label">Database Name</td>
             <td class="value <?php echo install_tpl_feedback_flag('db_name'); ?>">
@@ -33,7 +33,7 @@
             </td>
             <td class="description"> </td>
         </tr>
-        
+
         <tr>
             <td class="label">Table Prefix</td>
             <td class="value <?php echo install_tpl_feedback_flag('db_prefix'); ?>">

@@ -1,33 +1,27 @@
 <?php
 
-class INSTALL
+final class INSTALL
 {
-    /**
-     * 
-     * @return INSTALL_Storage
-     */
-    public static function getStorage()
+    public static function getStorage(): INSTALL_Storage
     {
         return INSTALL_Storage::getInstance();    
     }
-    
-    /**
-     * 
-     * @return INSTALL_FeedBack
-     */
-    public static function getFeedback()
+
+    public static function getFeedback(): INSTALL_FeedBack
     {
-        return INSTALL_FeedBack::getInstance();    
+        static $installFeedback;
+
+        if ( !isset($installFeedback) ) {
+            $installFeedback = new INSTALL_FeedBack();
+        }
+
+        return $installFeedback;    
     }
 
-    /**
-     * 
-     * @return INSTALL_CMP_Steps
-     */
-    public static function getStepIndicator()
+    public static function getStepIndicator(): INSTALL_CMP_Steps
     {
         static $stepIndicator;
-        
+
         if ( empty($stepIndicator) )
         {
             $stepIndicator = new INSTALL_CMP_Steps( self::getPredefinedPluginList(true) );
@@ -36,22 +30,12 @@ class INSTALL
         return $stepIndicator;    
     }
 
-    /**
-     * 
-     * @return INSTALL_ViewRenderer
-     */
-    public static function getViewRenderer()
+    public static function getViewRenderer(): INSTALL_ViewRenderer
     {
         return INSTALL_ViewRenderer::getInstance();
     }
 
-    /**
-     * Get predefined plugin list
-     *
-     * @param boolean $onlyOptional
-     * @return array
-     */
-    public static function getPredefinedPluginList($onlyOptional = false)
+    public static function getPredefinedPluginList(bool $onlyOptional = false): array
     {
         $fileContent = file_get_contents(INSTALL_DIR_FILES . 'plugins.txt');
         $pluginForInstall = explode("\n", $fileContent);
@@ -60,17 +44,15 @@ class INSTALL
         foreach ( $pluginForInstall as $pluginLine )
         {
             $plInfo = explode(':', $pluginLine);
-            $isAutoInstall = ( !empty($plInfo[1]) && trim($plInfo[1]) == 'auto' );
+            $isAutoInstall = !empty($plInfo[1]) && trim($plInfo[1]) === 'auto';
 
-            if ( $onlyOptional && $isAutoInstall )
+            if ( !$onlyOptional || !$isAutoInstall )
             {
-                continue;
+                $resultPluginList[] = [
+                    'plugin' => $plInfo[0],
+                    'auto' => $isAutoInstall
+                ];
             }
-
-            $resultPluginList[] = [
-                'plugin' => $plInfo[0],
-                'auto' => $isAutoInstall
-            ];
         }
 
         return $resultPluginList;

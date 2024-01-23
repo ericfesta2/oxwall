@@ -2,42 +2,35 @@
 
 class INSTALL_ActionController extends INSTALL_Renderable
 {
-    private $title = 'OW Install';
-    private $heading = 'Installation Process';
-    
-    private $navigation;
-    
-    public function __construct()
-    {
-        
-    }
-    
-    public function setPageTitle( $title )
+    private string $title = 'OW Install';
+    private string $heading = 'Installation Process';
+
+    public function __construct() {}
+
+    public function setPageTitle( string $title )
     {
         $this->title = $title;
     }
-    
-    public function getPageTitle()
+
+    public function getPageTitle(): string
     {
         return $this->title;
     }
-    
-    public function setPageHeading( $heading )
+
+    public function setPageHeading( string $heading )
     {
         $this->heading = $heading;
     }
-    
-    public function getPageHeading()
+
+    public function getPageHeading(): string
     {
         return $this->heading;
     }
 
     /**
      * Makes permanent redirect to provided URL or URI.
-     *
-     * @param string $redirectTo
      */
-    public function redirect( $redirectTo = null )
+    public function redirect( ?string $redirectTo = null )
     {
         // if empty redirect location -> current URI is used
         if ( $redirectTo === null )
@@ -52,13 +45,5 @@ class INSTALL_ActionController extends INSTALL_Renderable
         }
 
         UTIL_Url::redirect($redirectTo);
-    }
-
-    /**
-     * Optional method for override.
-     * Called before action is called.
-     */
-    public function init( $dispatchAttrs = null, $dbReady = null )
-    {
     }
 }

@@ -2,15 +2,12 @@
 
 class INSTALL_Component extends INSTALL_Renderable
 {
-    public function __construct( $template = null )
+    public function __construct( ?string $template = null )
     {
         parent::__construct();
 
-        if( $template === null )
-        {
-            $template = OW::getAutoloader()->classToFilename(get_class($this), false);
-        }
+        $templateToRender = $template ?? OW::getAutoloader()->classToFilename(get_class($this), false);
 
-        $this->setTemplate(INSTALL_DIR_VIEW_CMP . $template . '.php');
+        $this->setTemplate(INSTALL_DIR_VIEW_CMP . $templateToRender . '.php');
     }
 }
