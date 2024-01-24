@@ -4,7 +4,13 @@ final class INSTALL
 {
     public static function getStorage(): INSTALL_Storage
     {
-        return INSTALL_Storage::getInstance();    
+        static $installStorage;
+
+        if ( !isset($installStorage) ) {
+            $installStorage = new INSTALL_Storage();
+        }
+
+        return $installStorage;    
     }
 
     public static function getFeedback(): INSTALL_FeedBack

@@ -5,6 +5,7 @@ class INSTALL_Renderable extends OW_Renderable
     /**
      * Returns rendered markup
      */
+    #[\Override]
     public function render(): string
     {
         $this->onBeforeRender();

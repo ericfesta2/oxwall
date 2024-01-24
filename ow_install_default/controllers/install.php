@@ -414,7 +414,7 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
         $this->assign('isConfigWritable', is_writable($configFile));
     }
 
-    private function checkWritable( $dirs, & $notWritableDirs )
+    private function checkWritable( array $dirs, array &$notWritableDirs )
     {
         foreach ( $dirs as $dir )
         {

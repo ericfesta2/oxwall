@@ -1,26 +1,10 @@
 <?php
 
-class INSTALL_Storage 
+final class INSTALL_Storage 
 {
-    private static $classInstance;
+    private array $storage = [];
 
-    /**
-     *
-     * @return INSTALL_Storage
-     */
-    public static function getInstance()
-    {
-        if ( self::$classInstance === null )
-        {
-            self::$classInstance = new self();
-        }
-
-        return self::$classInstance;
-    }
-
-    private $storage = [];
-
-    protected function __construct()
+    public function __construct()
     {
         $this->storage = OW::getSession()->get('OW-INSTALL-DATA');
 
@@ -50,7 +34,7 @@ class INSTALL_Storage
         return $this->storage[$name];
     }
 
-    public function getAll()
+    public function getAll(): array
     {
         return empty($this->storage) ? [] : $this->storage;
     }
