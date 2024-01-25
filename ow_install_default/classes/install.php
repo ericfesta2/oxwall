@@ -10,7 +10,7 @@ final class INSTALL
             $installStorage = new INSTALL_Storage();
         }
 
-        return $installStorage;    
+        return $installStorage;
     }
 
     public static function getFeedback(): INSTALL_FeedBack

@@ -6,9 +6,7 @@ final class INSTALL_Storage
 
     public function __construct()
     {
-        $this->storage = OW::getSession()->get('OW-INSTALL-DATA');
-
-        $this->storage = empty($this->storage) ? [] : $this->storage;
+        $this->storage = OW::getSession()->get('OW-INSTALL-DATA') ?? [];
     }
 
     public function __destruct()
@@ -41,6 +39,6 @@ final class INSTALL_Storage
 
     public function clear()
     {
-        $this->storage = null;
+        $this->storage = [];
     }
 }

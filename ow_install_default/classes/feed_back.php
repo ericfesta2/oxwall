@@ -2,14 +2,18 @@
 
 final class INSTALL_FeedBack
 {
-    private array $session;
+    private array $session = [
+        'message' => [],
+        'flag' => []
+    ];
 
     public function __construct()
     {
-        $this->session = OW::getSession()->get('OW-INSTALL-FEEDBACK') ?? [
-            'message' => [],
-            'flag' => []
-        ];
+        $installFeedback = OW::getSession()->get('OW-INSTALL-FEEDBACK');
+
+        if ( $installFeedback !== null ) {
+            $this->session = $installFeedback;
+        }
     }
 
     public function __destruct()

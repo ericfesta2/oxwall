@@ -270,11 +270,12 @@ final class OW_ErrorManager
 
     private function handleRedirect( $data )
     {
+        print_r($data);
         $this->handleLog($data);
         OW::getEventManager()->trigger(new OW_Event('core.emergency_exit', $data));
 
         header("HTTP/1.1 500 Internal Server Error");
-        header('Location: ' . OW_URL_HOME . 'e500.php');
+        // header('Location: ' . OW_URL_HOME . 'e500.php');
     }
 
     private function handleIgnore( $data )

@@ -12,7 +12,7 @@ FROM php:8.3-apache
 
 ARG BASE_DIR
 
-# COPY --from=deps-install-base $BASE_DIR/ow_libraries/vendor $BASE_DIR
+COPY php.ini /usr/local/etc/php/conf.d/
 
 RUN apt-get update && apt-get install -y \
         cron \
