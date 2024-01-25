@@ -2,7 +2,7 @@
 
 final class INSTALL_CTRL_Install extends INSTALL_ActionController
 {
-    public function init( $dispatchAttrs = null, $dbReady = null )
+    public function init( array $dispatchAttrs = [], bool $dbReady = false )
     {
         if ( $dbReady && $dispatchAttrs['action'] !== 'finish' )
         {
@@ -82,13 +82,13 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
                 break;
 
                 case strpos($config ,'ini.') === 0:
-                    $value = ( $value == 'off' || $value == '0' ) ? false : true;
+                    $isValueEnabled = $value !== 'off' && $value !== '0';
                     $iniConfig = substr($config, 4);
                     $iniValue = (bool) ini_get($iniConfig);
 
-                    if ( intval($iniValue) != intval($value) )
+                    if ( intval($iniValue) != intval($isValueEnabled) )
                     {
-                        $fails['ini'][$iniConfig] = intval($value);
+                        $fails['ini'][$iniConfig] = intval($isValueEnabled);
                         $current['ini'][$iniConfig] = intval($iniValue);
                     }
                     $fails['ini'] = empty($fails['ini']) ? null : $fails['ini'];
@@ -518,7 +518,7 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
                     OW::getPluginManager()->readPluginsList();
                     OW::getPluginManager()->initPlugin(OW::getPluginManager()->getPlugin($plugin['key']));
                 }
-                catch ( LogicException $e )
+                catch ( LogicException )
                 {
                     $notInstalledPlugins[] = $plugin['key'];
                 }
@@ -573,7 +573,7 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
      *
      * @param string $sql_file path to file
      */
-    private static function sqlImport( $sqlFile )
+    private static function sqlImport( $sqlFile ): bool
     {
         if ( !($fd = @fopen($sqlFile, 'rb')) ) {
             throw new LogicException('SQL dump file `'.$sqlFile.'` not found');
@@ -602,7 +602,7 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
             try {
                 OW::getDbo()->query($query);
             }
-            catch ( Exception $e ) {
+            catch ( Exception ) {
                 throw new LogicException('<b>ow_includes/config.php</b> file is incorrect. Update it with details provided below.');
             }
 
@@ -614,7 +614,7 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
         return true;
     }
 
-    public function processData($data)
+    private function processData($data)
     {
         foreach ( $data as $name => $value )
         {

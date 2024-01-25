@@ -1,6 +1,6 @@
 <h2 class="setupSectHeading">Database Configuration</h2>
 
-<?php echo install_tpl_feedback(); ?>
+<?php echo install_tpl_feedback() ?>
 <form method="post">
     <p style="color: #626262; text-align: center">Please create a database and enter its details here.</p>
     <table style="font-size: 15px;" class="form">
@@ -21,7 +21,7 @@
         <tr>
             <td class="label">Password</td>
             <td class="value <?php echo install_tpl_feedback_flag('db_password') ?>">
-               <input type="password" name="db_password" value="<?php echo @$_assign_vars['data']['db_password']; ?>" />
+               <input type="password" name="db_password" value="<?php echo @$_assign_vars['data']['db_password'] ?>" />
             </td>
             <td class="description"> </td>
         </tr>

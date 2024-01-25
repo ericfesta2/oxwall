@@ -5,7 +5,7 @@ class INSTALL_ActionController extends INSTALL_Renderable
     private string $title = 'Install Oxwall';
     private string $heading = 'Installation Process';
 
-    public function setPageTitle( string $title )
+    protected function setPageTitle( string $title )
     {
         $this->title = $title;
     }
@@ -15,7 +15,7 @@ class INSTALL_ActionController extends INSTALL_Renderable
         return $this->title;
     }
 
-    public function setPageHeading( string $heading )
+    protected function setPageHeading( string $heading )
     {
         $this->heading = $heading;
     }

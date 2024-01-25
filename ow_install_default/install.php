@@ -10,7 +10,7 @@ if ( defined('OW_URL_HOME') )
         $installedValue = (bool) OW::getConfig()->getValue('base', 'site_installed');
         $installComplete = (bool) OW::getConfig()->getValue('base', 'install_complete');
     }
-    catch ( Exception $e )
+    catch ( Exception )
     {
         $installedValue = false;
 		$installComplete = false;
