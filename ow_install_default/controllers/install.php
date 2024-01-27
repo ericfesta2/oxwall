@@ -86,7 +86,7 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
                     $iniConfig = substr($config, 4);
                     $iniValue = (bool) ini_get($iniConfig);
 
-                    if ( intval($iniValue) != intval($isValueEnabled) )
+                    if ( intval($iniValue) !== intval($value) )
                     {
                         $fails['ini'][$iniConfig] = intval($isValueEnabled);
                         $current['ini'][$iniConfig] = intval($iniValue);

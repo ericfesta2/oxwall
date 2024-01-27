@@ -25,7 +25,7 @@ if ( !$installComplete || ( defined('OW_INSTALL_DEV') && OW_INSTALL_DEV ) )
     {
         $selfUrl = UTIL_Url::selfUrl();
 
-        if ( substr($selfUrl, -1) != '/' )
+        if ( substr($selfUrl, -1) !== '/' )
         {
             $selfUrl .= '/';
         }
