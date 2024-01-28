@@ -35,11 +35,12 @@
  * @package ow.ow_plugins.groups.bol
  * @since 1.0
  */
-class GROUPS_Cron extends OW_Cron
+final class GROUPS_Cron extends OW_Cron
 {
-    const GROUPS_DELETE_LIMIT = 50;
+    private const int GROUPS_DELETE_LIMIT = 50;
 
-    public function getRunInterval()
+    #[\Override]
+    public function getRunInterval(): int
     {
         return 1;
     }

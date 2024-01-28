@@ -315,8 +315,8 @@ class NEWSFEED_CMP_FeedItem extends OW_Component
  
     protected function processAssigns( $content, $assigns )
     {
-        $search = array();
-        $values = array();
+        $search = [];
+        $values = [];
  
         foreach ( $assigns as $key => $item )
         {
@@ -324,7 +324,7 @@ class NEWSFEED_CMP_FeedItem extends OW_Component
             $values[] = $item;
         }
  
-        $result = str_replace($search, $values, $content);
+        $result = str_replace($search, $values, $content ?? '');
         $result = preg_replace('/\[ph\:\w+\]/', '', $result);
  
         return $result;
@@ -574,70 +574,75 @@ class NEWSFEED_CMP_FeedItem extends OW_Component
             "custom" => $customFeatures
         );
     }
-    
+
     protected function getFeatures( $data )
     {
         $configs = $this->sharedData['configs'];
-        
+
         $featuresData = $this->getFeaturesData($data);
-        
-        $out = array(
-            'system' => array(
-                'comments' => false,
-                'likes' => false
-            ),
-            'custom' => array()
-        );
+
+        $out = [
+            'system' => [
+                'comments' => [
+                    'count' => 0
+                ],
+                'likes' => [
+                    'count' => 0,
+                    'cmp' => ''
+                ]
+            ],
+            'custom' => []
+        ];
  
-        $out['custom'] = $featuresData["custom"];
-        $systemFeatures = $featuresData["system"];
-        
+        $out['custom'] = $featuresData['custom'];
+        $systemFeatures = $featuresData['system'];
+
         if ( !empty($systemFeatures["comments"]) )
         {
             $feature = $systemFeatures["comments"];
-            
-            $commentsParams = new BASE_CommentsParams($feature["authGroup"], $feature["entityType"]);
-            $commentsParams->setEntityId($feature["entityId"]);
+
+            $commentsParams = new BASE_CommentsParams($feature['authGroup'], $feature['entityType']);
+            $commentsParams->setEntityId($feature['entityId']);
             $commentsParams->setInitialCommentsCount($configs['comments_count']);
             $commentsParams->setLoadMoreCount(6);
-            $commentsParams->setBatchData($feature["comments"]);
-            
+            $commentsParams->setBatchData($feature['comments']);
+
             $commentsParams->setOwnerId($this->action->getUserId());
             $commentsParams->setDisplayType(BASE_CommentsParams::DISPLAY_TYPE_WITH_LOAD_LIST_MINI);                        
             $commentsParams->setWrapInBox(false);
             $commentsParams->setShowEmptyList(false);            
- 
+
             if ( !empty($feature['error']) )
             {
                 $commentsParams->setErrorMessage($feature['error']);
             }
- 
+
             if ( isset($feature['allow']) )
             {
                 $commentsParams->setAddComment($feature['allow']);
             }
- 
+
             $commentCmp = new BASE_CMP_Comments($commentsParams);
             $out['system']['comments']['cmp'] = $commentCmp->render();
- 
-            $out['system']['comments']['count'] = $feature["count"];
-            $out['system']['comments']['allow'] = $feature["allow"];
-            $out['system']['comments']['expanded'] = $feature["expanded"];
+
+            $out['system']['comments']['count'] = $feature['count'];
+            $out['system']['comments']['allow'] = $feature['allow'];
+            $out['system']['comments']['expanded'] = $feature['expanded'];
         }
-        
-        if ( !empty($systemFeatures["likes"]) )
+
+        if ( !empty($systemFeatures['likes']) )
         {
            $feature = $systemFeatures['likes'];
- 
-           $out['system']['likes']['count'] = $feature["count"];
-           $out['system']['likes']['liked'] = $feature["liked"];
-           $out['system']['likes']['allow'] = $feature["allow"];
-           $out['system']['likes']['error'] = $feature["error"];
-                   
-           $likeCmp = new NEWSFEED_CMP_Likes($feature["entityType"], $feature["entityId"], $feature["likes"]);
+
+           $out['system']['likes']['count'] = $feature['count'];
+           $out['system']['likes']['liked'] = $feature['liked'];
+           $out['system']['likes']['allow'] = $feature['allow'];
+           $out['system']['likes']['error'] = $feature['error'];
+
+           $likeCmp = new NEWSFEED_CMP_Likes($feature['entityType'], $feature['entityId'], $feature['likes']);
            $out['system']['likes']['cmp'] = $likeCmp->render();
         }
- 
+
         return $out;
     }
     

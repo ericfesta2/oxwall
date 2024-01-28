@@ -406,7 +406,7 @@ final class OW_Database
      * @param object[] $objList
      * @return integer
      */
-    public function insertObjectList(string $tableName, array $objList, bool $delayed = false ): int
+    public function insertObjectList(string $tableName, array $objList, bool $delayed = false): int
     {
         $sqlList = '';
         $params = [];

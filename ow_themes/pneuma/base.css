@@ -235,7 +235,7 @@ div .ow_page h1 {
     border-style: solid;
     border-color: #eff2f5;
 }
-body > .ow_page_wrap {
+#ow_page_wrap {
     min-height: 100%;
     padding-top: 70px;
 }
@@ -264,7 +264,7 @@ body > .ow_page_wrap {
     width: 100%;
 }
 /* Footer */
-.ow_footer {
+#ow_footer {
     padding:1px 0;
     background: #fff; /** OW_Control type:color, section:1. General Settings, key:footerColor, label:4. Footer background color **/    
     height: 96px;
@@ -273,10 +273,10 @@ body > .ow_page_wrap {
     clear: both;
     font-size: 14px;
 }
-.ow_footer .ow_canvas {
+#ow_footer .ow_canvas {
     max-width: var(--page-max-width);
 }
-.ow_footer .ow_copyright{
+#ow_footer .ow_copyright{
     float: left;
     padding-left: 10px;
 }
@@ -508,7 +508,7 @@ input[type=text].ow_settings_input{
         [6] Menus        __menus
   ========================================================*/
 /* ---- Navigation on the left ---- */
-.ow_nav_btn {
+#ow_nav_btn {
     position: relative;
     float: left;
     width: 70px;
@@ -520,15 +520,15 @@ input[type=text].ow_settings_input{
     transition: opacity 0.3s ease-out 0.15s;
     display: none;
 }
-.ow_menu_active .ow_nav_btn {
+.ow_menu_active #ow_nav_btn {
     display: block;
     opacity: 1;
-    transition: background-position 0.2s ease;
+    transition: background-position .2s ease;
 }
-.ow_menu_active .ow_nav_btn,
-.ow_menu_active .ow_nav_btn:hover {
+.ow_menu_active #ow_nav_btn,
+.ow_menu_active #ow_nav_btn:hover {
     background-position: 4px 5px;
-    transition: background-position 0.2s ease;
+    transition: background-position .2s ease;
 }
 body.ow_menu_active {
     overflow: hidden;
@@ -545,30 +545,30 @@ body.ow_menu_active {
     display: none;
 }
 .ow_menu_active .ow_site_panel .ow_logo,
-.ow_menu_active .ow_site_panel .ow_menu_wrap {
+.ow_menu_active .ow_site_panel #ow_menu_wrap {
     display: none;
 }
 .ow_menu_active .ow_menu_fullpage {
     display: block;
     overflow-y: auto;
 }
-.ow_menu_active .ow_menu_fullpage_wrap {
+.ow_menu_active #ow_menu_fullpage_wrap {
     display: table;
     height: 100%;
     width: 100%;
 }
-.ow_menu_fullpage_wrap ul.ow_main_menu {
+#ow_menu_fullpage_wrap ul.ow_main_menu {
     display: table-cell;
     vertical-align: middle;
     overflow: visible;
     height: auto;
 }
-.ow_menu_fullpage_wrap ul.ow_main_menu li {
+#ow_menu_fullpage_wrap ul.ow_main_menu li {
     width: 100%;
     display: block;
     text-align: center;
 }
-.ow_menu_fullpage_wrap .ow_main_menu li a {
+#ow_menu_fullpage_wrap .ow_main_menu li a {
     text-transform: uppercase;
     font-size: 30px;
     line-height: 62px;
@@ -577,33 +577,35 @@ body.ow_menu_active {
     padding: 0;
     font-weight: 500;
 }
-.ow_menu_fullpage_wrap .ow_main_menu li a:hover {
+#ow_menu_fullpage_wrap .ow_main_menu li a:hover {
     color: #5b646a;
     text-decoration: none;
 }
-.ow_menu_fullpage_wrap .ow_main_menu li:first-child a {
+#ow_menu_fullpage_wrap .ow_main_menu li:first-child a {
     margin-left: 0;
 }
-.ow_menu_fullpage_wrap .ow_main_menu li a:hover {
+#ow_menu_fullpage_wrap .ow_main_menu li a:hover {
     background-color: rgba(22,22,23,0.2);
 }
 /* ---- End of the Navigation on the left ---- */
 /* ---- Console styles ---- */
-.ow_site_panel {
+#ow_site_header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     width: 100%;
-    max-width: var(--page-max-width);
     height: 70px;
     background: #fff;
     z-index: 99;
-    margin: auto;
     transition: box-shadow .3s;
 }
-.ow_site_panel.scroller {
+.scroller {
     box-shadow: 0 4px 12px rgba(0,0,0,.1);
+}
+.ow_site_panel {
+    max-width: var(--page-max-width);
+    margin: auto;
 }
 .ow_console_right {
     float: right;
@@ -924,7 +926,6 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     width: 50%;
     float: left;
     box-sizing: border-box;
-    -wenkit-box-sizing: border-box;
 }
 .ow_console_messages_btn .ow_console_messages_send {
     display: none;
@@ -961,7 +962,8 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 }
 /* ---- End of Console styles ---- */
 /* ---- Main Menu styles ---- */
-.ow_menu_wrap {
+#ow_menu_wrap {
+    margin: 0;
     padding: 0;
     display: table;
     position: relative;
@@ -1109,22 +1111,22 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 }
 /* ---- End of Box Menu styles ---- */
 /* ---- Content Menu styles ---- */
-.ow_content_menu{
+.ow_content_menu {
     font-size: 0;
     font-weight: 500;
     text-transform: uppercase;
     font-weight: normal;
     border-bottom: 1px solid #ccd6de;
 }
-.ow_content_menu_wrap{
+.ow_content_menu_wrap {
     margin-bottom:20px;
 }
-.ow_content_menu li{
+.ow_content_menu li {
     float: left;
     border: 1px solid transparent;
     position: relative;
     top: 1px;
-    border-radius: 4px 4px 0 0;
+    border-radius: 8px 8px 0 0;
 }
 .ow_content_menu li a {
     display: block;
@@ -1628,6 +1630,9 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 .ow_box_empty .ow_box_toolbar_cont {
     border-bottom: 2px solid #eff2f5;
 }
+.ow_box_empty .ow_highbox {
+    border-radius: 8px;
+}
 .ow_box_toolbar {
     margin-top: 16px;
     float: right;
@@ -2051,7 +2056,6 @@ span.ow_lbutton {
 }
 .ow_attachments a {
     background: url(images/wysiwyg.png) no-repeat scroll -175px 1px rgba(0, 0, 0, 0);
-    cursor: pointer;
     float: left;
     height: 22px;
     overflow: hidden;
@@ -2085,7 +2089,7 @@ span.ow_lbutton {
     width: 100%;
 }
 .ow_attachment_btn span.ow_button {
-    background-color: none;
+    background-color: transparent;
     background-image: none;
     background-repeat: repeat-x;
     background-position: center left;
@@ -2697,7 +2701,6 @@ div .ow_bg_controls .ow_green{
     top:0;
     left:0;
     z-index:-1;
-    filter:mask();
     width:3000px;
     height:3000px;
 }
@@ -2887,7 +2890,6 @@ div .ow_bg_controls .ow_green{
     border-style: solid;
     border-color: #eff2f5  #eff2f5 #eff2f5 #eff2f5;
     border-width: 0 1px 1px;
-    _border-width: 1px;
 }
 .ow_table_1 tr.ow_tr_first td,
 .ow_table_2 tr.ow_tr_first td{
@@ -4101,6 +4103,9 @@ tr.forum_placeholder td{
 .userisonline .ow_mailbox_username {
     padding: 4px 0 0 4px;
 }
+#mailbox_new_message_user:hover, #mailbox_new_message_user:focus {
+    box-shadow: none;
+}
 .ow_mailbox_right .ow_mailbox_username {
     min-width: 200px;
 }
@@ -5182,14 +5187,15 @@ ul.ow_newsfeed {
 .ow_sign_in_wrap {
     width:702px;
 }
-.ow_sign_in_wrap  h2 {
+.ow_sign_in_wrap h2 {
     font-size: 28px;
     line-height: 36px;
     margin:0 8px 10px 8px;
     padding:0 40px;
     color: #000;
+    font-weight: bold
 }
-.ow_sign_in_wrap form{
+.ow_sign_in_wrap form {
     margin: 8px;
     padding: 40px 40px 22px 40px;
     background: #fff;
@@ -5239,27 +5245,24 @@ ul.ow_newsfeed {
     margin: 0;
     box-shadow: none;
     border: 0;
-    border-radius: none;
+    border-radius: 0;
     padding: 10px 40px 0;    
 }
 .floatbox_container .ow_sign_in_wrap h2 {
     display: none;
 }
 /* Page Sign In */
-body.base_sign_in > .ow_page_wrap {
+.base_sign_in > #ow_page_wrap {
     padding-top: 0;
 }
-body.base_sign_in .ow_footer {
+.base_sign_in #ow_footer {
     height: 20px;
     margin-top: -29px;
 }
-body.base_sign_in .ow_footer .ow_page > div {
+.base_sign_in #ow_footer .ow_page > div {
     padding-bottom: 0 !important;
 }
-body.ow.base_sign_in {
-    background-color: #2f3335;
-}
-.ow.base_sign_in .ow_sign_in_wrap {
+.base_sign_in .ow_sign_in_wrap {
     width: 1055px;
     position: relative;
     margin: 0 auto;
@@ -5267,10 +5270,10 @@ body.ow.base_sign_in {
     left: auto;
     top: auto;
 }
-.ow.base_sign_in .ow_sign_in_cont {
+.base_sign_in .ow_sign_in_cont {
     background: none;
 }
-.ow.base_sign_in .ow_sign_in_wrap h2 {
+.base_sign_in .ow_sign_in_wrap h2 {
     width: 100%;
     height: 50px;
     margin: 0;
@@ -5280,7 +5283,7 @@ body.ow.base_sign_in {
     left: 0;
     text-align: center;
     text-transform: uppercase;
-    color: #e9eff5;
+    color: var(--light-accent-color);
     font-size: 47px;
 }
 .ow.base_sign_in .ow_sign_in_wrap form {
@@ -5292,7 +5295,6 @@ body.ow.base_sign_in {
     width: 300px;
 }
 .ow.base_sign_in form .ow_sign_up {
-    color: #93999f;
     line-height: 18px;
     font-size: 17px;
     margin: 0 0 32px 0;
@@ -5316,20 +5318,12 @@ body.ow.base_sign_in {
 }
 .ow.base_sign_in .ow_user_name input,
 .ow.base_sign_in .ow_password input {
-    background: #93999f;
-    border: 1px solid #93999f;
-    color: #fff;
     font-size: 18px;
     padding: 15px;
     height: auto;
-    border-radius: 0;
-}
-.ow.base_sign_in .ow_user_name input.invitation,
-.ow.base_sign_in .ow_password input.invitation {
-    color: #e9eff5;
+    border-radius: 8px;
 }
 .ow.base_sign_in form .ow_form_options p.ow_remember_me {
-    color: #e9eff5;
     font-size: 16px;
     padding: 0;
     float: left;
@@ -5341,12 +5335,8 @@ body.ow.base_sign_in {
     font-size: 16px;
     float: right;
 }
-.ow.base_sign_in form .ow_form_options p.ow_forgot_pass a {
-    color: #e9eff5;
-}
 .ow.base_sign_in .ow_sign_in > .clearfix a {
     display: inline-block;
-    float: left;
     text-align: center;
     width: 48%;
     font-size: 18px;
@@ -5354,6 +5344,7 @@ body.ow.base_sign_in {
     line-height: 60px;
     background: #1f2124;
     color: #e9eff5;
+    border-radius: 8px;
 }
 .ow.base_sign_in .ow_sign_in > .clearfix a:hover {
     background: #454a4d;
@@ -5365,7 +5356,6 @@ body.ow.base_sign_in {
 .ow.base_sign_in form .ow_sign_in span.ow_button {
     background: none;
     border: 0;
-    border-radius: 0;
     padding: 0;
     float: right;
     width: 48%;
@@ -5376,12 +5366,13 @@ body.ow.base_sign_in {
 }
 .ow.base_sign_in form .ow_sign_in span.ow_button .ow_positive input {
     height: auto;
-    line-height: 58px;
+    line-height: 60px;
     width: 100%;
     padding: 0;
     background: none;
     background-color: #1f2124;
     color: #e9eff5;
+    border-radius: 8px;
 }
 .ow.base_sign_in form .ow_sign_in span.ow_button .ow_positive input:hover {
     background: #454a4d;    
@@ -5445,7 +5436,7 @@ body.ow.base_sign_in {
     margin: 0;
     text-align: center;
 }
-.ow.base_sign_in .ow_footer .ow_canvas {
+.ow.base_sign_in #ow_footer .ow_canvas {
     width: 100%;
 }
 @media (max-width: 1055px) {
@@ -5609,7 +5600,7 @@ h1.page_title{
     body, html {
         min-width: 767px;
     }
-    .ow_page_container, .ow_site_panel_wrap, .ow_footer {
+    .ow_page_container, .ow_site_panel_wrap, #ow_footer {
         width: 100%;
     }
     .ow_canvas {
@@ -5641,7 +5632,7 @@ h1.page_title{
     .ow_console_item a.ow_console_item_link {
         pointer-events: none;
     }
-    .ow_nav_btn:hover {
+    #ow_nav_btn:hover {
         background-position: 0 -115px;
         background-color: transparent;
     }
@@ -5728,11 +5719,11 @@ h1.page_title{
     }
 }
 @media (max-width: 767px) {
-    .ow_menu_wrap,
+    #ow_menu_wrap,
     .ow_site_panel .ow_logo {
         display: none;
     }
-    .ow_nav_btn {
+    #ow_nav_btn {
         display: block;
         opacity: 1;
     }
@@ -6148,7 +6139,6 @@ h1.page_title{
     }
     .ow_mini_ipc_picture {
         width: 62px;
-        margin-right: -6 2px;    
     }
     .ow_mini_ipc_info {
         margin-left: 66px;

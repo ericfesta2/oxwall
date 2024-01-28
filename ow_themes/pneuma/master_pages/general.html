@@ -1,15 +1,17 @@
-<div class="ow_page_wrap">
+<main id="ow_page_wrap">
 	<div class="ow_menu_fullpage">
-		<div class="ow_menu_fullpage_wrap">{$main_menu}</div>
+		<nav id="ow_menu_fullpage_wrap">{$main_menu}</nav>
 	</div>
-	<div class="ow_site_panel clearfix">
-		<a class="ow_logo ow_left" href="{$siteUrl}"></a>
-		<div class="ow_nav_btn"></div>
-		<div class="ow_console_right">
-			{component class='BASE_CMP_Console'}
+	<header id="ow_site_header" class="clearfix">
+		<div class="ow_site_panel">
+			<a class="ow_logo ow_left" href="{$siteUrl}"></a>
+			<div id="ow_nav_btn"></div>
+			<div class="ow_console_right">
+				{component class='BASE_CMP_Console'}
+			</div>
+			<menu id="ow_menu_wrap">{component class='BASE_CMP_MainMenu' responsive=true}</menu>
 		</div>
-		<div class="ow_menu_wrap">{component class='BASE_CMP_MainMenu' responsive=true}</div>
-	</div>
+	</header>
 	<div class="ow_page_padding">
 		<div class="ow_page_container">
 			<div class="ow_canvas">
@@ -24,8 +26,8 @@
 			</div>
 		</div>
 	</div>
-</div>
-<div class="ow_footer">
+</main>
+<footer id="ow_footer">
 	<div class="ow_canvas">
 		<div class="ow_page clearfix">
 			{$bottom_menu}
@@ -37,12 +39,12 @@
 			</div>
 		</div>
 	</div>
-</div>
+</footer>
 {decorator name='floatbox'}
 <script>
 	window.addEventListener('scroll', function() {
-		const menuWrapPos = $('.ow_menu_wrap').offset().top;
-		const pageWrapRef = document.querySelector('.ow_page_wrap');
+		const menuWrapPos = $('#ow_menu_wrap').offset().top;
+		const pageWrapRef = document.getElementById('ow_page_wrap');
 
 		if ($(this).scrollTop() > menuWrapPos) {
 			pageWrapRef.classList.add('ow_hidden_menu');
@@ -50,7 +52,7 @@
 			pageWrapRef.classList.remove('ow_hidden_menu');
 		}
 
-		const sitePanelRef = document.querySelector('.ow_site_panel');
+		const sitePanelRef = document.getElementById('ow_site_header');
 
 		if (window.scrollY >= 35) {
 			sitePanelRef.classList.add('scroller');
@@ -59,15 +61,11 @@
 		}
 	});
 
-	document.querySelector('.ow_nav_btn').addEventListener('click', function() {
-    	if (document.body.classList.contains('ow_menu_active')) {
-    		document.body.classList.remove('ow_menu_active');
-    	} else {
-    		document.body.classList.add('ow_menu_active');
-    	}
+	document.getElementById('ow_nav_btn').addEventListener('click', function() {
+		document.body.classList.toggle('ow_menu_active');
     });
 
-    document.querySelector('.ow_menu_fullpage_wrap a').addEventListener('click', function() {
+    document.querySelector('#ow_menu_fullpage_wrap a').addEventListener('click', function() {
     	document.body.classList.remove('ow_menu_active');
     });
 </script>

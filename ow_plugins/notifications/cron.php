@@ -36,13 +36,9 @@
  * @package ow_plugins.notifications
  * @since 1.0
  */
-class NOTIFICATIONS_Cron extends OW_Cron
+final class NOTIFICATIONS_Cron extends OW_Cron
 {
-    /**
-     *
-     * @var NOTIFICATIONS_BOL_Service
-     */
-    private $service;
+    private NOTIFICATIONS_BOL_Service $service;
 
     public function __construct()
     {
@@ -58,10 +54,9 @@ class NOTIFICATIONS_Cron extends OW_Cron
 
     /**
      *  Return run interval in minutes
-     *
-     * @return int
      */
-    public function getRunInterval()
+    #[\Override]
+    public function getRunInterval(): int
     {
         return 1;
     }
@@ -100,7 +95,7 @@ class NOTIFICATIONS_Cron extends OW_Cron
 
         OW::getEventManager()->trigger($listEvent);
 
-        $notifications = array();
+        $notifications = [];
         foreach ( $listEvent->getData() as $notification )
         {
             $itemEvent = new OW_Event('notifications.on_item_send', $notification, $notification['data']);

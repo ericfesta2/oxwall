@@ -4,7 +4,7 @@
 		.ow_page_wrap {
 			background: none;
 		}
-		.ow_footer {
+		#ow_footer {
 			background: none;
 			border: none;
 		    clear: both;
@@ -13,13 +13,13 @@
 		    padding: 1px 0;
 		    position: relative;
     	}
-		.ow_footer .ow_canvas {
+		#ow_footer .ow_canvas {
 		    margin: 0 auto;
 		    width: 996px;
 		    word-wrap: break-word;
 		    background: none;
 		}
-		.ow_footer .ow_page {
+		#ow_footer .ow_page {
 		    margin: 0 0 0 auto;
 		    padding: 0 18px;
 		    background: none;
@@ -42,7 +42,7 @@
 		{$content}
 	</div>
 </div>
-<div class="ow_footer">
+<footer id="ow_footer">
 	<div class="ow_canvas">
 		<div class="ow_page clearfix">
 			<div style="float:right;padding-bottom: 30px;">
@@ -50,11 +50,24 @@
 			</div>
 		</div>
 	</div>
-</div>
-<script type="text/javascript">
-	$('.ow_sign_up').after($('.ow_sign_in'));
-	$('<div class="clearfix"></div>').appendTo($('.ow_sign_in'));
-	$('.ow_sign_in > .clearfix').append($('.ow_form_options .ow_button'));
-	$('.ow_sign_in > .clearfix').append($('.ow_sign_up p:last-child a'));
-	$('.ow_sign_in > .clearfix').after($('.ow_connect_buttons .clearfix'));
+</footer>
+<script>
+	const signUp = document.querySelector('.ow_sign_up');
+	const signIn = document.querySelector('.ow_sign_in');
+	const formOptionsButton = document.querySelector('.ow_form_options .ow_button');
+	const signUpLastChildLink = document.querySelector('.ow_sign_up p:last-child a');
+	const connectButtonsClearfix = document.querySelector('.ow_connect_buttons .clearfix');
+
+	signUp.parentNode.insertBefore(signIn, signUp.nextSibling);
+
+	const clearfixDiv = document.createElement('div');
+	clearfixDiv.className = 'clearfix';
+	signIn.appendChild(clearfixDiv);
+
+	clearfixDiv.appendChild(formOptionsButton);
+	clearfixDiv.appendChild(signUpLastChildLink);
+
+	if (connectButtonsClearfix !== null) {
+		connectButtonsClearfix.parentNode.insertBefore(clearfixDiv, connectButtonsClearfix.nextSibling);
+	}
 </script>

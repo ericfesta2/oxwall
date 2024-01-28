@@ -35,21 +35,15 @@ class OW_MasterPage extends OW_Renderable
     /*
      * List of default master page templates.
      */
-    //const TEMPLATE_HTML_DOCUMENT = 'html_document';
-    const TEMPLATE_GENERAL = 'general';
-    const TEMPLATE_BLANK = 'blank';
-    const TEMPLATE_ADMIN = 'admin';
-    const TEMPLATE_SIGN_IN = 'sign_in';
-    const TEMPLATE_INDEX = 'index';
+    const string TEMPLATE_BLANK = 'blank';
+    const string TEMPLATE_ADMIN = 'admin';
+    private const string TEMPLATE_GENERAL = 'general';
 
     /**
      * @var array
      */
-    protected $menus;
+    protected array $menus;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -58,22 +52,16 @@ class OW_MasterPage extends OW_Renderable
 
     /**
      * Adds menu components to master page object.
-     * 
-     * @param string $name
-     * @param BASE_CMP_Menu $menu Adds
      */
-    public function addMenu( $name, BASE_CMP_Menu $menu )
+    public function addMenu( string $name, BASE_CMP_Menu $menu )
     {
         $this->menus[$name] = $menu;
     }
 
     /**
      * Returns master page menu components.
-     *
-     * @param string $name
-     * @return BASE_CMP_Menu
      */
-    public function getMenu( $name )
+    public function getMenu( string $name ): ?BASE_CMP_Menu
     {
         if ( isset($this->menus[$name]) )
         {
@@ -83,10 +71,7 @@ class OW_MasterPage extends OW_Renderable
         return null;
     }
 
-    /**
-     * @param string $name
-     */
-    public function deleteMenu( $name )
+    public function deleteMenu( string $name )
     {
         if ( isset($this->menus[$name]) )
         {
@@ -101,6 +86,7 @@ class OW_MasterPage extends OW_Renderable
      * @param Form $form
      * @throws LogicException
      */
+    #[\Override]
     public function addForm( Form $form )
     {
         throw new LogicException('Cant add form to master page object!');
@@ -113,6 +99,7 @@ class OW_MasterPage extends OW_Renderable
      * @param string $name
      * @throws LogicException
      */
+    #[\Override]
     public function getForm( $name )
     {
         throw new LogicException('Master page cant cantain forms!');
@@ -150,6 +137,7 @@ class OW_MasterPage extends OW_Renderable
         }
     }
 
+    #[\Override]
     public function onBeforeRender()
     {
         if ( $this->getTemplate() === null )

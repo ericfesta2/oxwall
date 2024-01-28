@@ -328,10 +328,10 @@ class NEWSFEED_BOL_Service
         $actionKey = empty($temp[1]) ? null : $temp[1];
         $activityKey = empty($temp[0]) ? null : $temp[0];
 
-        $out = array(
-            'action' => array( 'entityType' => null, 'entityId' => null, 'id' => null ),
-            'activity' => array( 'activityType' => null, 'activityId' => null, 'id' => null, 'userId' => $userId)
-        );
+        $out = [
+            'action' => ['entityType' => null, 'entityId' => null, 'id' => null],
+            'activity' => ['activityType' => null, 'activityId' => null, 'id' => null, 'userId' => $userId]
+        ];
 
         if ( is_numeric($actionKey) && strpos($actionKey, '.') === false )
         {
@@ -339,7 +339,7 @@ class NEWSFEED_BOL_Service
         }
         else
         {
-            $temp = explode('.', $actionKey);
+            $temp = explode('.', $actionKey ?? '');
 
             $out['action']['entityType'] = $temp[0];
             $out['action']['entityId'] = empty($temp[1]) ? null : $temp[1];
@@ -352,7 +352,7 @@ class NEWSFEED_BOL_Service
         }
         else
         {
-            $temp = explode('.', $activityKey);
+            $temp = explode('.', $activityKey ?? '');
             $out['activity']['activityType'] = empty($temp[0]) ? null : $temp[0];
             $out['activity']['activityId'] = empty($temp[1]) ? null : $temp[1];
         }
