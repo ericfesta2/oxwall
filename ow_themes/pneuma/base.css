@@ -90,15 +90,34 @@ iframe {
 /*========================================================
         [3] Base Elements       __base
   ========================================================*/
-:root {
-    --light-accent-color: #e4850b; /** OW_Control type:color, section:1. General Settings, key:accentColor, label: Accent Color **/
-    --light-accent-color-alt: #BD700B; /** OW_Control type:color, section:1. General Settings, key:accentColor, label: Alternate Accent Color **/
-    --light-accent-very-light: #F9DCB6;
-    --font-stack: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --page-max-width: 2000px;
-    --main-sect-color: #F0F0F0;
-    --light-tooltip-border-color: #E0E0E0;
-    --mini-utils-bg: #E5E5E5;
+@media (prefers-color-scheme: light) {
+    :root {
+        --main-background-color: #FFF;
+        --main-text-color: #292929;
+        --accent-color: #E4850B; /** OW_Control type:color, section:1. General Settings, key:accentColorLight, label: Accent Color (Light) **/
+        --accent-color-alt: #BD700B; /** OW_Control type:color, section:1. General Settings, key:altAccentColorLight, label: Alternate Accent Color (Light) **/
+        --accent-very-light: #F9DCB6;
+        --font-stack: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        --page-max-width: 2000px;
+        --main-sect-color: #F0F0F0;
+        --tooltip-border-color: #E0E0E0;
+        --mini-utils-bg: #E5E5E5;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --main-background-color: #000;
+        --main-text-color: #FFF;
+        --accent-color: #E4850B; /** OW_Control type:color, section:1. General Settings, key:accentColorDark, label: Accent Color (Dark) **/
+        --accent-color-alt: #BD700B; /** OW_Control type:color, section:1. General Settings, key:altAccentColorDark, label: Alternate Accent Color (Dark) **/
+        --accent-very-light: #F9DCB6;
+        --font-stack: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        --page-max-width: 2000px;
+        --main-sect-color: #F0F0F0;
+        --tooltip-border-color: #E0E0E0;
+        --mini-utils-bg: #E5E5E5;
+    }
 }
 
 * {
@@ -106,30 +125,30 @@ iframe {
 }
 
 ::selection {
-    background-color: var(--light-accent-color);
+    background-color: var(--accent-color);
     color: #000;
 }
 
 body {
-    background-color: #fff; /** OW_Control type:color, section:1. General Settings, key:bodyColor, label:1. Page background color **/
+    background-color: var(--main-background-color);
+    color: var(--main-text-color);
 }
 
 body, html {
     font-family: var(--font-stack);
-    color: #292929; /** OW_Control type:color, section:2. Colors, key:textColor, label:Text **/
     font-size: 18px;
     height: 100%;
     min-width: 1000px;
 }
 
 a {
-    color: var(--light-accent-color);
+    color: var(--accent-color);
     text-decoration: none;
     transition: color .3s, background-color .3s;
 }
 
 a:hover {
-    color: var(--light-accent-color-alt);
+    color: var(--accent-color-alt);
     text-decoration: underline;
 }
 
@@ -153,7 +172,7 @@ h1, h2, h3, h4, h5 {
 h1 {
     font-size: 2em;
     padding-left: 0;
-    color: var(--light-accent-color);
+    color: var(--accent-color);
     text-transform: uppercase;
     margin-left: 0;
     background-repeat: no-repeat;
@@ -229,7 +248,7 @@ div .ow_page h1 {
     background: none;
 }
 .ow_bg_color{
-    background-color: #fff;/** OW_Control type:color, section:1. General Settings, key:bodyColor, label:1. Page background color **/    
+    background-color: var(--main-background-color);
 }
 .ow_border {
     border-style: solid;
@@ -266,7 +285,6 @@ div .ow_page h1 {
 /* Footer */
 #ow_footer {
     padding:1px 0;
-    background: #fff; /** OW_Control type:color, section:1. General Settings, key:footerColor, label:4. Footer background color **/    
     height: 96px;
     position: relative;
     margin-top: -99px;
@@ -596,7 +614,7 @@ body.ow_menu_active {
     right: 0;
     width: 100%;
     height: 70px;
-    background: #fff;
+    background-color: var(--main-background-color);
     z-index: 99;
     transition: box-shadow .3s;
 }
@@ -685,7 +703,7 @@ body.ow_menu_active {
     transition: color .3s;
 }
 .ow_signin_label:hover {
-    color: var(--light-accent-color);
+    color: var(--accent-color);
 }
 .ow_signin_delimiter {
     border-right: 1px solid #eff2f5;
@@ -723,7 +741,7 @@ li.ow_console_lang_item {
     padding: 3px 8px;
 }
 li.ow_console_lang_item:hover {
-    color: var(--light-accent-color);
+    color: var(--accent-color);
 }
 .ow_console_lang_item span {
     display: inline-block;
@@ -731,7 +749,7 @@ li.ow_console_lang_item:hover {
     background-position: 0 2px;
 }
 div.ow_console_lang_item:hover > span {
-    color: var(--light-accent-color);
+    color: var(--accent-color);
 } 
 /* Console tooltip */
 .ow_console .ow_tooltip_top_right.ow_tooltip {
@@ -993,10 +1011,10 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     display: inline-block;
 }
 .ow_main_menu li.active a {
-    color: var(--light-accent-color);
+    color: var(--accent-color);
 }
 .ow_main_menu li a:hover {
-    color: var(--light-accent-color); 
+    color: var(--accent-color); 
 }
 .ow_responsive_menu {
     padding-right: 70px;
@@ -1106,7 +1124,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 }
 .ow_box_menu a.active,
 .ow_box_menu a:hover{
-    color:var(--light-accent-color); 
+    color:var(--accent-color); 
     text-decoration:none;
 }
 /* ---- End of Box Menu styles ---- */
@@ -1144,7 +1162,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     border-color: #ccd6de #ccd6de #fff #ccd6de;
 }
 .ow_content_menu li.active a {
-    color: var(--light-accent-color); 
+    color: var(--accent-color); 
     text-decoration: none;
 }
 .ow_content_menu li:not(.active) a:hover {
@@ -1215,7 +1233,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 }
 .ow_paging a.active,
 .ow_paging a:hover{
-    color: var(--light-accent-color);
+    color: var(--accent-color);
 }
 .ow_paging span {
     display: inline-block;
@@ -1242,7 +1260,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 .ow_tooltip .ow_tooltip_body {
     background:#fff;
     padding:4px 0;
-    border: 1px solid var(--light-tooltip-border-color);
+    border: 1px solid var(--tooltip-border-color);
     border-radius: 8px;
     box-shadow: 0 6px 12px rgba(0,0,0,.1);
 }
@@ -1349,7 +1367,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 }
 .ow_context_action:hover,
 .ow_context_action.active {
-    background-color: var(--light-accent-color);
+    background-color: var(--accent-color);
 }
 .ow_context_action:hover .ow_context_action_wrap {
     display: block;
@@ -1376,7 +1394,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 }
 .ow_context_action_list a:hover {
     text-decoration: none;
-    background: var(--light-accent-color);
+    background: var(--accent-color);
     color: #000;
 }
 .ow_context_action .ow_tooltip {
@@ -1429,7 +1447,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     font-weight: bold;
 }
 .ow_count_active {
-    background: none repeat scroll 0 0 var(--light-accent-color);
+    background: none repeat scroll 0 0 var(--accent-color);
 }
 /* ---- End of Counter  ---- */
 /* ---- Info tooltip styles ---- */
@@ -1613,10 +1631,10 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     border-radius: 8px;
 }
 .ow_box a {
-    color: var(--light-accent-color-alt);
+    color: var(--accent-color-alt);
 }
 .ow_box a:hover {
-    color: var(--light-accent-color);
+    color: var(--accent-color);
 }
 .ow_box_empty{
     position: relative;
@@ -1648,7 +1666,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     line-height: 21px;
 }
 .ow_box_toolbar span.ow_nowrap a:hover {
-    color: var(--light-accent-color);
+    color: var(--accent-color);
 }
 .ow_box_toolbar a:hover {
     text-decoration: none;
@@ -1765,7 +1783,7 @@ select:focus,
 .jhtmlarea:focus,
 .ow_photo_upload_description:focus,
 .ow_photo_preview_edit .CodeMirror:focus {
-    border-color: var(--light-accent-color);
+    border-color: var(--accent-color);
     box-shadow: inset 0 1px 2px rgba(0,0,0,.3);
 }
 
@@ -1827,7 +1845,7 @@ input[type=button] {
     background-repeat: no-repeat;
     background-image: url(images/ic_right_arrow.svg);
     padding: 1px 31px 0 0;
-    color: var(--light-accent-color);
+    color: var(--accent-color);
     font-weight: bold;
     cursor: pointer;
     height: 40px;
@@ -1944,7 +1962,7 @@ div .ow_green,
 span.ow_blitem.ow_green input[type=submit],
 span.ow_blitem.ow_green input[type=button],
 .ow_bl a.ow_green:hover {
-    color: var(--light-accent-color);
+    color: var(--accent-color);
 }
 div .ow_red,
 span.ow_blitem.ow_red input[type=submit],
@@ -1962,7 +1980,7 @@ div .ow_mild_green,
 span.ow_blitem.ow_mild_green input[type=submit],
 span.ow_blitem.ow_mild_green input[type=button],
 .ow_bl a.ow_mild_green:hover {
-    color: var(--light-accent-color-alt);
+    color: var(--accent-color-alt);
 }
 .ow_button.ow_red,
 .ow_button.ow_mild_red,
@@ -2034,7 +2052,7 @@ span.ow_lbutton {
 }
 
 .ow_lbutton:hover{
-    background-color: var(--light-accent-color);
+    background-color: var(--accent-color);
     color: #000;
     cursor: pointer;
     text-decoration: none;
@@ -2907,10 +2925,6 @@ div .ow_bg_controls .ow_green{
     border-left-width: 1px;
     border-top-left-radius: 0;
 }
-.ie8 .ow_table_1 tr.ow_tr_first th,
-.ie8 .ow_table_2 tr.ow_tr_first th {
-    border-right-width: 1px;
-}
 .ow_table_1 tr.ow_tr_delimiter td,
 .ow_table_2 tr.ow_tr_delimiter td  {
     border: 0;
@@ -3051,7 +3065,7 @@ table.ow_form td.ow_submit{
     border-radius: 8px; 
 }
 .ow_ipc_info a {
-    color: var(--light-accent-color-alt);
+    color: var(--accent-color-alt);
 }
 .ow_ipc_header{
     padding: 0;
@@ -3718,7 +3732,7 @@ div.ow_nomargin {
     background: #aaffaa;
 }
 .ow_outline {
-    color: var(--light-accent-color);
+    color: var(--accent-color);
     font-weight: 500;
 }
 .ow_lightweight {
@@ -3730,23 +3744,23 @@ div.ow_nomargin {
 .ow_remark {
     color: #828894; 
 }
-.ow_alt1,
+/* .ow_alt1,
 tr.ow_alt1 td,
 .ow_alt2,
 tr.ow_alt2 td,
 .ow_high1,
 .ow_high2 {
     background-color: #fff; 
-}
+} */
 
 .ow_anno {
-    background: var(--light-accent-very-light) url(images/ic_warning.svg) no-repeat scroll 15px 45%;
+    background: var(--accent-very-light) url(images/ic_warning.svg) no-repeat scroll 15px 45%;
     padding: 10px;
     border-radius: 8px;
     font-weight: 300;
 }
 .outline{
-    color: var(--light-accent-color);
+    color: var(--accent-color);
     font-weight: 500;
 }
 .ow_highbox_table .ow_highbox,
@@ -4006,7 +4020,7 @@ tr.forum_placeholder td{
 .ow_mailbox_convers_info:hover,
 .ow_mailbox_convers_info_selected,
 .ow_mailbox_convers_info_selected:hover {
-    box-shadow: inset 2px 0 0 0 var(--light-accent-color);
+    box-shadow: inset 2px 0 0 0 var(--accent-color);
 }
 .ow_mailbox_convers_info .ow_mailbox_convers_info_string a {
     font-size: 14px;
@@ -4070,7 +4084,7 @@ tr.forum_placeholder td{
     text-transform: uppercase;
 }
 .ow_mailbox_convers_count_new {
-    color: var(--light-accent-color);
+    color: var(--accent-color);
 }
 .ow_mailbox_username .ow_mailbox_username_text {
     font-weight: normal;
@@ -4156,11 +4170,11 @@ a.ow_btn_sound span {
 .ow_chat_dialog_wrap .ow_count_bg, 
 .ow_chat .ow_count_bg {
     border-radius: 8px;
-    background-color: var(--light-accent-color);
+    background-color: var(--accent-color);
 }
 .ow_chat_dialog_wrap .ow_count_active, 
 .ow_chat .ow_count_active {
-    background-color: var(--light-accent-color);
+    background-color: var(--accent-color);
 }
 .ow_chat_dialog_wrap .ow_count, 
 .ow_chat .ow_count {
@@ -4536,12 +4550,12 @@ span.ow_chat_item_text,
     font-weight: 300 !important;
     color: #5b646a;
     background-color: #F0F0F0;
-    border: 4px dashed var(--light-accent-color) !important;
+    border: 4px dashed var(--accent-color) !important;
     font-size: 18px;
     transition: background-color .3s;
 }
 .ow_photo_dragndrop:hover {
-    background-color: var(--light-accent-very-light);
+    background-color: var(--accent-very-light);
 }
 .ow_photo_upload_bottom .ow_photo_upload_submit {
     position: static;
@@ -4620,7 +4634,7 @@ div.floatbox_empty a.ow_ic_delete.close {
     right: 6px;
 }
 .ow_photo_submit_wrapper.ow_mild_green {
-    background-color: var(--light-accent-color);
+    background-color: var(--accent-color);
 }
 /*Photo list*/
 .ow_photo_list_wrap div.ow_photo_item {
@@ -5283,7 +5297,7 @@ ul.ow_newsfeed {
     left: 0;
     text-align: center;
     text-transform: uppercase;
-    color: var(--light-accent-color);
+    color: var(--accent-color);
     font-size: 47px;
 }
 .ow.base_sign_in .ow_sign_in_wrap form {
