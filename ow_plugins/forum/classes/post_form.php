@@ -80,11 +80,11 @@ class FORUM_CLASS_PostForm extends Form
             $textField = new MobileWysiwygTextarea('text');
         }
         else {
-            $textField = new WysiwygTextarea('text', array(
+            $textField = new WysiwygTextarea('text', '', [
                 BOL_TextFormatService::WS_BTN_IMAGE, 
                 BOL_TextFormatService::WS_BTN_VIDEO, 
                 BOL_TextFormatService::WS_BTN_HTML
-            ));
+            ]);
         }
 
         $textField->setRequired(true);

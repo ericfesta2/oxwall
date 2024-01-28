@@ -1414,7 +1414,6 @@ class PHOTO_CTRL_Photo extends OW_ActionController
         
         $photo->addDatetime = UTIL_DateTime::formatDate($photo->addDatetime);
         $photo->description = UTIL_HtmlTag::autoLink($photo->description);
-        $dim = !empty($photo->dimension) ? $photo->dimension : FALSE;
         $photo->url = $this->photoService->getPhotoUrlByPhotoInfo($photo->id, PHOTO_BOL_PhotoService::TYPE_MAIN, get_object_vars($photo));
         
         if ( $photo->hasFullsize )

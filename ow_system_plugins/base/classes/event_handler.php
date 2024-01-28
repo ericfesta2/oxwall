@@ -358,7 +358,15 @@ class BASE_CLASS_EventHandler
         {
             $newToken = UTIL_String::getRandomString(32);
             OW::getConfig()->saveConfig('base', 'admin_cookie', $newToken);
-            setcookie('adminToken', $newToken, time() + 3600 * 24 * 100, '/', '', false, true);
+            setcookie('adminToken', $newToken, [
+                'expires' => time() + 3600 * 24 * 100,
+                'path' => '/',
+                'domain' => '',
+                'secure' =>
+                    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] === '443',
+                'httponly' => true,
+                'samesite' => 'Strict'
+            ]);
         }
     }
 

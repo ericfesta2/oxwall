@@ -36,19 +36,18 @@
  * @package ow.plugin.photo.classes
  * @since 1.6.1
  */
-class PHOTO_CLASS_AlbumNameValidator extends OW_Validator
+final class PHOTO_CLASS_AlbumNameValidator extends OW_Validator
 {
-    private $checkDuplicate;
     private $userId;
-    private $albumName;
 
-    public function __construct( $checkDuplicate = TRUE, $userId = NULL, $albumName = NULL )
-    {
+    public function __construct(
+        private readonly bool $checkDuplicate = true,
+        ?int $userId = null,
+        private readonly ?string $albumName = null
+    ) {
         $this->errorMessage = OW::getLanguage()->text('photo', 'newsfeed_album_error_msg');
-        $this->checkDuplicate = $checkDuplicate;
-        $this->albumName = $albumName;
-        
-        if ( $userId !== NULL )
+
+        if ( $userId !== null )
         {
             $this->userId = (int)$userId;
         }
@@ -58,28 +57,33 @@ class PHOTO_CLASS_AlbumNameValidator extends OW_Validator
         }
     }
 
+    #[\Override]
     public function isValid( $albumName )
     {
+        if ($albumName === null) {
+            return false;
+        }
+
         if ( strcasecmp(trim($this->albumName), OW::getLanguage()->text('photo', 'newsfeed_album')) === 0 )
         {
-            return TRUE;
+            return true;
         }
         
         if ( strcasecmp(trim($albumName), OW::getLanguage()->text('photo', 'newsfeed_album')) === 0 )
         {
-            return FALSE;
+            return false;
         }
         elseif ( $this->checkDuplicate && strcasecmp($albumName, $this->albumName) !== 0 && PHOTO_BOL_PhotoAlbumService::getInstance()->findAlbumByName($albumName, $this->userId) !== NULL )
         {
             $this->setErrorMessage(OW::getLanguage()->text('photo', 'album_name_error'));
             
-            return FALSE;
+            return false;
         }
-        
-        return TRUE;
+
+        return true;
     }
 
-    public function getJsValidator()
+    public function getJsValidator(): string
     {
         return UTIL_JsGenerator::composeJsString('{
             validate : function( value )
@@ -94,10 +98,10 @@ class PHOTO_CLASS_AlbumNameValidator extends OW_Validator
                     throw {$errorMsg};
                 }
             }
-        }', array(
+        }', [
             'albumName' => $this->albumName,
             'newsfeedAlbum' => OW::getLanguage()->text('photo', 'newsfeed_album'),
             'errorMsg' => $this->errorMessage
-        ));
+        ]);
     }
 }

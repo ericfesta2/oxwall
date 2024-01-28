@@ -38,9 +38,12 @@
  */
 class PHOTO_CTRL_AjaxUpload extends OW_ActionController
 {
-    CONST STATUS_SUCCESS = 'success';
-    const STATUS_ERROR = 'error';
-    
+    private const string STATUS_SUCCESS = 'success';
+    private const string STATUS_ERROR = 'error';
+
+    private readonly PHOTO_BOL_PhotoService $photoService;
+    private readonly PHOTO_BOL_PhotoAlbumService $photoAlbumService;
+
     public function __construct()
     {
         parent::__construct();

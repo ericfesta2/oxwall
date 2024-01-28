@@ -3319,10 +3319,14 @@ class WysiwygTextarea extends InvitationFormElement
     const int SIZE_M = 170;
     const int SIZE_L = 300;
 
-    /**
-     * @var bool
-     */
-    private $init;
+    private const array DEFAULT_FORM_BUTTONS = [
+        BOL_TextFormatService::WS_BTN_BOLD,
+        BOL_TextFormatService::WS_BTN_ITALIC,
+        BOL_TextFormatService::WS_BTN_UNDERLINE,
+        BOL_TextFormatService::WS_BTN_LINK,
+        BOL_TextFormatService::WS_BTN_ORDERED_LIST,
+        BOL_TextFormatService::WS_BTN_UNORDERED_LIST,
+    ];
 
     /**
      * @var array
@@ -3356,37 +3360,19 @@ class WysiwygTextarea extends InvitationFormElement
      * @param string $name
      * @param string $id
      */
-    public function __construct( $name, $id = '', array $buttons = null, $init = true )
+    public function __construct(
+        string $name, string $id = '', ?array $buttons = null, private readonly bool $init = true )
     {
         parent::__construct($name, $id);
 
         $this->service = BOL_TextFormatService::getInstance();
-        $this->init = (bool) $init;
 
-        if ( !empty($buttons) )
-        {
-            $buttons = array_unique(array_merge($buttons, array(
-                BOL_TextFormatService::WS_BTN_BOLD,
-                BOL_TextFormatService::WS_BTN_ITALIC,
-                BOL_TextFormatService::WS_BTN_UNDERLINE,
-                BOL_TextFormatService::WS_BTN_LINK,
-                BOL_TextFormatService::WS_BTN_ORDERED_LIST,
-                BOL_TextFormatService::WS_BTN_UNORDERED_LIST,
-            )));
-        }
-        else
-        {
-            $buttons = array(
-                BOL_TextFormatService::WS_BTN_BOLD,
-                BOL_TextFormatService::WS_BTN_ITALIC,
-                BOL_TextFormatService::WS_BTN_UNDERLINE,
-                BOL_TextFormatService::WS_BTN_LINK,
-                BOL_TextFormatService::WS_BTN_ORDERED_LIST,
-                BOL_TextFormatService::WS_BTN_UNORDERED_LIST,
-            );
-        }
+        $this->buttons = $this->processButtons(
+            !empty($buttons) ?
+                array_unique(array_merge($buttons, self::DEFAULT_FORM_BUTTONS)) :
+                self::DEFAULT_FORM_BUTTONS
+        );
 
-        $this->buttons = $this->processButtons($buttons);
         $this->size = self::SIZE_M;
 
         if ( OW::getRequest()->isMobileUserAgent() )
@@ -3395,7 +3381,7 @@ class WysiwygTextarea extends InvitationFormElement
         }
 
         $stringValidator = new StringValidator(0, 50000);
-        $stringValidator->setErrorMessage(OW::getLanguage()->text('base', 'text_is_too_long', array('max_symbols_count' => 50000)));
+        $stringValidator->setErrorMessage(OW::getLanguage()->text('base', 'text_is_too_long', ['max_symbols_count' => 50000]));
 
         $this->addValidator($stringValidator);
     }

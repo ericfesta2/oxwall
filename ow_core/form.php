@@ -31,8 +31,8 @@
  */
 class Form
 {
-    private const string METHOD_POST = 'post';
-    private const string METHOD_GET = 'get';
+    protected const string METHOD_POST = 'post';
+    protected const string METHOD_GET = 'get';
     private const string AJAX_DATA_TYPE_JSON = 'json';
 
     const string ENCTYPE_APP_FORM_URLENCODED = 'application/x-www-form-urlencoded';

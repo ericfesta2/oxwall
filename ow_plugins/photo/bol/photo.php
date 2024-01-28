@@ -36,7 +36,7 @@
  * @package ow.plugin.photo.bol
  * @since 1.0
  */
-class PHOTO_BOL_Photo extends OW_Entity
+final class PHOTO_BOL_Photo extends OW_Entity
 {
     /**
      * @var integer
@@ -73,6 +73,8 @@ class PHOTO_BOL_Photo extends OW_Entity
     public $uploadKey;
     
     public $dimension;
+
+    public string $url;
     
     public function getDimension()
     {

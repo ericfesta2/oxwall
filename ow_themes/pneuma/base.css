@@ -90,19 +90,18 @@ iframe {
 /*========================================================
         [3] Base Elements       __base
   ========================================================*/
-@media (prefers-color-scheme: light) {
-    :root {
-        --main-background-color: #FFF;
-        --main-text-color: #292929;
-        --accent-color: #E4850B; /** OW_Control type:color, section:1. General Settings, key:accentColorLight, label: Accent Color (Light) **/
-        --accent-color-alt: #BD700B; /** OW_Control type:color, section:1. General Settings, key:altAccentColorLight, label: Alternate Accent Color (Light) **/
-        --accent-very-light: #F9DCB6;
-        --font-stack: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        --page-max-width: 2000px;
-        --main-sect-color: #F0F0F0;
-        --tooltip-border-color: #E0E0E0;
-        --mini-utils-bg: #E5E5E5;
-    }
+:root {
+    --main-background-color: #FFF;
+    --main-text-color: #292929;
+    --accent-color: #E4850B; /** OW_Control type:color, section:1. General Settings, key:accentColorLight, label: Accent Color (Light) **/
+    --accent-color-alt: #BD700B; /** OW_Control type:color, section:1. General Settings, key:altAccentColorLight, label: Alternate Accent Color (Light) **/
+    --accent-very-light: #F9DCB6;
+    --border-color-default: #D9D9D9;
+    --font-stack: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --page-max-width: 2000px;
+    --main-sect-color: #F0F0F0;
+    --tooltip-border-color: #E0E0E0;
+    --mini-utils-bg: #E5E5E5;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -112,6 +111,7 @@ iframe {
         --accent-color: #E4850B; /** OW_Control type:color, section:1. General Settings, key:accentColorDark, label: Accent Color (Dark) **/
         --accent-color-alt: #BD700B; /** OW_Control type:color, section:1. General Settings, key:altAccentColorDark, label: Alternate Accent Color (Dark) **/
         --accent-very-light: #F9DCB6;
+        --border-color-default: #D9D9D9;
         --font-stack: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         --page-max-width: 2000px;
         --main-sect-color: #F0F0F0;
@@ -252,7 +252,7 @@ div .ow_page h1 {
 }
 .ow_border {
     border-style: solid;
-    border-color: #eff2f5;
+    border-color: var(--border-color-default);
 }
 #ow_page_wrap {
     min-height: 100%;
@@ -319,7 +319,7 @@ div .ow_page h1 {
     width: 23%;
     overflow: hidden;
 }
-/* Avatar list (Groups, Googgle popup)*/
+/* Avatar list (Groups, Google popup)*/
 .ow_item_set2 { 
     width: 49%; 
 }
@@ -366,7 +366,7 @@ a.ow_logo:hover {
 }
 .ow_dnd_schem_item {
     background:#fff url(images/ic_file.svg) no-repeat 10px 50%;
-    border:1px solid #D9D9D9;
+    border:1px solid var(--border-color-default);
     cursor:move;
     height:30px;
     margin:2px 4px 2px 0;
@@ -1067,7 +1067,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     right: -1px;
     padding: 25px 0 10px;
     background-color: #fff;
-    border: 1px solid #D9D9D9;
+    border: 1px solid var(--border-color-default);
     border-radius: 0 0 8px 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,.1);
     display: none;
@@ -1264,6 +1264,9 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     border-radius: 8px;
     box-shadow: 0 6px 12px rgba(0,0,0,.1);
 }
+.ow_forum_search_context_menu {
+    top: 8px !important;
+}
 .ow_forum_search_context_menu .ow_tooltip .ow_tooltip_body {
     padding: 4px 0;
 }
@@ -1272,10 +1275,19 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 }
 .forum_search_wrap {
     background-image: none;
+    line-height: normal !important;
+    border-radius: 500px !important;
 }
 .forum_search_wrap input {
-    box-shadow: none;
+    box-shadow: none !important;
     line-height: 19px;
+    padding: 0 !important;
+}
+.forum_search_wrap .ow_context_action {
+    border-radius: 500px;
+}
+.forum_search_input {
+    padding: 6px 8px !important;
 }
 /* ---- Top Right Tooltip  ---- */
 .ow_tooltip_top_right.ow_tooltip {
@@ -1753,10 +1765,12 @@ input[type=password],
 textarea,
 select,
 .jhtmlarea,
+.ow_searchbar,
 .ow_photo_upload_description,
-.ow_photo_preview_edit .CodeMirror {
+.ow_photo_preview_edit .CodeMirror,
+.forum_search_wrap {
     background-color: #FFF;
-    border: 1px solid #D9D9D9;
+    border: 1px solid var(--border-color-default);
     color: #292929;
     border-radius: 4px;
     padding: 6px 8px;
@@ -1770,8 +1784,10 @@ input[type=password]:hover,
 textarea:hover,
 select:hover,
 .jhtmlarea:hover,
+.ow_searchbar:hover,
 .ow_photo_upload_description:hover,
-.ow_photo_preview_edit .CodeMirror:hover {
+.ow_photo_preview_edit .CodeMirror:hover,
+.forum_search_wrap:hover {
     border-color: #BABABA;
     box-shadow: inset 0 1px 2px rgba(0,0,0,.162);
 }
@@ -1780,9 +1796,12 @@ input[type=text]:focus,
 input[type=password]:focus,
 textarea:focus,
 select:focus,
-.jhtmlarea:focus,
+.jhtmlarea:focus-within,
+.jhtmlarea:active,
+.ow_searchbar:focus-within,
 .ow_photo_upload_description:focus,
-.ow_photo_preview_edit .CodeMirror:focus {
+.ow_photo_preview_edit .CodeMirror:focus,
+.forum_search_wrap:focus-within {
     border-color: var(--accent-color);
     box-shadow: inset 0 1px 2px rgba(0,0,0,.3);
 }
@@ -2017,7 +2036,7 @@ body.htmlarea_styles p{
 div.tagsinput { 
     background-color: #fff;
     border-radius: 4px;
-    border-color: #D9D9D9;
+    border-color: var(--border-color-default);
     font-family: var(--font-stack);
     margin: 0;
     font-size: 16px;
@@ -2688,10 +2707,10 @@ div .ow_bg_controls .ow_green{
     font-size: 14px;
     padding: 5px 7px;
     text-decoration: none;
+    border-radius: 4px;
 }
 .ow_bl_narrow li a:hover{
-    background-color: #cad4dd;
-    color: #5b646a;
+    background-color: var(--accent-very-light);
 }
 /* ---- End of Button List narrow styles ---- */
 /* ---- Suggest field styles ---- */
@@ -4151,7 +4170,7 @@ tr.forum_placeholder td{
     border-bottom: 0;
 }
 .ow_chat_in_block {
-    border-left: 1px solid #D9D9D9;
+    border-left: 1px solid var(--border-color-default);
 }
 span.ow_btn_sort_users span {
     background-image: url(images/chat_btn_sort.png);
@@ -4236,11 +4255,11 @@ span.ow_btn_sort_users:hover span {
     border-width: 1px 0 0 1px;
 }
 .ow_chat_block.ow_active .ow_bot_panel {
-    border-left: 1px solid #D9D9D9;
+    border-left: 1px solid var(--border-color-default);
 }
 .ow_chat_block .ow_top_panel {
     border-style: solid;
-    border-color: #D9D9D9;
+    border-color: var(--border-color-default);
     border-radius: 8px 8px 0 0;
 }
 span.ow_chat_item_author, 
@@ -4262,7 +4281,7 @@ span.ow_chat_item_text,
     background-color: #fff;
 }
 .ow_mailchat_new_message.ow_chat_dialog {
-    border: 1px solid #D9D9D9;
+    border: 1px solid var(--border-color-default);
     border-radius: 8px 8px 0 0;
     box-shadow: 0 0 1px 2px rgba(0,0,0,.1);
 }
@@ -4561,7 +4580,8 @@ span.ow_chat_item_text,
     position: static;
 }
 .ow_photo_upload_wrap .ow_photo_preview_block_wrap .ow_photo_preview_edit {
-    border: 1px solid #eff2f5;
+    border: 1px solid var(--border-color-default);
+    border-radius: 4px;
 }
 .ow_photo_preview_image {
     background-color: #fafafa;
@@ -4712,6 +4732,9 @@ div.floatbox_empty a.ow_ic_delete.close {
     background-color: rgba(144,144,144, 0.3);
     background-image: url(images/context_action_arrow.svg);
 }
+.ow_photoview_stage_wrap {
+    border-radius: 8px;
+}
 .ow_photoview_stage_wrap .ow_photo_context_action .ow_context_action,
 .ow_photoview_stage_wrap .ow_photo_context_action .ow_context_action:hover {
     background-image: url(images/context_action_arrow.svg);
@@ -4805,9 +4828,12 @@ div.floatbox_empty a.ow_ic_delete.close {
     box-shadow: none;
     border-radius: 0;
 }
+#search-photo {
+    box-shadow: none;
+}
 /*Searchbar*/
 .ow_searchbar {
-    border:1px solid #D9D9D9;
+    border:1px solid var(--border-color-default);
     padding: 2px 4px 2px 6px;
     border-radius: 15px;
     background: #fff;
@@ -4890,7 +4916,9 @@ input.ow_dropdown_btn {
     width: 100%;
 }
 .ow_dropdown_list {
-    border: 1px solid #eff2f5;
+    border: 1px solid var(--border-color-default);
+    border-radius: 4px;
+    box-shadow: 0 3px 4px rgba(0,0,0,.1);
     position: absolute;
     top: -1px;
     left: 0;
@@ -4903,13 +4931,11 @@ input.ow_dropdown_btn {
     box-sizing: border-box;
     padding: 4px;
     background-color: #fff;
-    color: #4c4c4c;
     cursor: pointer;
     position: relative;
 }
 .ow_dropdown_list li:hover {
-    background-color: #cad4dd;
-    color: #fff;
+    background-color: var(--accent-very-light);
 }
 .ow_add_item {
     position: absolute;

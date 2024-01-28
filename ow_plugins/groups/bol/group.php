@@ -37,11 +37,11 @@
  * @since 1.0
  */
 
-class GROUPS_BOL_Group extends OW_Entity
+final class GROUPS_BOL_Group extends OW_Entity
 {
-    const STATUS_ACTIVE = "active";
-    const STATUS_APPROVAL = "approval";
-    const STATUS_SUSPENDED = "suspended";
+    const string STATUS_ACTIVE = 'active';
+    const string STATUS_APPROVAL = 'approval';
+    const string STATUS_SUSPENDED = 'suspended';
     
     /**
      * @var string

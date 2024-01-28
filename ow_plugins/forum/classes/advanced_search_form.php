@@ -33,7 +33,7 @@
  * @package ow.ow_plugins.forum
  * @since 1.7.2
  */
-class FORUM_CLASS_AdvancedSearchForm extends Form
+final class FORUM_CLASS_AdvancedSearchForm extends Form
 {
     /**
      * Class constructor

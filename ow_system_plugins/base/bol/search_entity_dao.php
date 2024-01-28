@@ -405,13 +405,9 @@ class BOL_SearchEntityDao extends OW_BaseDao
             SELECT
                 COUNT(*) as rowsCount
             FROM (
-                SELECT 
-                    DISTINCT ' .  
-                    self::ENTITY_TYPE . ', ' . 
-                    self::ENTITY_ID . '
-                FROM 
-                    (' . $subQuery . ') result
-            )as rows';
+                SELECT DISTINCT ' . self::ENTITY_TYPE . ', ' . self::ENTITY_ID . '
+                FROM (' . $subQuery . ') as result
+            ) as `rows`';
 
         $result = $this->dbo->queryForRow($query, $queryParams);
 
