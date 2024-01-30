@@ -51,15 +51,21 @@ $errorData = unserialize($session->get('errorData'), ['allowed_classes' => false
             <h2 style="margin:0">Internal Server Error.</h2>
         </div>
         <br />
-        <div style="font-size: 13px; margin-bottom: 4px;">
+        <div style="margin-bottom: 4px">
             If you are the site admin, <a href="#" id="show_err_details_link">click here for details (+)</a>
         </div>
-        <div style="font-size: 13px; display: none;" id="hiddenNode">
+        <div style="display: none" id="hiddenNode">
             <div style="margin-top: 30px;">
-                <b style="line-height: 24px;">Something went wrong</b>!<br /> 
-                To get the error details follow these steps:<br />
-                - Open <i>ow_includes/config.php</i> file and set <b>DEBUG_MODE</b> to <b>true</b></br>
-                    - Reproduce your last action.
+                <b style="line-height: 24px">Something went wrong</b>!<br /> 
+                To get the error details follow these steps:
+                <ol>
+                    <li>
+                        Open <i>ow_includes/config.php</i> file and set
+                        <span style="font-weight:bold">DEBUG_MODE</span> to
+                        <span style="font-weight:bold">true</span>
+                    </li>
+                    <li>Reproduce your last action.</li>
+                </ol>
             </div>
             <?php if (!empty($errorData)): ?>
                 <div style="margin-top: 30px;">

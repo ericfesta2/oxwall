@@ -4703,9 +4703,6 @@ div.floatbox_empty a.ow_ic_delete.close {
     top: 0;
     right: 0;
 }
-.ow_photo_context_action .ow_tooltip .ow_tooltip_body {
-    border-radius: 0;
-}
 .ow_photo_context_action .ow_context_action_block .ow_context_action,
 .ow_photo_context_action .ow_context_action {
     border: 0;
@@ -4797,15 +4794,14 @@ div.floatbox_empty a.ow_ic_delete.close {
 }
 /* Pint Mode */
 .ow_photo_pint_mode .ow_photo_item_wrap .ow_photo_item_info {
-    background-color: #fff;
+    background-color: var(--main-sect-color);
     border: 1px solid #cad4dd;
-    border-radius: 0;
 }
 .ow_photo_pint_mode .ow_photo_item_info_user,
 .ow_photo_pint_mode .ow_photo_item_info_album,
 .ow_photo_pint_mode .ow_photo_item_info_description,
 .ow_photo_pint_mode .ow_photo_item_info .ow_rates_wrap {
-    color: #5b646a;
+    color: var(--main-text-color-alt);
 }
 .ow_photo_list.ow_photo_edit_mode .ow_photo_item .ow_photo_chekbox_area {
     background-color: rgba(255,255,255,0.4);
