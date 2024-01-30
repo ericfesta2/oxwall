@@ -93,6 +93,7 @@ iframe {
 :root {
     --main-background-color: #FFF;
     --main-text-color: #292929;
+    --main-text-color-alt: #5B646A;
     --accent-color: #E4850B; /** OW_Control type:color, section:1. General Settings, key:accentColorLight, label: Accent Color (Light) **/
     --accent-color-alt: #BD700B; /** OW_Control type:color, section:1. General Settings, key:altAccentColorLight, label: Alternate Accent Color (Light) **/
     --accent-very-light: #F9DCB6;
@@ -102,21 +103,28 @@ iframe {
     --main-sect-color: #F0F0F0;
     --tooltip-border-color: #E0E0E0;
     --mini-utils-bg: #E5E5E5;
+    --mini-utils-bg-alt: #D5D5D5;
+    --floatbox-bg: #FFF;
+    --button-text-color: #666;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --main-background-color: #000;
         --main-text-color: #FFF;
+        --main-text-color-alt: #E8E8E8;
         --accent-color: #E4850B; /** OW_Control type:color, section:1. General Settings, key:accentColorDark, label: Accent Color (Dark) **/
         --accent-color-alt: #BD700B; /** OW_Control type:color, section:1. General Settings, key:altAccentColorDark, label: Alternate Accent Color (Dark) **/
         --accent-very-light: #F9DCB6;
         --border-color-default: #D9D9D9;
         --font-stack: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         --page-max-width: 2000px;
-        --main-sect-color: #F0F0F0;
+        --main-sect-color: #404040;
         --tooltip-border-color: #E0E0E0;
-        --mini-utils-bg: #E5E5E5;
+        --mini-utils-bg: #4B4B4B;
+        --mini-utils-bg-alt: #595959;
+        --floatbox-bg: #404040;
+        --button-text-color: #D9D9D9;
     }
 }
 
@@ -164,10 +172,8 @@ p {
     margin-bottom: 8px;
 }
 h1, h2, h3, h4, h5 {
-    color: #000; 
     margin: 0;
     padding: 0;
-    font-weight: normal;
 }
 h1 {
     font-size: 2em;
@@ -203,17 +209,14 @@ th, td {
     vertical-align: top;
 }
 th {
+    background-color: var(--main-sect-color);
+    font-weight: 600;
     border-bottom-width: 1px;
     border-bottom-style: solid;
     padding: 10px;
     vertical-align: middle;
-    font-weight: normal;
-    font-size: 17px;
 }
-th {
-    background-color: #fff;
-    font-weight: 600;
-}
+
 hr {
     background-color: #dddfeb;
     border: 0;
@@ -698,7 +701,7 @@ body.ow_menu_active {
     display: inline-block;
     margin: 4px 0;
     vertical-align: top;
-    color: #5b646a;
+    color: var(--main-text-color-alt);
     font-size: 15px;
     transition: color .3s;
 }
@@ -995,7 +998,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     display: inline-block;
 }
 .ow_main_menu li a {
-    color: #5b646a; /** OW_Control type:color, key:menuColor, section:2. Colors, label:4. Menu text color **/
+    color: var(--main-text-color-alt); /** OW_Control type:color, key:menuColor, section:2. Colors, label:4. Menu text color **/
     display: inline-block;
     font-size: 15px;
     padding: 0 1vw;
@@ -1108,9 +1111,9 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     line-height: 16px;
     height: 16px;
     padding: 0 6px 0 7px;
-    border-right: 1px #4c4c4c solid;
+    border-right: 1px solid var(--mini-utils-bg);
     outline: 0;
-    color: #4c4c4c;
+    color: var(--main-text-color-alt);
     text-transform: uppercase;
 }
 .ow_box_menu a:first-child {
@@ -1149,7 +1152,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 .ow_content_menu li a {
     display: block;
     font-size: 14px;
-    color: #707070;
+    color: var(--main-text-color-alt);
 }
 .ow_content_menu span{
     background-image: url(images/ic_file.svg);
@@ -1159,7 +1162,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     display: block;
 }
 .ow_content_menu li.active {
-    border-color: #ccd6de #ccd6de #fff #ccd6de;
+    border-color: #ccd6de #ccd6de var(--main-background-color) #ccd6de;
 }
 .ow_content_menu li.active a {
     color: var(--accent-color); 
@@ -1258,11 +1261,15 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     height: 10px;
 }
 .ow_tooltip .ow_tooltip_body {
-    background:#fff;
-    padding:4px 0;
+    background-color: var(--main-sect-color);
+    padding: 4px 0;
     border: 1px solid var(--tooltip-border-color);
     border-radius: 8px;
     box-shadow: 0 6px 12px rgba(0,0,0,.1);
+}
+.forum_search_tag_input[style*="visibility: visible"] {
+    padding: 6px 8px !important;
+    width: 128px !important;
 }
 .ow_forum_search_context_menu {
     top: 8px !important;
@@ -1359,7 +1366,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     display: inline-block;
     padding: 0 5px 0 0;
     text-decoration: none;
-    color: #292929;
+    color: var(--main-text-color);
     text-transform: uppercase;
 }
 .ow_context_action:hover .ow_context_action_value, .ow_context_action .ow_context_action_value:hover {
@@ -1471,8 +1478,8 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 .ow_tip_box {
     position: relative;
     padding: 2px 9px 4px;
-    background-color:#fff;
-    color: #828894;
+    background-color:var(--main-sect-color);
+    color: var(--main-text-color-alt);
     border: 1px solid #ccd6de;
     border-radius: 13px;
     font-weight: 300;
@@ -1632,8 +1639,6 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 }
 .ow_box {
     background-color: var(--main-sect-color);
-    border: 1px solid #eff2f5;
-    border-top: none;
     margin-bottom: 8px;
     padding: 16px;
     position: relative;
@@ -1725,6 +1730,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 .floatbox_container .ow_bg_color {
+    background-color: var(--floatbox-bg);
     border-radius: 8px;
 }
 .floatbox_header {
@@ -1968,7 +1974,7 @@ form input[type=text].hasDatepicker{
 /* ---- Positive and Negative buttons ---- */
 div .ow_positive input[type=submit],
 div .ow_positive input[type=button]{
-    color: #666;
+    color: var(--button-text-color);
 }
 .ow_negative input[type=submit],
 .ow_negative input[type=button]{
@@ -2548,7 +2554,7 @@ span.ow_lbutton {
 }
 .ow_comments_msg {
     margin-top: 4px;
-    color: #5b646a;
+    color: var(--main-text-color-alt);
 }
 .item_loaded {
     margin: 0 3px 8px 57px;
@@ -2622,7 +2628,7 @@ textarea.ow_newsfeed_status_input.invitation {
     list-style: none;
     margin-left: 4px;
 }
-.ow_bl a{
+.ow_bl a {
     display: block;
     padding: 4px 6px;
     line-height: 22px;
@@ -2631,10 +2637,10 @@ textarea.ow_newsfeed_status_input.invitation {
     text-transform: uppercase;
     background-color: var(--mini-utils-bg);
     border-radius: 4px;
-    color: #292929;
+    color: var(--main-text-color);
 }
 .ow_bl a:hover {
-    background-color: #D5D5D5;
+    background-color: var(--mini-utils-bg-alt);
 }
 .ow_dnd_widget .ow_box_empty .ow_bl.ow_box_toolbar li {
     margin-bottom: 8px;
@@ -3531,7 +3537,6 @@ span.ow_icon{
 /* ---- User Avatar Console styles ---- */
 .ow_avatar_console{
     position: relative;
-    background: #fff;
     padding: 14px 4px 0;
 }
 .ow_avatar_console #avatar_console_image {
@@ -3763,17 +3768,10 @@ div.ow_nomargin {
 .ow_remark {
     color: #828894; 
 }
-/* .ow_alt1,
-tr.ow_alt1 td,
-.ow_alt2,
-tr.ow_alt2 td,
-.ow_high1,
-.ow_high2 {
-    background-color: #fff; 
-} */
 
 .ow_anno {
     background: var(--accent-very-light) url(images/ic_warning.svg) no-repeat scroll 15px 45%;
+    color: #292929;
     padding: 10px;
     border-radius: 8px;
     font-weight: 300;
@@ -5238,12 +5236,11 @@ ul.ow_newsfeed {
 .ow_sign_in_wrap form {
     margin: 8px;
     padding: 40px 40px 22px 40px;
-    background: #fff;
     box-shadow:0 2px 6px rgba(0, 0, 0, 0.2);
     border:1px solid #e7e7e7;
 }
 .ow_sign_in_wrap form .ow_sign_in{float:left; width:312px;}
-.ow_sign_in_wrap form .ow_sign_up {margin:0px 0 0 342px; color: #333; padding-top: 7px;}
+.ow_sign_in_wrap form .ow_sign_up {margin:0px 0 0 342px; padding-top: 7px;}
 .ow_sign_in_wrap form .ow_sign_up hr{margin:5px 0 15px;}
 
 .ow_sign_in_wrap form .ow_box_cap{
