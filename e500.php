@@ -40,63 +40,63 @@ $errorData = unserialize($session->get('errorData'), ['allowed_classes' => false
 
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Something Went Wrong</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="robots" content="noindex,nofollow" />
-  </head>
-  <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 18px">
-    <div style="display: inline-block; padding-right: 16px; border-bottom: 1px solid #666; padding-bottom: 6px; margin-bottom: 8px;">
-        <h1 style="margin:0">Error 500</h1>
-        <h2 style="margin:0">Internal Server Error.</h2>
-    </div>
-    <br />
-    <div style="font-size: 13px; margin-bottom: 4px;">
-        If you are the site admin, <a href="#" id="show_err_details_link">click here for details (+)</a>
-    </div>
-    <div style="font-size: 13px; display: none;" id="hiddenNode">
-        <div style="margin-top: 30px;">
-            <b style="line-height: 24px;">Something went wrong</b>!</br> 
-            To get the error details follow these steps:</br>
-            - Open <i>ow_includes/config.php</i> file and set <b>DEBUG_MODE</b> to <b>true</b></br>
-                - Reproduce your last action.
+    <head>
+        <title>Something Went Wrong</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="robots" content="noindex,nofollow" />
+    </head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 18px">
+        <div style="display: inline-block; padding-right: 16px; border-bottom: 1px solid #666; padding-bottom: 6px; margin-bottom: 8px;">
+            <h1 style="margin:0">Error 500</h1>
+            <h2 style="margin:0">Internal Server Error.</h2>
         </div>
-        <?php if (!empty($errorData)): ?>
+        <br />
+        <div style="font-size: 13px; margin-bottom: 4px;">
+            If you are the site admin, <a href="#" id="show_err_details_link">click here for details (+)</a>
+        </div>
+        <div style="font-size: 13px; display: none;" id="hiddenNode">
             <div style="margin-top: 30px;">
-                <b>Error details</b>:
-                <table style="font-size: 13px;">
-                    <tbody>
-                        <tr>
-                            <td class="lbl">Type:</td>
-                            <td class="cnt"><?php echo $errorData['type'] ?></td>
-                        </tr>
-                        <tr>
-                            <td class="lbl">Message:</td>
-                            <td class="cnt"><?php echo $errorData['message'] ?></td>
-                        </tr>
-                        <tr>
-                            <td class="lbl">File:</td>
-                            <td class="cnt"><?php echo $errorData['file'] ?></td>
-                        </tr>
-                        <tr>
-                            <td class="lbl">Line:</td>
-                            <td class="cnt"><?php echo $errorData['line'] ?></td>
-                        </tr>
-                        <?php if (!empty($errorData['trace'])): ?>
-                            <tr>
-                                <td class="lbl">Trace:</td>
-                                <td class="cnt"><?php echo $errorData['trace'] ?></td>
-                            </tr>
-                        <?php endif ?>
-                    </tbody>
-                </table>
+                <b style="line-height: 24px;">Something went wrong</b>!<br /> 
+                To get the error details follow these steps:<br />
+                - Open <i>ow_includes/config.php</i> file and set <b>DEBUG_MODE</b> to <b>true</b></br>
+                    - Reproduce your last action.
             </div>
-        <?php endif ?>
-    </div>
-    <script>
-      document.getElementById('show_err_details_link').addEventListener('click', function() {
-        document.getElementById('hiddenNode').style.display = 'block';
-      });
-    </script>
-  </body>
+            <?php if (!empty($errorData)): ?>
+                <div style="margin-top: 30px;">
+                    <b>Error details</b>:
+                    <table style="font-size: 13px;">
+                        <tbody>
+                            <tr>
+                                <td class="lbl">Type:</td>
+                                <td class="cnt"><?php echo $errorData['type'] ?></td>
+                            </tr>
+                            <tr>
+                                <td class="lbl">Message:</td>
+                                <td class="cnt"><?php echo $errorData['message'] ?></td>
+                            </tr>
+                            <tr>
+                                <td class="lbl">File:</td>
+                                <td class="cnt"><?php echo $errorData['file'] ?></td>
+                            </tr>
+                            <tr>
+                                <td class="lbl">Line:</td>
+                                <td class="cnt"><?php echo $errorData['line'] ?></td>
+                            </tr>
+                            <?php if (!empty($errorData['trace'])): ?>
+                                <tr>
+                                    <td class="lbl">Trace:</td>
+                                    <td class="cnt"><?php echo $errorData['trace'] ?></td>
+                                </tr>
+                            <?php endif ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif ?>
+        </div>
+        <script>
+            document.getElementById('show_err_details_link').addEventListener('click', function() {
+                document.getElementById('hiddenNode').style.display = 'block';
+            });
+        </script>
+    </body>
 </html>
