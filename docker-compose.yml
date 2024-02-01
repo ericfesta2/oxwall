@@ -23,5 +23,4 @@ services:
 networks:
   oxwall:
 volumes:
-  # ow_data:
   ow_mysql:
