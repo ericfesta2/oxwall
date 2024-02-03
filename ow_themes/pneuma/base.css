@@ -368,7 +368,7 @@ a.ow_logo:hover {
     margin-top: 5px;
 }
 .ow_dnd_schem_item {
-    background:#fff url(images/ic_file.svg) no-repeat 10px 50%;
+    background: var(--main-background-color) url(images/ic_file.svg) no-repeat 10px 50%;
     border:1px solid var(--border-color-default);
     cursor:move;
     height:30px;
@@ -5576,10 +5576,10 @@ ul.ow_newsfeed {
 /*========================================================
         [17] Misc        __misc
   ========================================================*/
-.ow_column_equal_fix{
+/* .ow_column_equal_fix{
    padding-bottom: 20001px !important;
    margin-bottom: -20000px !important;
-}
+} */
 .fullsize-photo {
     display: none;
 }
