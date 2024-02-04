@@ -2076,73 +2076,52 @@ class BASE_CLASS_EventHandler
             }
         }
 
-        if( !empty($params["description"]) )
+        if( !empty($params['description']) )
         {
-            $parts = explode("+", $params["description"]);
+            $parts = explode('+', $params['description']);
             $desc = $this->processMetaText($language->text($parts[0], $parts[1], $vars), true, BOL_SeoService::META_DESC_MAX_LENGTH);
         }
 
-        if( !empty($params["keywords"]) )
+        if( !empty($params['keywords']) )
         {
-            $parts = explode("+", $params["keywords"]);
+            $parts = explode('+', $params['keywords']);
             $keywords = $this->processMetaText($language->text($parts[0], $parts[1], $vars));
-        }
-
-        // add standard meta
-        if( $title )
-        {
-            $document->setTitle($title);
-        }
-
-        if( $desc )
-        {
-            $document->setDescription($desc);
-        }
-
-        if( $keywords )
-        {
-            $document->setKeywords($keywords);
         }
 
         //add og
         $imageUrl = BOL_SeoService::getInstance()->getSocialLogoUrl();
 
-        if( !empty($params["image"]) )
+        if( !empty($params['image']) )
         {
-            $imageUrl = trim($params["image"]);
+            $imageUrl = trim($params['image']);
         }
 
-        $document->addMetaInfo("og:type", "website");
-        $document->addMetaInfo("og:site_name", OW::getConfig()->getValue('base', 'site_name'));
+        $document->addMetaInfo('og:type', 'website');
+        $document->addMetaInfo('og:site_name', OW::getConfig()->getValue('base', 'site_name'));
 
         if( $title )
         {
-            $document->addMetaInfo("og:title", $title);
+            $document->setTitle($title);
+            $document->addMetaInfo('og:title', $title);
+            $document->addMetaInfo('twitter:title', $title);
         }
 
         if( $desc )
         {
-            $document->addMetaInfo("og:description", $desc);
+            $document->setDescription($desc);
+            $document->addMetaInfo('og:description', $desc);
+            $document->addMetaInfo('twitter:description', $desc);
+        }
+
+        if( $keywords ) // TODO: Deprecate since search engines don't use meta keywords?
+        {
+            $document->setKeywords($keywords);
         }
 
         if( $imageUrl )
         {
-            $document->addMetaInfo("og:image", $imageUrl);
-        }
-
-        if( $title )
-        {
-            $document->addMetaInfo("twitter:title", $title);
-        }
-
-        if( $desc )
-        {
-            $document->addMetaInfo("twitter:description", $desc);
-        }
-
-        if( $imageUrl )
-        {
-            $document->addMetaInfo("twitter:image", $imageUrl);
+            $document->addMetaInfo('og:image', $imageUrl);
+            $document->addMetaInfo('twitter:image', $imageUrl);
         }
     }
 

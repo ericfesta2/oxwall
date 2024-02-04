@@ -400,7 +400,7 @@ class OW_HtmlDocument extends OW_Document
      * @param string $type
      * @return OW_HtmlDocument
      */
-    public function addScriptDeclaration( $script, $type = "text/javascript", $priority = null )
+    public function addScriptDeclaration( $script, $type = 'text/javascript', $priority = null )
     {
         $type = trim(mb_strtolower($type));
 
@@ -456,7 +456,7 @@ class OW_HtmlDocument extends OW_Document
      * @param string $type
      * @return OW_HtmlDocument
      */
-    public function addScriptDeclarationBeforeIncludes( $script, $type = "text/javascript", $priority = null )
+    public function addScriptDeclarationBeforeIncludes( $script, $type = 'text/javascript', $priority = null )
     {
         $type = trim(mb_strtolower($type));
 
@@ -478,11 +478,9 @@ class OW_HtmlDocument extends OW_Document
      * Sets document favicon.
      *
      * @param string $url
-     * @param string $type
-     * @param string $relation
      * @return OW_HtmlDocument
      */
-    public function setFavicon( $url )
+    public function setFavicon( string $url )
     {
         $attributes = ['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => trim($url)];
 
@@ -566,9 +564,9 @@ class OW_HtmlDocument extends OW_Document
         $this->getMasterPage()->assign('heading', $this->getHeading());
         $this->getMasterPage()->assign('heading_icon_class', $this->getHeadingIconClass());
 
-        $this->throwEvent("core.before_master_page_render");
+        $this->throwEvent('core.before_master_page_render');
         $masterPageOutput = $this->getMasterPage()->render();
-        $this->throwEvent("core.after_master_page_render");
+        $this->throwEvent('core.after_master_page_render');
 
         $headData = '';
         $jsData = '';
@@ -701,14 +699,14 @@ class OW_HtmlDocument extends OW_Document
 
         $customHeadData = implode('', $this->customHeadInfo);
 
-        $assignArray = array(
+        $assignArray = [
             'title' => $this->getTitle(),
             'headData' => $headData . $headJsInclude . $customHeadData,
             'language' => $this->language,
             'direction' => $this->direction,
             'pageBody' => $this->prependCode . $masterPageOutput . $this->appendCode . $jsData . OW_Document::APPEND_PLACEHOLDER,
             'bodyClass' => $this->bodyClass
-        );
+        ];
 
         $renderer = OW_ViewRenderer::getInstance();
         $renderer->clearAssignedVars();

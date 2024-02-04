@@ -88,4 +88,6 @@ final class GROUPS_BOL_Group extends OW_Entity
      * @var string 
      */
     public $status = self::STATUS_ACTIVE;
+
+    public string $privacy;
 }

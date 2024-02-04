@@ -73,7 +73,7 @@ final class MAILBOX_BOL_ConversationService
         array(
             'txt', 'doc', 'docx', 'sql', 'csv', 'xls', 'ppt',
             'jpg', 'jpeg', 'png', 'gif', 'bmp', 'psd', 'ai', 'pdf',
-            'avi', 'wmv', 'mp3', '3gp', 'flv', 'mkv', 'mpeg', 'mpg', 'swf',
+            'avi', 'wmv', 'mp3', '3gp', 'flv', 'mkv', 'mpeg', 'mpg',
             'zip', 'gz', '.tgz', 'gzip', '7z', 'bzip2', 'rar'
         );
     /**

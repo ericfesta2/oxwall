@@ -89,6 +89,7 @@ class MAILBOX_CMP_Toolbar extends OW_Component
         OW::getDocument()->addScript( OW::getPluginManager()->getPlugin('base')->getStaticJsUrl().'underscore-min.js', 'text/javascript', 3000 );
         OW::getDocument()->addScript( OW::getPluginManager()->getPlugin('base')->getStaticJsUrl().'backbone-min.js', 'text/javascript', 3000 );
 
+        // TODO: replace swf audio player
         OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('mailbox')->getStaticJsUrl() . 'audio-player.js');
         OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('mailbox')->getStaticJsUrl() . 'mailbox.js', 'text/javascript', 3000);
         OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('mailbox')->getStaticJsUrl() . 'contactmanager.js', 'text/javascript', 3001);
@@ -110,7 +111,6 @@ class MAILBOX_CMP_Toolbar extends OW_Component
         $jsGenerator->setVariable('OWMailbox.soundEnabled', (bool) BOL_PreferenceService::getInstance()->getPreferenceValue('mailbox_user_settings_enable_sound', $userId));
         $jsGenerator->setVariable('OWMailbox.showOnlineOnly', (bool) BOL_PreferenceService::getInstance()->getPreferenceValue('mailbox_user_settings_show_online_only', $userId));
         $jsGenerator->setVariable('OWMailbox.showAllMembersMode', (bool)OW::getConfig()->getValue('mailbox', 'show_all_members') );
-        $jsGenerator->setVariable('OWMailbox.soundSwfUrl', OW::getPluginManager()->getPlugin('mailbox')->getStaticUrl() . 'js/player.swf');
         $jsGenerator->setVariable('OWMailbox.soundUrl', OW::getPluginManager()->getPlugin('mailbox')->getStaticUrl() . 'sound/receive.mp3');
         $jsGenerator->setVariable('OWMailbox.defaultAvatarUrl', BOL_AvatarService::getInstance()->getDefaultAvatarUrl());
         $jsGenerator->setVariable('OWMailbox.serverTimezoneOffset', date('Z') / 3600);

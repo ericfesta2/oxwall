@@ -584,7 +584,9 @@ class NEWSFEED_CMP_FeedItem extends OW_Component
         $out = [
             'system' => [
                 'comments' => [
-                    'count' => 0
+                    'count' => 0,
+                    'expanded' => false,
+                    'cmp' => ''
                 ],
                 'likes' => [
                     'count' => 0,

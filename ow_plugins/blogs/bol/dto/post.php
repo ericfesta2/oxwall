@@ -152,4 +152,3 @@ class Post extends OW_Entity
     }
 
 }
-?>

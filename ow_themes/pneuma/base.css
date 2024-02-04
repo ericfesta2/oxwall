@@ -351,8 +351,6 @@ div .ow_page h1 {
     display: inline-block;
     height: 70px;
     width: 80px;
-}
-a.ow_logo:hover {
     text-decoration: none;
 }
 
@@ -963,8 +961,8 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     line-height: 38px;
     text-align: center;
     box-sizing: border-box;
-    background: #fff;
-    color: #a2acb3;
+    background: var(--main-background-color);
+    color: var(--main-text-color);
     text-transform: uppercase;
 }
 .ow_console_messages_btns .ow_console_messages_viewall a,
@@ -2271,10 +2269,10 @@ span.ow_lbutton {
 }
 .ow_photo_attachment_pic {
     display: inline-block;
-    background-color: #fff;
+    background-color: var(--main-background-color);
+    border-radius: 4px;
     width: 120px;
     height: 120px;
-    border: 1px solid #eff2f5;
     position: relative;
     background-size: cover;
     background-repeat: no-repeat;
@@ -2406,14 +2404,6 @@ span.ow_lbutton {
 .base_cmnts_temp_cont .ow_ipc_info {
     border: 0;
     padding-bottom: 1px;
-}
-.ow_feed_comments_viewall,
-.ow_photo_attachment_preview,
-.ow_oembed_attachment_preview,
-.ow_oembed_attachment_pic {
-    background-color: #fff;
-    border-color: #e4e9ee;
-    border-style: solid;
 }
 .ow_comments_item {
     position: relative;
@@ -2990,7 +2980,7 @@ div .ow_bg_controls .ow_green{
 }
 .ow_content .ow_table_3 td.ow_label{
     border: 0;
-    color: #5b646a;
+    color: var(--main-text-color-alt);
     text-align: right;
     width: 50% !important;
 }

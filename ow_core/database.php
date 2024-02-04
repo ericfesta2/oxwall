@@ -70,7 +70,7 @@ final class OW_Database
         return $this->queryExecTime;
     }
 
-    public function getTotalQueryExecTime(): int
+    public function getTotalQueryExecTime(): float
     {
         return $this->totalQueryExecTime;
     }

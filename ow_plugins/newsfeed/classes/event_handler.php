@@ -545,12 +545,12 @@ class NEWSFEED_CLASS_EventHandler
         );
 
         $comment = BOL_CommentService::getInstance()->findComment($params['commentId']);
-        $attachment = json_decode($comment->getAttachment(), true);
+        $attachment = $comment->getAttachment();
 
-        $eventData = array(
+        $eventData = [
             'message' => $comment->getMessage(),
-            'attachment' => $attachment
-        );
+            'attachment' => isset($attachment) ? json_decode($attachment, true) : null
+        ];
 
         OW::getEventManager()->trigger(new OW_Event('feed.after_comment_add', $eventParams, $eventData));
     }

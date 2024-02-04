@@ -31,26 +31,22 @@
  */
 abstract class OW_Document
 {
-    const HTML = 1;
-    const AJAX = 2;
-    const XML = 3;
-    const JSON = 4;
+    const int HTML = 1;
+    const int AJAX = 2;
+    const int XML = 3;
+    const int JSON = 4;
 //	const FEED = 3;
 //	const PDF = 4;
 
-    const APPEND_PLACEHOLDER = '###ow_postappend_placeholder###';
+    const string APPEND_PLACEHOLDER = '###ow_postappend_placeholder###';
 
     /**
      * Document title.
-     *
-     * @var string
      */
     protected $title;
 
     /**
-     * Document description.
-     *
-     * @var string
+     * Document description
      */
     protected $description;
 
@@ -120,13 +116,10 @@ abstract class OW_Document
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription( $description )
+    public function setDescription( ?string $description )
     {
-        $description = str_replace(PHP_EOL, "", $description ?? '');
-        $this->throwEvent("core.set_document_description", array("str" => $description));
+        $description = str_replace(PHP_EOL, '', $description ?? '');
+        $this->throwEvent('core.set_document_description', ['str' => $description]);
         $this->description = $description;
     }
 
@@ -186,13 +179,10 @@ abstract class OW_Document
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
-    public function setTitle( $title )
+    public function setTitle( string $title )
     {
-        $title = str_replace(PHP_EOL, "", $title);
-        $this->throwEvent("core.set_document_title", array("str" => $title));
+        $title = str_replace(PHP_EOL, '', $title);
+        $this->throwEvent('core.set_document_title', ['str' => $title]);
         $this->title = $title;
     }
 

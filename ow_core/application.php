@@ -32,11 +32,11 @@ class OW_Application
 {
     use OW_Singleton;
     
-    const CONTEXT_MOBILE = BOL_UserService::USER_CONTEXT_MOBILE;
-    const CONTEXT_DESKTOP = BOL_UserService::USER_CONTEXT_DESKTOP;
-    const CONTEXT_API = BOL_UserService::USER_CONTEXT_API;
-    const CONTEXT_CLI = BOL_UserService::USER_CONTEXT_CLI;
-    const CONTEXT_NAME = 'owContext';
+    const int CONTEXT_MOBILE = BOL_UserService::USER_CONTEXT_MOBILE;
+    const int CONTEXT_DESKTOP = BOL_UserService::USER_CONTEXT_DESKTOP;
+    const int CONTEXT_API = BOL_UserService::USER_CONTEXT_API;
+    const int CONTEXT_CLI = BOL_UserService::USER_CONTEXT_CLI;
+    const string CONTEXT_NAME = 'owContext';
 
     /**
      * Current page document key.
@@ -155,7 +155,7 @@ class OW_Application
 
         // setting current theme
         $activeThemeName = OW::getEventManager()->call('base.get_active_theme_name');
-        $activeThemeName = $activeThemeName ? $activeThemeName : OW::getConfig()->getValue('base', 'selectedTheme');
+        $activeThemeName = $activeThemeName ?? OW::getConfig()->getValue('base', 'selectedTheme');
 
         if ( $activeThemeName !== BOL_ThemeService::DEFAULT_THEME && OW::getThemeManager()->getThemeService()->themeExists($activeThemeName) )
         {
@@ -172,15 +172,15 @@ class OW_Application
         {
             OW::getRouter()->addRoute(new OW_Route($value->getKey(), $value->getUri(),
                 $staticPageDispatchAttrs['controller'], $staticPageDispatchAttrs['action'],
-                array('documentKey' => array(OW_Route::PARAM_OPTION_HIDDEN_VAR => $value->getKey()))));
+                ['documentKey' => [OW_Route::PARAM_OPTION_HIDDEN_VAR => $value->getKey()]]));
 
             // TODO refactor - hotfix for TOS page
             if ( in_array(UTIL_String::removeFirstAndLastSlashes($value->getUri()),
-                    array("terms-of-use", "privacy", "privacy-policy")) )
+                    ['terms-of-use', 'privacy', 'privacy-policy']) )
             {
                 OW::getRequestHandler()->addCatchAllRequestsExclude('base.members_only',
                     $staticPageDispatchAttrs['controller'], $staticPageDispatchAttrs['action'],
-                    array('documentKey' => $value->getKey()));
+                    ['documentKey' => $value->getKey()]);
             }
         }
 
@@ -202,9 +202,9 @@ class OW_Application
 
             $router->addRoute(new OW_Route('base_default_index', '/', $ddispatchAttrs['controller'],
                 $ddispatchAttrs['action'],
-                array('documentKey' => array(OW_Route::PARAM_OPTION_HIDDEN_VAR => $item->getDocumentKey()))));
+                ['documentKey' => [OW_Route::PARAM_OPTION_HIDDEN_VAR => $item->getDocumentKey()]]));
             $this->indexMenuItem = $item;
-            OW::getEventManager()->bind(OW_EventManager::ON_AFTER_REQUEST_HANDLE, array($this, 'activateMenuItem'));
+            OW::getEventManager()->bind(OW_EventManager::ON_AFTER_REQUEST_HANDLE, [$this, 'activateMenuItem']);
         }
         else
         {
@@ -243,11 +243,11 @@ class OW_Application
         $viewRenderer->assignVar('bottomPoweredByLink',
             '<a href="https://developers.oxwall.com/" target="_blank" title="Powered by Oxwall Community Software"><img src="' . $currentThemeImagesDir . 'powered-by-oxwall.png" alt="Oxwall Community Software" /></a>');
 
-        $spotParams = array(
-            "platform-version" => OW::getConfig()->getValue("base", "soft_version"),
-            "platform-build" => OW::getConfig()->getValue("base", "soft_build"),
-            "theme" => OW::getConfig()->getValue("base", "selectedTheme")
-        );
+        $spotParams = [
+            'platform-version' => OW::getConfig()->getValue('base', 'soft_version'),
+            'platform-build' => OW::getConfig()->getValue('base', 'soft_build'),
+            'theme' => OW::getConfig()->getValue('base', 'selectedTheme')
+        ];
 
         $viewRenderer->assignVar('adminDashboardIframeUrl',
             OW::getRequest()->buildUrlQueryString("//static.oxwall.org/spotlight/", $spotParams));
@@ -291,10 +291,10 @@ class OW_Application
         //members only
         if ( (int) $baseConfigs['guests_can_view'] === BOL_UserService::PERMISSIONS_GUESTS_CANT_VIEW && !OW::getUser()->isAuthenticated() )
         {
-            $attributes = array(
+            $attributes = [
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_CTRL => 'BASE_CTRL_User',
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_ACTION => 'standardSignIn'
-            );
+            ];
 
             $handler = OW::getRequestHandler()->getHandlerAttributes();
 
@@ -309,13 +309,13 @@ class OW_Application
         //splash screen
         if ( (bool) OW::getConfig()->getValue('base', 'splash_screen') && !isset($_COOKIE['splashScreen']) )
         {
-            $attributes = array(
+            $attributes = [
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_CTRL => 'BASE_CTRL_BaseDocument',
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_ACTION => 'splashScreen',
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_REDIRECT => true,
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_JS => true,
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_ROUTE => 'base_page_splash_screen'
-            );
+            ];
 
             OW::getRequestHandler()->setCatchAllRequestsAttributes('base.splash_screen', $attributes);
             $this->addCatchAllRequestsException('base.splash_screen_exceptions', 'base.splash_screen');
@@ -325,10 +325,10 @@ class OW_Application
         if ( (int) $baseConfigs['guests_can_view'] === BOL_UserService::PERMISSIONS_GUESTS_PASSWORD_VIEW && !OW::getUser()->isAuthenticated() && !isset($_COOKIE['base_password_protection'])
         )
         {
-            $attributes = array(
+            $attributes = [
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_CTRL => 'BASE_CTRL_BaseDocument',
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_ACTION => 'passwordProtection'
-            );
+            ];
 
             OW::getRequestHandler()->setCatchAllRequestsAttributes('base.password_protected', $attributes);
             $this->addCatchAllRequestsException('base.password_protected_exceptions', 'base.password_protected');
@@ -337,11 +337,11 @@ class OW_Application
         // maintenance mode
         if ( (bool) $baseConfigs['maintenance'] && !OW::getUser()->isAdmin() )
         {
-            $attributes = array(
+            $attributes = [
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_CTRL => 'BASE_CTRL_BaseDocument',
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_ACTION => 'maintenance',
                 OW_RequestHandler::CATCH_ALL_REQUEST_KEY_REDIRECT => true
-            );
+            ];
 
             OW::getRequestHandler()->setCatchAllRequestsAttributes('base.maintenance_mode', $attributes);
             $this->addCatchAllRequestsException('base.maintenance_mode_exceptions', 'base.maintenance_mode');
@@ -482,7 +482,7 @@ class OW_Application
      */
     public function redirect( $redirectTo = null, $switchContextTo = false )
     {
-        if ( $switchContextTo !== false && in_array($switchContextTo, array(self::CONTEXT_DESKTOP, self::CONTEXT_MOBILE)) )
+        if ( $switchContextTo !== false && in_array($switchContextTo, [self::CONTEXT_DESKTOP, self::CONTEXT_MOBILE]) )
         {
             OW::getSession()->set(self::CONTEXT_NAME, $switchContextTo);
         }
@@ -573,8 +573,6 @@ class OW_Application
             'text/javascript', (-100));
         $document->addScript(OW::getPluginManager()->getPlugin('base')->getStaticJsUrl() . 'jquery-migrate.min.js',
             'text/javascript', (-100));
-
-        //$document->addScript(OW::getPluginManager()->getPlugin('base')->getStaticJsUrl() . 'json2.js', 'text/javascript', (-99));
         $document->addScript(OW::getPluginManager()->getPlugin('base')->getStaticJsUrl() . 'ow.js?' . OW::getConfig()->getValue('base',
                 'cachedEntitiesPostfix'), 'text/javascript', (-50));
 
@@ -587,7 +585,7 @@ class OW_Application
         }
 
         $document->addOnloadScript($onloadJs);
-        OW::getEventManager()->bind(OW_EventManager::ON_AFTER_REQUEST_HANDLE, array($this, 'onBeforeDocumentRender'));
+        OW::getEventManager()->bind(OW_EventManager::ON_AFTER_REQUEST_HANDLE, [$this, 'onBeforeDocumentRender']);
 
         return $document;
     }
@@ -620,7 +618,7 @@ class OW_Application
 
     public function addHttpsHandlerAttrs( $controller, $action = false )
     {
-        $this->httpsHandlerAttrsList[] = array(OW_RequestHandler::ATTRS_KEY_CTRL => $controller, OW_RequestHandler::ATTRS_KEY_ACTION => $action);
+        $this->httpsHandlerAttrsList[] = [OW_RequestHandler::ATTRS_KEY_CTRL => $controller, OW_RequestHandler::ATTRS_KEY_ACTION => $action];
     }
 
     protected function httpVsHttpsRedirect()
