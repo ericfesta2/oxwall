@@ -2,7 +2,7 @@
 
 class BASE_CTRL_Ping extends OW_ActionController
 {
-    const PING_EVENT = 'base.ping';
+    const string PING_EVENT = 'base.ping';
 
     public function index()
     {
@@ -22,15 +22,15 @@ class BASE_CTRL_Ping extends OW_ActionController
             $event = new OW_Event(self::PING_EVENT, $c, $event->getData());
             OW::getEventManager()->trigger($event);
 
-            $responseStack[] = array(
+            $responseStack[] = [
                 'command' => $command,
                 'result' => $event->getData()
-            );
+            ];
         }
 
-        echo json_encode(array(
+        echo json_encode([
             'stack' => $responseStack
-        ));
+        ]);
 
         exit;
     }

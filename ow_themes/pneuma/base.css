@@ -4657,7 +4657,7 @@ div.floatbox_empty a.ow_ic_delete.close {
     background-color: rgba(255, 255, 255, 0.9);
 }
 .ow_photo_item_wrap .ow_photo_item img {
-    border-radius: 0;
+    border-radius: 4px 4px 0 0;
 }
 .ow_photo_album_info_wrap {
     border-bottom: 1px solid #eff2f5;

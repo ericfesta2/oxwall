@@ -1,5 +1,7 @@
 Options +FollowSymLinks
 RewriteEngine On
+ServerSignature Off
+FileETag None
 
 AddEncoding gzip .gz
 AddEncoding gzip .gzip
@@ -11,6 +13,9 @@ AddEncoding gzip .gzip
 </FilesMatch>
 <FilesMatch "\.(jpe?g|png)$">
   Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
+<FilesMatch ".(ico|svg|jpg|jpeg|png|gif|js|css|min.js|min.css|woff2)$">
+  Header set Cache-Control "max-age=31536000"
 </FilesMatch>
 
 SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
