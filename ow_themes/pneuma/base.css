@@ -91,40 +91,44 @@ iframe {
         [3] Base Elements       __base
   ========================================================*/
 :root {
+    --font-stack: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --main-background-color: #FFF;
+    --main-sect-color: #F0F0F0;
+    --input-background-color: #FFF;
     --main-text-color: #292929;
     --main-text-color-alt: #5B646A;
+    --button-text-color: #666;
     --accent-color: #E4850B; /** OW_Control type:color, section:1. General Settings, key:accentColorLight, label: Accent Color (Light) **/
     --accent-color-alt: #BD700B; /** OW_Control type:color, section:1. General Settings, key:altAccentColorLight, label: Alternate Accent Color (Light) **/
     --accent-very-light: #F9DCB6;
     --border-color-default: #D9D9D9;
-    --font-stack: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --page-max-width: 2000px;
-    --main-sect-color: #F0F0F0;
     --tooltip-border-color: #E0E0E0;
     --mini-utils-bg: #E5E5E5;
     --mini-utils-bg-alt: #D5D5D5;
     --floatbox-bg: #FFF;
-    --button-text-color: #666;
+    --box-shadow-color: rgba(0,0,0,.1);
+    --page-max-width: 2000px;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --main-background-color: #000;
+        --main-sect-color: #404040;
+        --input-background-color: #262626;
         --main-text-color: #FFF;
         --main-text-color-alt: #E8E8E8;
+        --button-text-color: #D9D9D9;
         --accent-color: #E4850B; /** OW_Control type:color, section:1. General Settings, key:accentColorDark, label: Accent Color (Dark) **/
         --accent-color-alt: #BD700B; /** OW_Control type:color, section:1. General Settings, key:altAccentColorDark, label: Alternate Accent Color (Dark) **/
         --accent-very-light: #F9DCB6;
         --border-color-default: #D9D9D9;
         --font-stack: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        --page-max-width: 2000px;
-        --main-sect-color: #404040;
         --tooltip-border-color: #E0E0E0;
         --mini-utils-bg: #4B4B4B;
         --mini-utils-bg-alt: #595959;
         --floatbox-bg: #404040;
-        --button-text-color: #D9D9D9;
+        --box-shadow-color: #404040;
+        --page-max-width: 2000px;
     }
 }
 
@@ -620,7 +624,7 @@ body.ow_menu_active {
     transition: box-shadow .3s;
 }
 .scroller {
-    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    box-shadow: 0 4px 12px var(--box-shadow-color);
 }
 .ow_site_panel {
     max-width: var(--page-max-width);
@@ -1773,9 +1777,9 @@ select,
 .ow_photo_upload_description,
 .ow_photo_preview_edit .CodeMirror,
 .forum_search_wrap {
-    background-color: #FFF;
+    background-color: var(--input-background-color);
     border: 1px solid var(--border-color-default);
-    color: #292929;
+    color: var(--main-text-color);
     border-radius: 4px;
     padding: 6px 8px;
     font-size: 16px;
@@ -1810,8 +1814,9 @@ select:focus,
     box-shadow: inset 0 1px 2px rgba(0,0,0,.3);
 }
 
-form div.jhtmlarea {
-    background: #fff;
+.jhtmlarea {
+    background-color: var(--main-sect-color) !important;
+    color: var(--main-text-color) !important;
     width: 100% !important;
     box-sizing: border-box;
 }
@@ -2068,7 +2073,7 @@ span.ow_lbutton {
     display: inline-block;
     font-weight: 600;
     vertical-align: text-bottom;
-    color: #5b646a;
+    color: var(--main-text-color-alt);
     background-color: var(--mini-utils-bg);
     border-radius: 4px;
     transition: background-color .3s, color .3s;
@@ -3019,13 +3024,13 @@ th.ow_section span {
     padding: 5px 10px;
 }
 table.ow_form td.ow_label{
-    color: #5b646a;
+    color: var(--main-text-color-alt);
     text-align: right;
     width: 20%;
 }
 table.ow_form td.ow_desc{
     width: 25%;
-    color: #5b646a;
+    color: var(--main-text-color-alt);
     font-size: 14px;
 }
 table.ow_form td.ow_submit{
@@ -3611,7 +3616,7 @@ span.ow_icon{
     position:absolute;
     top:13px; 
     right:14px;
-    background:url(images/message_btn_close.png) no-repeat 50% 50%;
+    background:url(images/ic_x.svg) no-repeat 50% 50%;
 }
 /*info*/
 .ow_message_cont .ow_message_node.info {
@@ -4256,7 +4261,7 @@ span.ow_chat_item_text,
 .ow_mailchat_new_message.ow_chat_dialog.ow_active .ow_mailchat_select_user input,
 .ow_chat_dialog .ow_chat_subject_block input,
 .ow_mailchat_autocomplete_inner span.ow_chat_item_author .ow_chat_in_item_author {
-    color:#4c4c4c;
+    color: var(--main-text-color);
     font-weight: normal;
 }
 .ow_author_block span.ow_chat_item_author {
@@ -4269,9 +4274,8 @@ span.ow_chat_item_text,
     background-color: #fff;
 }
 .ow_mailchat_new_message.ow_chat_dialog {
-    border: 1px solid var(--border-color-default);
     border-radius: 8px 8px 0 0;
-    box-shadow: 0 0 1px 2px rgba(0,0,0,.1);
+    box-shadow: 0 0 1px 2px var(--box-shadow-color);
 }
 .ow_diagonal_puller {
     background-image: url(images/diagonal_puller.png);
@@ -4319,13 +4323,13 @@ span.ow_chat_item_text,
 .ow_chat_dialog .ow_chat_subject_block input,
 .ow_mailchat_new_message.ow_chat_dialog .ow_mailchat_select_user.ow_author_block,
 .ow_mailchat_new_message .ow_mailchat_select_user input {
-    background-color: #fff;
+    background-color: var(--main-sect-color);
 }
 .ow_chat_dialog_wrap .ow_chat_message_block .ow_chat_message textarea.invitation,
 .ow_chat_in_dialog .ow_time_block p span.ow_time_text,
 .ow_mailchat_new_message.ow_chat_dialog .ow_mailchat_select_user.ow_author_block,
 .ow_chat_dialog .ow_chat_subject_block input {
-    color: #828894;
+    color: var(--main-text-color);
 }
 .ow_mailchat_new_message.ow_chat_dialog_active .ow_mailchat_select_user.ow_author_block {
     background-color: #36353b;
@@ -4411,7 +4415,7 @@ span.ow_chat_item_text,
     border-top-width: 1px;
 }
 .ow_chat_dialog .ow_chat_subject_block input {
-    font-size: 13px;
+    font-size: 16px;
 }
 .toolbar ul li a {
     border-radius: 0;
@@ -6108,17 +6112,6 @@ h1.page_title{
     }
     .ow_chat_in_dialog .ow_time_block p span.ow_time_text {
         font-size: 0.9rem;
-    }
-    .ow_dialog_date_cap,
-    .ow_chat_dialog .ow_author_block span.ow_chat_item_author,
-    .ow_top_panel .ow_count_txt,
-    .ow_chat_block_main .ow_chat_search input[type="text"], 
-    .ow_chat_block_main .ow_chat_search input[type="password"],
-    .ow_dialog_in_item p,
-    span.ow_chat_in_item_author, 
-    span.ow_chat_in_item_text,
-    .ow_chat_dialog .ow_chat_subject_block input {
-        font-size: 1rem;
     }
     .ow_mailbox_log .ow_time_block p span.ow_time_text {
         font-size: 0.9rem;

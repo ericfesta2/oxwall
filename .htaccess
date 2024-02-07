@@ -5,17 +5,14 @@ FileETag None
 
 AddEncoding gzip .gz
 AddEncoding gzip .gzip
-<FilesMatch "\.(js.gz|js.gzip)$">
+<FilesMatch "\.(js\.gz|js\.gzip)$">
   ForceType text/javascript
 </FilesMatch>
-<FilesMatch "\.(css.gz|css.gzip)$">
+<FilesMatch "\.(css\.gz|css\.gzip)$">
   ForceType text/css
 </FilesMatch>
-<FilesMatch "\.(jpe?g|png)$">
-  Header set Access-Control-Allow-Origin "*"
-</FilesMatch>
-<FilesMatch ".(ico|svg|jpg|jpeg|png|gif|js|css|min.js|min.css|woff2)$">
-  Header set Cache-Control "max-age=31536000"
+<FilesMatch "\.(ico|svg|jpg|jpeg|png|gif|js|css|min\.js|min\.css|woff2)$">
+  Header set Cache-Control "max-age=31536000; private"
 </FilesMatch>
 
 SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1

@@ -137,8 +137,8 @@ class BLOGS_CTRL_UserBlog extends OW_ActionController
             $month = $arr[0];
             $year = $arr[1];
 
-            $lb = mktime(null, null, null, $month, 1, $year);
-            $ub = mktime(null, null, null, $month + 1, null, $year);
+            $lb = mktime(0, null, null, $month, 1, $year);
+            $ub = mktime(0, null, null, $month + 1, null, $year);
 
             $list = $service->findUserPostListByPeriod($author->getId(), $lb, $ub, $first, $count);
 

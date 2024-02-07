@@ -590,6 +590,8 @@ class NEWSFEED_CMP_FeedItem extends OW_Component
                 ],
                 'likes' => [
                     'count' => 0,
+                    'liked' => false,
+                    'allow' => false,
                     'cmp' => ''
                 ]
             ],
