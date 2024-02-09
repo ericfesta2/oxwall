@@ -27,29 +27,27 @@
  * @package ow_utilities
  * @since 1.0
  */
-class UTIL_Validator
+final readonly class UTIL_Validator
 {
-    const PASSWORD_MIN_LENGTH = 4;
+    const int PASSWORD_MIN_LENGTH = 4;
 
-    const PASSWORD_MAX_LENGTH = 128;
+    const int PASSWORD_MAX_LENGTH = 128;
 
-    const USER_NAME_PATTERN = '/^[\w]{1,32}$/';
+    const string USER_NAME_PATTERN = '/^[\w]{1,32}$/';
 
-    const EMAIL_PATTERN = '/^([\w\-\.\+\%]*[\w])@((?:[A-Za-z0-9\-]+\.)+[A-Za-z]{2,})$/';
+    const string EMAIL_PATTERN = '/^([\w\-\.\+\%]*[\w])@((?:[A-Za-z0-9\-]+\.)+[A-Za-z]{2,})$/';
 
-    const URL_PATTERN = '/^(http(s)?:\/\/)?((\d+\.\d+\.\d+\.\d+)|(([\w-]+\.)+([a-z,A-Z][\w-]*)))(:[1-9][0-9]*)?(\/?([\w\-.\,\/:%+@&*=~]+[\w\- \,.\/?:%+@&=*|]*)?)?(#(.*))?$/';
+    const string URL_PATTERN = '/^(http(s)?:\/\/)?((\d+\.\d+\.\d+\.\d+)|(([\w-]+\.)+([a-z,A-Z][\w-]*)))(:[1-9][0-9]*)?(\/?([\w\-.\,\/:%+@&*=~]+[\w\- \,.\/?:%+@&=*|]*)?)?(#(.*))?$/';
 
-    const INT_PATTERN = '/^[-+]?[0-9]+$/';
+    const string INT_PATTERN = '/^[-+]?[0-9]+$/';
 
-    const FLOAT_PATTERN = '/^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/';
+    const string FLOAT_PATTERN = '/^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/';
 
-    const ALPHA_NUMERIC_PATTERN = '/^[A-Za-z0-9]+$/';
+    const string ALPHA_NUMERIC_PATTERN = '/^[A-Za-z0-9]+$/';
 
-    public static function isEmailValid( $value )
+    public static function isEmailValid( $value ): bool
     {
-        $pattern = self::EMAIL_PATTERN;
-
-        if ( !preg_match($pattern, $value) )
+        if ( !preg_match(self::EMAIL_PATTERN, $value) )
         {
             return false;
         }

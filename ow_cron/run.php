@@ -115,7 +115,7 @@ foreach ( $plugins as $plugin )
             $runStamp = ( isset($runJobs[$methodName]) ) ? $runJobs[$methodName] : 0;
             $currentStamp = time();
 
-            if ($plugin->getKey() == 'fake' || $plugin->getKey() == 'console') {
+            if ($plugin->getKey() === 'fake' || $plugin->getKey() === 'console') {
                 $factor = 1;
             } else {
                 $factor = 60;
