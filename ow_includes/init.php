@@ -50,7 +50,7 @@ $autoloader->addPackagePointer('UTIL', OW_DIR_UTIL);
 $autoloader->addPackagePointer('BOL', OW_DIR_SYSTEM_PLUGIN . 'base' . DS . 'bol');
 
 // Force autoload of classes without package pointer
-$classesToAutoload = array(
+$classesToAutoload = [
     'Form' => OW_DIR_CORE . 'form.php',
     'TextField' => OW_DIR_CORE . 'form_element.php',
     'HiddenField' => OW_DIR_CORE . 'form_element.php',
@@ -86,7 +86,7 @@ $classesToAutoload = array(
     'WyswygRequiredValidator' => OW_DIR_CORE . 'validator.php',
     'DateField' => OW_DIR_CORE . 'form_element.php',
     'DateRangeInterface' => OW_DIR_CORE . 'form_element.php'
-);
+];
 
 OW::getAutoloader()->addClassArray($classesToAutoload);
 

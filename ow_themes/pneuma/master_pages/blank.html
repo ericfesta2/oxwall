@@ -1,73 +1,73 @@
 {style}
-	{literal}
-		body,html {min-width:0; height: 100%;}
-		.ow_page_wrap {
-			background: none;
-		}
-		#ow_footer {
-			background: none;
-			border: none;
-		    clear: both;
-		    height: 96px;
-		    margin-top: -99px;
-		    padding: 1px 0;
-		    position: relative;
-    	}
-		#ow_footer .ow_canvas {
-		    margin: 0 auto;
-		    width: 996px;
-		    word-wrap: break-word;
-		    background: none;
-		}
-		#ow_footer .ow_page {
-		    margin: 0 0 0 auto;
-		    padding: 0 18px;
-		    background: none;
-		}
-		.ow_sign_in_cont {
-			position: relative;
-		}
-		body > .ow_page_wrap {
-		     min-height: 100%;
-		     position: relative;
-		}
-		.ow_page_padding {
-		     padding-bottom: 99px;
-		     background: none;
-		}
-	{/literal}
+    {literal}
+        body,html {min-width:0; height: 100%;}
+        .ow_page_wrap {
+            background: none;
+        }
+        #ow_footer {
+            background: none;
+            border: none;
+            clear: both;
+            height: 96px;
+            margin-top: -99px;
+            padding: 1px 0;
+            position: relative;
+        }
+        #ow_footer .ow_canvas {
+            margin: 0 auto;
+            width: 996px;
+            word-wrap: break-word;
+            background: none;
+        }
+        #ow_footer .ow_page {
+            margin: 0 0 0 auto;
+            padding: 0 18px;
+            background: none;
+        }
+        .ow_sign_in_cont {
+            position: relative;
+        }
+        body > .ow_page_wrap {
+             min-height: 100%;
+             position: relative;
+        }
+        .ow_page_padding {
+             padding-bottom: 99px;
+             background: none;
+        }
+    {/literal}
 {/style}
 <div class="ow_page_wrap">
-	<div class="ow_page_padding">
-		{$content}
-	</div>
+    <div class="ow_page_padding">
+        {$content}
+    </div>
 </div>
 <footer id="ow_footer">
-	<div class="ow_canvas">
-		<div class="ow_page clearfix">
-			<div style="float:right;padding-bottom: 30px;">
-				{$bottomPoweredByLink}
-			</div>
-		</div>
-	</div>
+    <div class="ow_canvas">
+        <div class="ow_page clearfix">
+            <div style="float:right;padding-bottom: 30px;">
+                {$bottomPoweredByLink}
+            </div>
+        </div>
+    </div>
 </footer>
 <script>
-	const signUp = document.querySelector('.ow_sign_up');
-	const signIn = document.querySelector('.ow_sign_in');
-	const formOptionsButton = document.querySelector('.ow_form_options .ow_button');
-	const signUpLastChildLink = document.querySelector('.ow_sign_up p:last-child a');
-	const connectButtonsClearfix = document.querySelector('.ow_connect_buttons .clearfix');
+    const signUp = document.querySelector('.ow_sign_up');
+    const signIn = document.querySelector('.ow_sign_in');
+    const formOptionsButton = document.querySelector('.ow_form_options .ow_button');
+    const signUpLastChildLink = document.querySelector('.ow_sign_up p:last-child a');
+    const connectButtonsClearfix = document.querySelector('.ow_connect_buttons .clearfix');
 
-	signUp.parentNode.insertBefore(signIn, signUp.nextSibling);
+    signUp.parentNode.insertBefore(signIn, signUp.nextSibling);
 
-	const clearfixDiv = document.createElement('div');
-	clearfixDiv.className = 'clearfix';
-	signIn.appendChild(clearfixDiv);
+    const clearfixDiv = document.createElement('div');
+    clearfixDiv.className = 'clearfix';
+    signIn.appendChild(clearfixDiv);
 
-	clearfixDiv.appendChild(formOptionsButton);
-	clearfixDiv.appendChild(signUpLastChildLink);
+    clearfixDiv.appendChild(formOptionsButton);
+    clearfixDiv.appendChild(signUpLastChildLink);
 
-	if (connectButtonsClearfix !== null) {
-		connectButtonsClearfix.parentNode.insertBefore(clearfixDiv, connectButtonsClearfix.nextSibling);
-	}
+    if (connectButtonsClearfix !== null) {
+        connectButtonsClearfix.parentNode.insertBefore(clearfixDiv, connectButtonsClearfix.nextSibling);
+    }
 </script>
