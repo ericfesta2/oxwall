@@ -470,19 +470,16 @@ class BOL_SeoService
     {
         $entities = $this->getSitemapEntities();
 
-        if ( !array_key_exists($entityType, $entities) )
+        if ( $entities !== null && !array_key_exists($entityType, $entities) )
         {
             // process items
-            $processedItems = [];
-            foreach ($items as $item) {
-                $processedItems[] = array(
-                    'name' => $item,
-                    'data_fetched' => false,
-                    'urls_count' => 0,
-                );
-            }
+            $processedItems = array_map(fn($item) => [
+                'name' => $item,
+                'data_fetched' => false,
+                'urls_count' => 0
+            ], $items);
 
-            $entities[$entityType] = array(
+            $entities[$entityType] = [
                 'lang_prefix' => $langPrefix,
                 'label' => $label,
                 'description' => $description,
@@ -490,7 +487,7 @@ class BOL_SeoService
                 'enabled' => true,
                 'priority' => $priority,
                 'changefreq' => $changeFreq
-            );
+            ];
 
             OW::getConfig()->saveConfig('base', 'seo_sitemap_entities', json_encode($entities));
         }
@@ -548,7 +545,7 @@ class BOL_SeoService
     {
         if( $this->metaData === null )
         {
-            $this->metaData = json_decode(OW::getConfig()->getValue("base", "seo_meta_info"), true);
+            $this->metaData = json_decode(OW::getConfig()->getValue('base', 'seo_meta_info'), true);
         }
 
         return $this->metaData;
@@ -560,7 +557,7 @@ class BOL_SeoService
     public function setMetaData( array $data )
     {
         $this->metaData = $data;
-        OW::getConfig()->saveConfig("base", "seo_meta_info", json_encode($data));
+        OW::getConfig()->saveConfig('base', 'seo_meta_info', json_encode($data));
     }
 
     /**

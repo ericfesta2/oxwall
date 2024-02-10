@@ -29,9 +29,9 @@
  * @package ow_system_plugins.base.bol
  * @since 1.0
  */
-class BOL_LanguageService
+final class BOL_LanguageService
 {
-    const LANG_ID_VAR_NAME = "base_language_id";
+    const string LANG_ID_VAR_NAME = 'base_language_id';
 
     /**
      * @var BOL_Language
@@ -71,7 +71,7 @@ class BOL_LanguageService
     /**
      * @var array
      */
-    private $exceptionPrefixes = array( "mobile", "nav", "ow_custom" ); // section which importing without checking plugin key
+    private $exceptionPrefixes = ['mobile', 'nav', 'ow_custom']; // section which importing without checking plugin key
 
     /**
      * Class instance
@@ -1212,9 +1212,13 @@ class BOL_LanguageService
     {
         $dh = opendir($dir);
 
+        if ($dh === false) {
+            return;
+        }
+
         while ( ( $node = readdir($dh) ) )
         {
-            if ( $node == '.' || $node == '..' )
+            if ( $node === '.' || $node === '..' )
                 continue;
 
             if ( is_dir($dir . $node) )

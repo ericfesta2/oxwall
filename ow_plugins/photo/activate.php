@@ -71,7 +71,7 @@ $credits = new PHOTO_CLASS_Credits();
 $credits->triggerCreditActionsAdd();
 
 // register sitemap entities
-BOL_SeoService::getInstance()->addSitemapEntity('photo', 'photo_sitemap', 'photos', array(
+BOL_SeoService::getInstance()->addSitemapEntity('photo', 'photo_sitemap', 'photos', [
     'photo_list',
     'photos',
     'photos_latest',
@@ -81,4 +81,4 @@ BOL_SeoService::getInstance()->addSitemapEntity('photo', 'photo_sitemap', 'photo
     'photo_tags',
     'photo_user_albums',
     'photo_users'
-));
+]);

@@ -35,17 +35,17 @@ class BOL_PluginService
     const UPDATE_SERVER = BOL_StorageService::UPDATE_SERVER;
 
     /* list of plugin scripts */
-    const SCRIPT_INIT = "init.php";
-    const SCRIPT_INSTALL = "install.php";
-    const SCRIPT_UNINSTALL = "uninstall.php";
-    const SCRIPT_ACTIVATE = "activate.php";
-    const SCRIPT_DEACTIVATE = "deactivate.php";
-    const PLUGIN_INFO_XML = "plugin.xml";
+    const string SCRIPT_INIT = 'init.php';
+    const string SCRIPT_INSTALL = 'install.php';
+    const string SCRIPT_UNINSTALL = 'uninstall.php';
+    const string SCRIPT_ACTIVATE = 'activate.php';
+    const string SCRIPT_DEACTIVATE = 'deactivate.php';
+    const string PLUGIN_INFO_XML = 'plugin.xml';
     /* ---------------------------------------------------------------------- */
-    const PLUGIN_STATUS_UP_TO_DATE = BOL_PluginDao::UPDATE_VAL_UP_TO_DATE;
-    const PLUGIN_STATUS_UPDATE = BOL_PluginDao::UPDATE_VAL_UPDATE;
-    const PLUGIN_STATUS_MANUAL_UPDATE = BOL_PluginDao::UPDATE_VAL_MANUAL_UPDATE;
-    const MANUAL_UPDATES_CHECK_INTERVAL_IN_SECONDS = 30;
+    const int PLUGIN_STATUS_UP_TO_DATE = BOL_PluginDao::UPDATE_VAL_UP_TO_DATE;
+    const int PLUGIN_STATUS_UPDATE = BOL_PluginDao::UPDATE_VAL_UPDATE;
+    const int PLUGIN_STATUS_MANUAL_UPDATE = BOL_PluginDao::UPDATE_VAL_MANUAL_UPDATE;
+    const int MANUAL_UPDATES_CHECK_INTERVAL_IN_SECONDS = 30;
 
     /**
      * @var BOL_PluginDao

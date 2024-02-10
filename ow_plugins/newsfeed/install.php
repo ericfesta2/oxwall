@@ -163,13 +163,13 @@ foreach ( $event->getData() as $follow )
     $follow['permission'] = empty($follow['permission']) ? 'everybody' : $follow['permission'];
 
     $query = "REPLACE INTO $dbTbl SET feedType=:ft, feedId=:f, userId=:u, followTime=:t, permission=:p";
-    OW::getDbo()->query($query, array(
+    OW::getDbo()->query($query, [
         'ft' => trim($follow['feedType']),
         'u' => (int) $follow['feedId'],
         'f' => (int) $follow['userId'],
         'p' => $follow['permission'],
         't' => time()
-    ));
+    ]);
 }
 
 $preference = BOL_PreferenceService::getInstance()->findPreference('newsfeed_generate_action_set_timestamp');
