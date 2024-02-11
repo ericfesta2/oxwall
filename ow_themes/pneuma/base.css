@@ -130,6 +130,10 @@ iframe {
         --box-shadow-color: #404040;
         --page-max-width: 2000px;
     }
+
+    .htmlarea_styles {
+        color: #FFF;
+    }
 }
 
 * {
@@ -1844,9 +1848,6 @@ select:focus,
 .jhtmlarea .input_ws_cont {
     padding: 8px;
 }
-body.htmlarea_styles {
-    margin: 0;
-}
 select{
     background-image: none;
 }
@@ -2033,12 +2034,15 @@ input[type=button].ow_mild_red  {
     background-color: transparent;
 }
 /* wysiwyg styles */
-body.htmlarea_styles{
-    color: #828894;
-    font-size: 14px;
+.htmlarea_styles{
+    margin: 0;
+    color: #292929;
+    font-size: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 18px;
 }
-body.htmlarea_styles p{
+
+.htmlarea_styles p{
     margin:0;
 }
 /* tag styles */
@@ -3917,26 +3921,26 @@ div .ow_add_content.ow_ic_video:hover {
     border-color: transparent;
     cursor: default; 
 }
-body.htmlarea_styles blockquote.ow_quote,
+.htmlarea_styles blockquote.ow_quote,
 blockquote.ow_quote{
     margin: 10px 0 10px 40px;
     background: #fff;
     padding: 2px 5px;
 }
-body.htmlarea_styles blockquote.ow_quote .ow_author,
+.htmlarea_styles blockquote.ow_quote .ow_author,
 blockquote.ow_quote .ow_author{
     color: #fff;
     display: inline-block;
     padding: 2px 0;
     width: 98%;
 }
-body.htmlarea_styles .ow_quote_header,
+.htmlarea_styles .ow_quote_header,
 .ow_quote_header {
     display: block;
     padding: 6px;
     background-color: #cad4dd;
 }
-body.htmlarea_styles .ow_quote_cont_wrap,
+.htmlarea_styles .ow_quote_cont_wrap,
 .ow_quote_cont_wrap {
     background: url("images/quote_top.png") no-repeat right 1px;
     border-color: #eff2f5;
@@ -3944,7 +3948,7 @@ body.htmlarea_styles .ow_quote_cont_wrap,
     border-width: 0 1px 1px;
     display: block;
 }
-body.htmlarea_styles .ow_quote_cont,
+.htmlarea_styles .ow_quote_cont,
 .ow_quote_cont {
     background: url("images/quote_bottom.png") no-repeat 1px bottom;
     display: block;
