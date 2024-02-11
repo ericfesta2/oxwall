@@ -92,9 +92,9 @@ class OW_HtmlDocument extends OW_Document
     private array $customHeadInfo = [];
 
     /**
-     * Document master page.
+     * Document master page. (OW_MasterPage)
      */
-    private OW_MasterPage $masterPage;
+    private $masterPage;
 
     /**
      * Content area html code.
@@ -288,7 +288,7 @@ class OW_HtmlDocument extends OW_Document
     /**
      * Returns document master page.
      */
-    public function getMasterPage(): OW_MasterPage
+    public function getMasterPage()
     {
         return $this->masterPage;
     }

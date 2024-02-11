@@ -33,14 +33,14 @@ class BASE_CTRL_Base extends OW_ActionController
     {
         //TODO implement
     }
-    
+
     public function turnDevModeOn()
     {
         if( OW_DEV_MODE || OW_PROFILER_ENABLE )
         {
             OW::getConfig()->saveConfig('base', 'dev_mode', 1);
         }
-        
+
         if( !empty($_GET['back-uri']) )
         {
             $this->redirect(OW::getRouter()->getBaseUrl() . urldecode($_GET['back-uri']));

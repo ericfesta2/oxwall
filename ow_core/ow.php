@@ -198,7 +198,7 @@ final class OW
                 $params['socket'] = OW_DB_SOCKET;
             }
 
-            if ( OW_DEV_MODE || OW_PROFILER_ENABLE )
+            if ( OW_PROFILER_ENABLE )
             {
                 $params['profilerEnable'] = true;
             }

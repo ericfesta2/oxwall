@@ -174,7 +174,7 @@ class OW_Response
             exit();
         }
 
-        if ( OW_PROFILER_ENABLE || OW_DEV_MODE )
+        if ( OW_PROFILER_ENABLE )
         {
             UTIL_Profiler::getInstance()->mark('final');
         }

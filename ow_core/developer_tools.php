@@ -66,16 +66,16 @@ class OW_DeveloperTools
 
     public function init()
     {
-        $configDev = (int) OW::getConfig()->getValue("base", self::CONFIG_NAME);
+        $configDev = (int) OW::getConfig()->getValue('base', self::CONFIG_NAME);
 
         if ( $configDev > 0 )
         {
             $this->refreshEntitiesCache($configDev);
-            OW::getConfig()->saveConfig("base", self::CONFIG_NAME, 0);
+            OW::getConfig()->saveConfig('base', self::CONFIG_NAME, 0);
             OW::getApplication()->redirect();
         }
 
-        if ( defined("OW_DEV_MODE") && OW_DEV_MODE )
+        if ( defined('OW_DEV_MODE') && OW_DEV_MODE )
         {
             $this->refreshEntitiesCache(OW_DEV_MODE);
         }
@@ -88,7 +88,7 @@ class OW_DeveloperTools
 
         OW_View::setCollectDevInfo(true);
         OW::getEventManager()->setDevMode(true);
-        OW::getEventManager()->bind("base.append_markup", array($this, "onAppendMarkup"));
+        OW::getEventManager()->bind('base.append_markup', [$this, 'onAppendMarkup']);
     }
     /* ---------------------------------------- Developer handlers -------------------------------------------------- */
 
@@ -101,27 +101,27 @@ class OW_DeveloperTools
     {
         $options = (intval($options) == 1 ? PHP_INT_MAX : intval($options));
 
-        if ( $options & self::CACHE_ENTITY_TEMPLATE )
+        /* if ( $options & self::CACHE_ENTITY_TEMPLATE )
         {
             $this->clearTemplatesCache();
-        }
+        } */
 
         if ( $options & self::CACHE_ENTITY_THEME )
         {
             $this->clearThemeCache();
         }
 
-        if ( $options & self::CACHE_ENTITY_LANGUAGE )
+        /* if ( $options & self::CACHE_ENTITY_LANGUAGE )
         {
             $this->clearLanguagesCache();
-        }
+        } */
 
         if ( $options & self::CACHE_ENTITY_PLUGIN_STRUCTURE )
         {
             $this->updateStructureforAllPlugins();
         }
 
-        OW::getEventManager()->trigger(new OW_Event(self::EVENT_UPDATE_CACHE_ENTITIES, array("options" => $options)));
+        OW::getEventManager()->trigger(new OW_Event(self::EVENT_UPDATE_CACHE_ENTITIES, ['options' => $options]));
     }
 
     /**
@@ -137,12 +137,14 @@ class OW_DeveloperTools
      */
     public function clearThemeCache()
     {
-        $this->themeService->updateThemeList();
-        $this->themeService->processAllThemes();
+        // $this->themeService->updateThemeList();
+        $this->themeService->processTheme(
+            $this->themeService->findThemeByKey(OW::getConfig()->getValue('base', 'selectedTheme'))
+        );
 
-        if ( OW::getConfig()->configExists("base", "cachedEntitiesPostfix") )
+        if ( OW::getConfig()->configExists('base', 'cachedEntitiesPostfix') )
         {
-            OW::getConfig()->saveConfig("base", "cachedEntitiesPostfix", UTIL_String::getRandomString());
+            OW::getConfig()->saveConfig('base', 'cachedEntitiesPostfix', bin2hex(random_bytes(8)));
         }
     }
 

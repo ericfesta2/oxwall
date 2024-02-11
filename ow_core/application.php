@@ -31,7 +31,7 @@
 class OW_Application
 {
     use OW_Singleton;
-    
+
     const int CONTEXT_MOBILE = BOL_UserService::USER_CONTEXT_MOBILE;
     const int CONTEXT_DESKTOP = BOL_UserService::USER_CONTEXT_DESKTOP;
     const int CONTEXT_API = BOL_UserService::USER_CONTEXT_API;
@@ -250,7 +250,7 @@ class OW_Application
         ];
 
         $viewRenderer->assignVar('adminDashboardIframeUrl',
-            OW::getRequest()->buildUrlQueryString("//static.oxwall.org/spotlight/", $spotParams));
+            OW::getRequest()->buildUrlQueryString('//static.oxwall.org/spotlight/', $spotParams));
 
         if ( function_exists('ow_service_actions') )
         {
@@ -375,7 +375,7 @@ class OW_Application
         {
             foreach ( $messageList as $message )
             {
-                $document->addOnloadScript("OW.message(" . json_encode($message) . ", '" . $messageType . "');");
+                $document->addOnloadScript('OW.message(' . json_encode($message) . ", '" . $messageType . "');");
             }
         }
 
@@ -391,10 +391,18 @@ class OW_Application
         $document = OW::getDocument();
         $themeManager = OW::getThemeManager();
 
-        $document->addStyleSheet(OW::getPluginManager()->getPlugin('base')->getStaticCssUrl() . 'ow.css' . '?' . OW::getConfig()->getValue('base',
-                'cachedEntitiesPostfix'), 'all', -100);
-        $document->addStyleSheet($themeManager->getCssFileUrl() . '?' . OW::getConfig()->getValue('base',
-                'cachedEntitiesPostfix'), 'all', (-90));
+        $document->addStyleSheet(
+            OW::getPluginManager()->getPlugin('base')->getStaticCssUrl() . 'ow.css' . '?' .
+                OW::getConfig()->getValue('base', 'cachedEntitiesPostfix'),
+            'all',
+            -100
+        );
+
+        $document->addStyleSheet(
+            $themeManager->getCssFileUrl() . '?' . OW::getConfig()->getValue('base', 'cachedEntitiesPostfix'),
+            'all',
+            -90
+        );
 
         // add custom css if page is not admin TODO replace with another condition
         if ( !OW::getDocument()->getMasterPage() instanceof ADMIN_CLASS_MasterPage )
@@ -618,7 +626,9 @@ class OW_Application
 
     public function addHttpsHandlerAttrs( $controller, $action = false )
     {
-        $this->httpsHandlerAttrsList[] = [OW_RequestHandler::ATTRS_KEY_CTRL => $controller, OW_RequestHandler::ATTRS_KEY_ACTION => $action];
+        $this->httpsHandlerAttrsList[] = [
+            OW_RequestHandler::ATTRS_KEY_CTRL => $controller, OW_RequestHandler::ATTRS_KEY_ACTION => $action
+        ];
     }
 
     protected function httpVsHttpsRedirect()
@@ -645,7 +655,9 @@ class OW_Application
                 $specAttrs = true;
                 if ( !$isSsl )
                 {
-                    $this->redirect(str_replace("http://", "https://", OW_URL_HOME) . OW::getRequest()->getRequestUri());
+                    $this->redirect(
+                        str_replace('http://', 'https://', OW_URL_HOME) . OW::getRequest()->getRequestUri()
+                    );
                 }
             }
         }
@@ -657,9 +669,9 @@ class OW_Application
 
         $urlArray = parse_url(OW_URL_HOME);
 
-        if ( !empty($urlArray["scheme"]) )
+        if ( !empty($urlArray['scheme']) )
         {
-            $homeUrlSsl = ($urlArray["scheme"] == "https");
+            $homeUrlSsl = $urlArray['scheme'] === 'https';
 
             if ( ($isSsl && !$homeUrlSsl) || (!$isSsl && $homeUrlSsl) )
             {
@@ -670,7 +682,7 @@ class OW_Application
 
     protected function handleHttps()
     {
-        if ( !OW::getRequest()->isSsl() || substr(OW::getRouter()->getBaseUrl(), 0, 5) == "https" )
+        if ( !OW::getRequest()->isSsl() || substr(OW::getRouter()->getBaseUrl(), 0, 5) === 'https' )
         {
             return;
         }
@@ -679,26 +691,26 @@ class OW_Application
         {
             $markup = OW::getResponse()->getMarkup();
             $matches = [];
-            preg_match_all("/<a([^>]+?)>(.+?)<\/a>/", $markup, $matches);
+            preg_match_all('/<a([^>]+?)>(.+?)<\/a>/', $markup, $matches);
             $search = array_unique($matches[0]);
             $replace = [];
             $contentReplaceArr = [];
 
             for ( $i = 0; $i < sizeof($search); $i++ )
             {
-                $replace[] = "<#|#|#" . $i . "#|#|#>";
-                if ( mb_strstr($matches[2][$i], "http:") )
+                $replace[] = '<#|#|#' . $i . '#|#|#>';
+                if ( mb_strstr($matches[2][$i], 'http:') )
                 {
                     $contentReplaceArr[] = $i;
                 }
             }
 
             $markup = str_replace($search, $replace, $markup);
-            $markup = str_replace("http:", "https:", $markup);
+            $markup = str_replace('http:', 'https:', $markup);
 
             foreach ( $contentReplaceArr as $index )
             {
-                $search[$index] = str_replace($matches[2][$index], str_replace("http:", "https:", $matches[2][$index]),
+                $search[$index] = str_replace($matches[2][$index], str_replace('http:', 'https:', $matches[2][$index]),
                     $search[$index]);
             }
 
@@ -706,7 +718,7 @@ class OW_Application
 
             OW::getResponse()->setMarkup($markup);
         }
-        OW::getEventManager()->bind(OW_EventManager::ON_AFTER_DOCUMENT_RENDER, "base_post_handle_https_static_content");
+        OW::getEventManager()->bind(OW_EventManager::ON_AFTER_DOCUMENT_RENDER, 'base_post_handle_https_static_content');
     }
 
     protected function userAutoLogin()

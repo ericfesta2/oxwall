@@ -1450,9 +1450,9 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 /* ---- Counter  ---- */
 .ow_count_wrap {
     text-align: center;
-       display: inline-block;
-    line-height: 15px;
-    font-size: 10px;
+    display: inline-block;
+    line-height: 18px;
+    font-size: 12px;
     vertical-align: top;
 }
 .ow_count_bg {
@@ -2857,20 +2857,12 @@ div .ow_bg_controls .ow_green{
     border-left-width: 1px;
 }
 .ow_video_list div,
-.ow_user_list div {
-    border-bottom-width: 1px;
-    border-left-width: 1px;
-    border-right-width: 1px;
-}
+.ow_user_list div,
 .ow_video_list div:last-child,
 .ow_user_list div:last-child {
     border-bottom-width: 1px;
     border-left-width: 1px;
     border-right-width: 1px;
-
-}
-.ow_video_list div:first-child,
-.ow_user_list div:first-child {
 }
 .ow_table_1 tr td:last-child,
 .ow_table_2 tr td:last-child {
@@ -3219,8 +3211,6 @@ a.avatar_list_more_icon{
 }
 /* ---- End of the Listing Picture styles ---- */
 /* ---- User List styles ---- */
-.ow_user_list {
-}
 .ow_user_list .ow_item_set3{
     width: 32%;
     word-wrap: break-word;
@@ -4173,17 +4163,14 @@ tr.forum_placeholder td{
 .ow_chat_in_block {
     border-left: 1px solid var(--border-color-default);
 }
-span.ow_btn_sort_users span {
+.ow_btn_sort_users span {
     background-image: url(images/chat_btn_sort.png);
 }
-a.ow_btn_sound span {
+.ow_btn_sound span {
     background-image: url(images/chat_btn_sound.png);
 }
-/*body .ow_btn_close_search {
-    background-image: url(images/chat_btn_close_search.png);
-}*/
-.ow_count_block span.ow_count_txt {
-    color: #9b9a9d;
+.ow_count_block .ow_count_txt {
+    color: var(--main-text-color);
     font-weight: normal;
     font-size: 14px;
 }
@@ -4438,9 +4425,6 @@ span.ow_chat_item_text,
 }
 .ow_chat .ow_chat_block .ow_count_block a {
     height: 20px;
-}
-.ow_chat_block .ow_count_wrap {
-    vertical-align: text-bottom;
 }
 .ow_chat .ow_chat_block .ow_bot_panel .ow_count_block {
     padding-top: 2px;
@@ -5505,9 +5489,6 @@ ul.ow_newsfeed {
 }
 /* ---- End SignIn Form styles ---- */
 /* ---- My Avatar Widget styles ---- */
-.ow_my_avatar_img {
-
-}
 .ow_my_avatar_username {
     display: table-cell;
     vertical-align: middle;
