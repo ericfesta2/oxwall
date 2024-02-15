@@ -44,7 +44,7 @@ abstract class OW_Validator
      * @param mixed $value
      * @return boolean
      */
-    abstract function isValid( $value );
+    abstract public function isValid($value);
 
     /**
      * Returns validator error message.
@@ -63,10 +63,9 @@ abstract class OW_Validator
      * @return OW_Validator
      * @throws InvalidArgumentException
      */
-    public function setErrorMessage( $errorMessage )
+    public function setErrorMessage($errorMessage)
     {
-        if ( $errorMessage === null || mb_strlen(trim($errorMessage)) === 0 )
-        {
+        if ($errorMessage === null || mb_strlen(trim($errorMessage)) === 0) {
             //throw new InvalidArgumentException('Invalid error message!');
             return;
         }
@@ -81,9 +80,9 @@ abstract class OW_Validator
      */
     public function getJsValidator()
     {
-        return "{
+        return '{
             validate : function( value ){}
-        }";
+        }';
     }
 }
 
@@ -105,8 +104,7 @@ class RequiredValidator extends OW_Validator
     {
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_required_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'Required Validator Error!';
         }
 
@@ -118,21 +116,17 @@ class RequiredValidator extends OW_Validator
      *
      * @param mixed $value
      */
-    public function isValid( $value )
+    public function isValid($value)
     {
-        if ( is_array($value) )
-        {
-            if ( sizeof($value) === 0 )
-            {
+        if (is_array($value)) {
+            if (sizeof($value) === 0) {
                 return false;
             }
-        }
-        else if ( $value === null || mb_strlen(trim($value)) === 0 )
-        {
-            return false;
-        }
+        } return !($value === null || mb_strlen(trim($value)) === 0) 
 
-        return true;
+
+
+         ;
     }
 
     /**
@@ -142,13 +136,13 @@ class RequiredValidator extends OW_Validator
      */
     public function getJsValidator()
     {
-        return "{
+        return '{
         	validate : function( value ){
-                if(  $.isArray(value) ){ if(value.length == 0  ) throw " . json_encode($this->getError()) . "; return;}
-                else if( !value || $.trim(value).length == 0 ){ throw " . json_encode($this->getError()) . "; }
+                if(  $.isArray(value) ){ if(value.length == 0  ) throw ' . json_encode($this->getError()) . '; return;}
+                else if( !value || $.trim(value).length == 0 ){ throw ' . json_encode($this->getError()) . '; }
         },
-        	getErrorMessage : function(){ return " . json_encode($this->getError()) . " }
-        }";
+        	getErrorMessage : function(){ return ' . json_encode($this->getError()) . ' }
+        }';
     }
 }
 
@@ -170,8 +164,7 @@ class WyswygRequiredValidator extends OW_Validator
     {
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_required_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'Required Validator Error!';
         }
 
@@ -183,10 +176,10 @@ class WyswygRequiredValidator extends OW_Validator
      *
      * @param mixed $value
      */
-    public function isValid( $value )
+    public function isValid($value)
     {
         // process value
-        $value = htmlentities(str_replace(array('&nbsp;', '&nbsp'), array(' ', ' '), $value));
+        $value = htmlentities(str_replace(['&nbsp;', '&nbsp'], [' ', ' '], $value));
 
         return mb_strlen(trim($value));
     }
@@ -205,11 +198,11 @@ class WyswygRequiredValidator extends OW_Validator
                     value = value.replace(/(<([^>]+)>)/ig,''); 
 
                     if (!$.trim(value).length) {
-                        throw " . json_encode($this->getError()) . ";
+                        throw " . json_encode($this->getError()) . ';
                     }
         },
-        	getErrorMessage : function(){ return " . json_encode($this->getError()) . " }
-        }";
+        	getErrorMessage : function(){ return ' . json_encode($this->getError()) . ' }
+        }';
     }
 }
 
@@ -241,25 +234,22 @@ class StringValidator extends OW_Validator
      * @param int $min
      * @param int $max
      */
-    public function __construct( $min = null, $max = null )
+    public function __construct($min = null, $max = null)
     {
-        if ( isset($min) )
-        {
+        if (isset($min)) {
             $this->setMinLength($min);
         }
 
-        if ( isset($max) )
-        {
+        if (isset($max)) {
             $this->setMaxLength($max);
         }
 
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_string_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'String Validator Error!';
         }
-        
+
         $this->setErrorMessage($errorMessage);
     }
 
@@ -268,10 +258,9 @@ class StringValidator extends OW_Validator
      *
      * @param int $max
      */
-    public function setMaxLength( $max )
+    public function setMaxLength($max)
     {
-        if ( !isset($max) )
-        {
+        if (!isset($max)) {
             throw new InvalidArgumentException('Empty max length!');
         }
 
@@ -283,10 +272,9 @@ class StringValidator extends OW_Validator
      *
      * @param int $min
      */
-    public function setMinLength( $min )
+    public function setMinLength($min)
     {
-        if ( !isset($min) )
-        {
+        if (!isset($min)) {
             throw new InvalidArgumentException('Empty min length!');
         }
 
@@ -298,46 +286,39 @@ class StringValidator extends OW_Validator
      *
      * @param mixed $value
      */
-    public function isValid( $value )
+    public function isValid($value)
     {
         // doesn't check empty values
-        if ( (is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0 )
-        {
+        if ((is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0) {
             return true;
         }
 
-        if ( is_array($value) )
-        {
-            foreach ( $value as $val )
-            {
-                if ( !$this->checkValue($value) )
-                {
+        if (is_array($value)) {
+            foreach ($value as $val) {
+                if (!$this->checkValue($value)) {
                     return false;
                 }
             }
             return true;
         }
-        else
-        {
-            return $this->checkValue($value);
-        }
+
+
+        return $this->checkValue($value);
     }
 
-    public function checkValue( $value )
+    public function checkValue($value)
     {
         $trimValue = trim($value);
 
-        if ( isset($this->min) && mb_strlen($trimValue) < (int) $this->min )
-        {
+        if (isset($this->min) && mb_strlen($trimValue) < (int) $this->min) {
             return false;
         }
 
-        if ( isset($this->max) && mb_strlen($trimValue) > (int) $this->max )
-        {
-            return false;
-        }
+        return !(isset($this->max) && mb_strlen($trimValue) > (int) $this->max) 
 
-        return true;
+
+
+         ;
     }
 
     public function getJsValidator()
@@ -369,40 +350,38 @@ class StringValidator extends OW_Validator
         	},
     		";
 
-        $js .= "
+        $js .= '
         	getErrorMessage : function()
         	{
-        		return " . json_encode($this->getError()) . "
+        		return ' . json_encode($this->getError()) . '
     		},
-        ";
+        ';
 
-        $js .= "
+        $js .= '
             checkValue : function( value )
             {
-        ";
+        ';
 
-        if ( isset($this->min) )
-        {
-            $js .= "
-            if( $.trim(value).length < " . $this->min . " )
+        if (isset($this->min)) {
+            $js .= '
+            if( $.trim(value).length < ' . $this->min . ' )
             {
-            	throw " . json_encode($this->getError()) . ";
+            	throw ' . json_encode($this->getError()) . ';
             }
-           ";
+           ';
         }
 
-        if ( isset($this->max) )
-        {
-            $js .= "
-            if( $.trim(value).length > " . $this->max . " )
+        if (isset($this->max)) {
+            $js .= '
+            if( $.trim(value).length > ' . $this->max . ' )
             {
-            	throw " . json_encode($this->getError()) . ";
+            	throw ' . json_encode($this->getError()) . ';
             }
-           ";
+           ';
         }
 
-        $js .= "}
-    		}";
+        $js .= '}
+    		}';
 
         return $js;
     }
@@ -429,10 +408,9 @@ class RegExpValidator extends OW_Validator
      *
      * @param string pattern
      */
-    public function __construct( $pattern = null, $invert = false )
+    public function __construct($pattern = null, $invert = false)
     {
-        if ( isset($pattern) )
-        {
+        if (isset($pattern)) {
             $this->setPattern($pattern);
         }
 
@@ -440,11 +418,10 @@ class RegExpValidator extends OW_Validator
 
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_regexp_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'Regexp Validator Error!';
         }
-        
+
         $this->setErrorMessage($errorMessage);
     }
 
@@ -453,10 +430,9 @@ class RegExpValidator extends OW_Validator
      *
      * @param string $pattern
      */
-    public function setPattern( $pattern )
+    public function setPattern($pattern)
     {
-        if ( !isset($pattern) || mb_strlen(trim($pattern)) === 0 )
-        {
+        if (!isset($pattern) || mb_strlen(trim($pattern)) === 0) {
             throw new InvalidArgumentException('Empty pattern!');
         }
 
@@ -468,41 +444,35 @@ class RegExpValidator extends OW_Validator
      *
      * @param mixed $value
      */
-    public function isValid( $value )
+    public function isValid($value)
     {
         // doesn't check empty values
-        if ( (is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0 )
-        {
+        if ((is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0) {
             return true;
         }
 
-        if ( is_array($value) )
-        {
-            foreach ( $value as $val )
-            {
-                if ( !$this->checkValue($value) )
-                {
+        if (is_array($value)) {
+            foreach ($value as $val) {
+                if (!$this->checkValue($value)) {
                     return false;
                 }
             }
             return true;
         }
-        else
-        {
-            return $this->checkValue($value);
-        }
+
+
+        return $this->checkValue($value);
     }
 
-    public function checkValue( $value )
+    public function checkValue($value)
     {
         $trimValue = trim($value);
 
-        if ( !preg_match($this->pattern, $trimValue) && !$this->invert )
-        {
-            return false;
-        }
+        return !(!preg_match($this->pattern, $trimValue) && !$this->invert) 
 
-        return true;
+
+
+         ;
     }
 
     public function getJsValidator()
@@ -534,38 +504,37 @@ class RegExpValidator extends OW_Validator
         	},
     		";
 
-        $js .= "
+        $js .= '
         	getErrorMessage : function()
         	{
-        		return " . json_encode($this->getError()) . "
+        		return ' . json_encode($this->getError()) . '
     		},
-        ";
+        ';
 
-        if($this->invert){
-            $js .= "
+        if ($this->invert) {
+            $js .= '
             checkValue : function( value )
             {
-                var pattern = " . $this->pattern . ";
+                var pattern = ' . $this->pattern . ';
         		
             	if( pattern.test( value ) )
             	{
-            		throw " . json_encode($this->getError()) . ";
+            		throw ' . json_encode($this->getError()) . ';
         		}
         	}}
-        ";
-        }
-        else{
-            $js .= "
+        ';
+        } else {
+            $js .= '
             checkValue : function( value )
             {
-                var pattern = " . $this->pattern . ";
+                var pattern = ' . $this->pattern . ';
         		
             	if( !pattern.test( value ) )
             	{
-            		throw " . json_encode($this->getError()) . ";
+            		throw ' . json_encode($this->getError()) . ';
         		}
         	}}
-        ";
+        ';
         }
 
 
@@ -583,7 +552,6 @@ class RegExpValidator extends OW_Validator
  */
 class EmailValidator extends RegExpValidator
 {
-
     /**
      * Class constructor
      */
@@ -593,8 +561,7 @@ class EmailValidator extends RegExpValidator
 
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_email_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'Email Validator Error!';
         }
 
@@ -621,8 +588,7 @@ class UrlValidator extends RegExpValidator
 
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_url_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'Url Validator Error!';
         }
 
@@ -640,7 +606,6 @@ class UrlValidator extends RegExpValidator
  */
 class AlphaNumericValidator extends RegExpValidator
 {
-
     /**
      * Class constructor
      */
@@ -650,8 +615,7 @@ class AlphaNumericValidator extends RegExpValidator
 
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_url_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'Alphanumeric Validator Error!';
         }
 
@@ -680,7 +644,7 @@ class InArrayValidator extends OW_Validator
      *
      * @param array $predefinedValues
      */
-    public function __construct( array $predefinedValues  = [] )
+    public function __construct(array $predefinedValues = [])
     {
         $this->predefinedValues = $predefinedValues;
         $this->errorMessage = OW::getLanguage()->text('base', 'form_validate_common_error_message');
@@ -692,7 +656,7 @@ class InArrayValidator extends OW_Validator
      * @param array $predefinedValues
      * @return void
      */
-    public function setPredefinedValues( array $predefinedValues = [] )
+    public function setPredefinedValues(array $predefinedValues = [])
     {
         $this->predefinedValues = $predefinedValues;
     }
@@ -703,7 +667,7 @@ class InArrayValidator extends OW_Validator
      * @param mixed $value
      * @return boolean
      */
-    public function isValid( $value )
+    public function isValid($value)
     {
         return is_scalar($value) && in_array($value, $this->predefinedValues);
     }
@@ -717,7 +681,7 @@ class InArrayValidator extends OW_Validator
     {
         $values = json_encode(array_map('strval', $this->predefinedValues), JSON_UNESCAPED_UNICODE);
 
-        $js = "{
+        return "{
             validate : function( value )
         	{
         	    if ( $.inArray(value, {$values}) == -1 )
@@ -728,11 +692,9 @@ class InArrayValidator extends OW_Validator
 
         	getErrorMessage : function()
         	{
-        		return " . json_encode($this->getError()) . "
+        		return " . json_encode($this->getError()) . '
     		}
-        }";
-
-        return $js;
+        }';
     }
 }
 
@@ -764,85 +726,74 @@ class IntValidator extends OW_Validator
      * @param int $min
      * @param int $max
      */
-    public function __construct( $min = null, $max = null )
+    public function __construct($min = null, $max = null)
     {
         $this->pattern = UTIL_Validator::INT_PATTERN;
 
-        if ( !is_null($min) )
-        {
+        if (null !== $min) {
             $this->min = (int) $min;
         }
 
-        if ( !is_null($max) )
-        {
+        if (null !== $max) {
             $this->max = (int) $max;
         }
 
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_int_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'Int Validator Error!';
         }
 
         $this->setErrorMessage($errorMessage);
     }
 
-    public function setMaxValue( $max )
+    public function setMaxValue($max)
     {
         $this->max = (int) $max;
     }
 
-    public function setMinValue( $min )
+    public function setMinValue($min)
     {
         $this->min = (int) $min;
     }
 
-    public function isValid( $value )
+    public function isValid($value)
     {
         // doesn't check empty values
-        if ( (is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0 )
-        {
+        if ((is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0) {
             return true;
         }
 
-        if ( is_array($value) )
-        {
-            foreach ( $value as $val )
-            {
-                if ( !$this->checkValue($value) )
-                {
+        if (is_array($value)) {
+            foreach ($value as $val) {
+                if (!$this->checkValue($value)) {
                     return false;
                 }
             }
             return true;
         }
-        else
-        {
-            return $this->checkValue($value);
-        }
+
+
+        return $this->checkValue($value);
     }
 
-    public function checkValue( $value )
+    public function checkValue($value)
     {
         $intValue = (int) $value;
 
-        if ( !UTIL_Validator::isIntValid($value) )
-        {
+        if (!UTIL_Validator::isIntValid($value)) {
             return false;
         }
 
-        if ( isset($this->min) && $intValue < (int) $this->min )
-        {
+        if (isset($this->min) && $intValue < (int) $this->min) {
             return false;
         }
 
-        if ( isset($this->max) && $intValue > (int) $this->max )
-        {
-            return false;
-        }
+        return !(isset($this->max) && $intValue > (int) $this->max) 
 
-        return true;
+
+
+         ;
     }
 
     public function getJsValidator()
@@ -874,46 +825,44 @@ class IntValidator extends OW_Validator
             },
             ";
 
-        $js .= "
+        $js .= '
             getErrorMessage : function()
             {
-                return " . json_encode($this->getError()) . "
+                return ' . json_encode($this->getError()) . '
             },
-        ";
+        ';
 
-        $js .= "
+        $js .= '
             checkValue : function( value )
             {
-                var pattern = " . $this->pattern . ";
+                var pattern = ' . $this->pattern . ';
                 
                 if( !pattern.test( value ) )
                 {
-                    throw " . json_encode($this->getError()) . ";
+                    throw ' . json_encode($this->getError()) . ';
                 }
-        ";
+        ';
 
-        if ( isset($this->min) )
-        {
-            $js .= "
-            if( parseInt(value) < " . $this->min . " )
+        if (isset($this->min)) {
+            $js .= '
+            if( parseInt(value) < ' . $this->min . ' )
             {
-                throw " . json_encode($this->getError()) . ";
+                throw ' . json_encode($this->getError()) . ';
             }
-           ";
+           ';
         }
 
-        if ( isset($this->max) )
-        {
-            $js .= "
-            if( parseInt(value) > " . $this->max . " )
+        if (isset($this->max)) {
+            $js .= '
+            if( parseInt(value) > ' . $this->max . ' )
             {
-                throw " . json_encode($this->getError()) . ";
+                throw ' . json_encode($this->getError()) . ';
             }
-           ";
+           ';
         }
 
-        $js .= "}
-            }";
+        $js .= '}
+            }';
 
         return $js;
     }
@@ -955,85 +904,74 @@ class FloatValidator extends OW_Validator
      * @param float $min
      * @param float $max
      */
-    public function __construct( $min = null, $max = null )
+    public function __construct($min = null, $max = null)
     {
         $this->pattern = UTIL_Validator::FLOAT_PATTERN;
 
-        if ( !is_null($min) )
-        {
+        if (null !== $min) {
             $this->min = (float) $min;
         }
 
-        if ( !is_null($max) )
-        {
+        if (null !== $max) {
             $this->max = (float) $max;
         }
 
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_float_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'Float Validator Error!';
         }
 
         $this->setErrorMessage($errorMessage);
     }
 
-    public function setMaxValue( $max )
+    public function setMaxValue($max)
     {
         $this->max = (float) $max;
     }
 
-    public function setMinValue( $min )
+    public function setMinValue($min)
     {
         $this->min = (float) $min;
     }
 
-    public function isValid( $value )
+    public function isValid($value)
     {
         // doesn't check empty values
-        if ( (is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0 )
-        {
+        if ((is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0) {
             return true;
         }
 
-        if ( is_array($value) )
-        {
-            foreach ( $value as $val )
-            {
-                if ( !$this->checkValue($value) )
-                {
+        if (is_array($value)) {
+            foreach ($value as $val) {
+                if (!$this->checkValue($value)) {
                     return false;
                 }
             }
             return true;
         }
-        else
-        {
-            return $this->checkValue($value);
-        }
+
+
+        return $this->checkValue($value);
     }
 
-    public function checkValue( $value )
+    public function checkValue($value)
     {
         $floatValue = (float) $value;
 
-        if ( !UTIL_Validator::isFloatValid($value) )
-        {
+        if (!UTIL_Validator::isFloatValid($value)) {
             return false;
         }
 
-        if ( isset($this->min) && $floatValue < (float) $this->min )
-        {
+        if (isset($this->min) && $floatValue < (float) $this->min) {
             return false;
         }
 
-        if ( isset($this->max) && $floatValue > (float) $this->max )
-        {
-            return false;
-        }
+        return !(isset($this->max) && $floatValue > (float) $this->max) 
 
-        return true;
+
+
+         ;
     }
 
     public function getJsValidator()
@@ -1065,46 +1003,44 @@ class FloatValidator extends OW_Validator
         	},
     		";
 
-        $js .= "
+        $js .= '
         	getErrorMessage : function()
         	{
-        		return " . json_encode($this->getError()) . "
+        		return ' . json_encode($this->getError()) . '
     		},
-        ";
+        ';
 
-        $js .= "
+        $js .= '
             checkValue : function( value )
             {
-                var pattern = " . $this->pattern . ";
+                var pattern = ' . $this->pattern . ';
         		
             	if( !pattern.test( value ) )
             	{
-            		throw " . json_encode($this->getError()) . ";
+            		throw ' . json_encode($this->getError()) . ';
         		}
-        ";
+        ';
 
-        if ( isset($this->min) )
-        {
-            $js .= "
-            if( parseFloat(value) < " . $this->min . " )
+        if (isset($this->min)) {
+            $js .= '
+            if( parseFloat(value) < ' . $this->min . ' )
             {
-            	throw " . json_encode($this->getError()) . ";
+            	throw ' . json_encode($this->getError()) . ';
             }
-           ";
+           ';
         }
 
-        if ( isset($this->max) )
-        {
-            $js .= "
-            if( parseFloat(value) > " . $this->max . " )
+        if (isset($this->max)) {
+            $js .= '
+            if( parseFloat(value) > ' . $this->max . ' )
             {
-            	throw " . json_encode($this->getError()) . ";
+            	throw ' . json_encode($this->getError()) . ';
             }
-           ";
+           ';
         }
 
-        $js .= "}
-    		}";
+        $js .= '}
+    		}';
 
         return $js;
     }
@@ -1138,128 +1074,112 @@ class DateValidator extends OW_Validator
      * @param int $min
      * @param int $max
      */
-    public function __construct( $minYear = null, $maxYear = null )
+    public function __construct($minYear = null, $maxYear = null)
     {
-        if ( isset($minYear) )
-        {
+        if (isset($minYear)) {
             $this->setMinYear($minYear);
         }
 
-        if ( isset($maxYear) )
-        {
+        if (isset($maxYear)) {
             $this->setMaxYear($maxYear);
         }
 
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_date_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'Date Validator Error!';
         }
 
         $this->setErrorMessage($errorMessage);
     }
 
-    public function setMaxYear( $maxYear )
+    public function setMaxYear($maxYear)
     {
         $value = (int) $maxYear;
 
-        if ( empty($value) )
-        {
+        if (empty($value)) {
             throw new InvalidArgumentException('Incorrect max year value!');
         }
 
         $this->maxYear = (int) $value;
     }
 
-    public function setDateFormat( $dateFormat )
+    public function setDateFormat($dateFormat)
     {
         $format = trim($dateFormat);
 
-        if ( empty($format) )
-        {
+        if (empty($format)) {
             throw new InvalidArgumentException('Incorrect argument `$format`!');
         }
 
         $this->dateFormat = trim($format);
     }
 
-    public function setMinYear( $minYear )
+    public function setMinYear($minYear)
     {
         $value = (int) $minYear;
 
-        if ( empty($value) )
-        {
+        if (empty($value)) {
             throw new InvalidArgumentException('Incorrect min year value!');
         }
 
         $this->minYear = (int) $value;
     }
 
-    public function isValid( $value )
+    public function isValid($value)
     {
         // doesn't check empty values
-        if ( (is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0 )
-        {
+        if ((is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0) {
             return true;
         }
 
-        if ( is_array($value) )
-        {
-            foreach ( $value as $val )
-            {
-                if ( !$this->checkValue($value) )
-                {
+        if (is_array($value)) {
+            foreach ($value as $val) {
+                if (!$this->checkValue($value)) {
                     return false;
                 }
             }
             return true;
         }
-        else
-        {
-            return $this->checkValue($value);
-        }
+
+
+        return $this->checkValue($value);
     }
 
-    public function checkValue( $value )
+    public function checkValue($value)
     {
-        if ( $value === null || mb_strlen(trim($value)) === 0 )
-        {
+        if ($value === null || mb_strlen(trim($value)) === 0) {
             return true;
         }
 
         $date = UTIL_DateTime::parseDate($value, $this->dateFormat);
 
-        if ( $date === null )
-        {
+        if ($date === null) {
             return false;
         }
 
-        if ( !UTIL_Validator::isDateValid($date[UTIL_DateTime::PARSE_DATE_MONTH], $date[UTIL_DateTime::PARSE_DATE_DAY], $date[UTIL_DateTime::PARSE_DATE_YEAR]) )
-        {
+        if (!UTIL_Validator::isDateValid($date[UTIL_DateTime::PARSE_DATE_MONTH], $date[UTIL_DateTime::PARSE_DATE_DAY], $date[UTIL_DateTime::PARSE_DATE_YEAR])) {
             return false;
         }
 
-        if ( !empty($this->maxYear) && $date[UTIL_DateTime::PARSE_DATE_YEAR] > $this->maxYear )
-        {
+        if (!empty($this->maxYear) && $date[UTIL_DateTime::PARSE_DATE_YEAR] > $this->maxYear) {
             return false;
         }
 
-        if ( !empty($this->minYear) && $date[UTIL_DateTime::PARSE_DATE_YEAR] < $this->minYear )
-        {
-            return false;
-        }
+        return !(!empty($this->minYear) && $date[UTIL_DateTime::PARSE_DATE_YEAR] < $this->minYear) 
 
-        return true;
+
+
+         ;
     }
 
     public function getJsValidator()
     {
-        return "{
+        return '{
         	validate : function( value ){
         },
-        	getErrorMessage : function(){ return " . json_encode($this->getError()) . " }
-        }";
+        	getErrorMessage : function(){ return ' . json_encode($this->getError()) . ' }
+        }';
     }
 }
 
@@ -1278,80 +1198,71 @@ class CaptchaValidator extends OW_Validator
     {
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_captcha_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'Captcha Validator Error!';
         }
 
         $this->setErrorMessage($errorMessage);
     }
 
-    public function isValid( $value )
+    public function isValid($value)
     {
         // doesn't check empty values
-        if ( (is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0 )
-        {
+        if ((is_array($value) && sizeof($value) === 0) || $value === null || mb_strlen(trim($value)) === 0) {
             return true;
         }
 
-        if ( is_array($value) )
-        {
-            foreach ( $value as $val )
-            {
-                if ( !$this->checkValue($value) )
-                {
+        if (is_array($value)) {
+            foreach ($value as $val) {
+                if (!$this->checkValue($value)) {
                     return false;
                 }
             }
             return true;
         }
-        else
-        {
-            return $this->checkValue($value);
-        }
+
+
+        return $this->checkValue($value);
     }
 
-    public function setJsObjectName( $name )
+    public function setJsObjectName($name)
     {
-        if ( !empty($name) )
-        {
+        if (!empty($name)) {
             $this->jsObjectName = $name;
         }
     }
 
-    public function checkValue( $value )
+    public function checkValue($value)
     {
         return UTIL_Validator::isCaptchaValid($value);
     }
 
     public function getJsValidator()
     {
-        if ( empty($this->jsObjectName) )
-        {
-            return "{
+        if (empty($this->jsObjectName)) {
+            return '{
                     validate : function( value ){
             },
-                    getErrorMessage : function(){ return " . json_encode($this->getError()) . " }
-            }";
+                    getErrorMessage : function(){ return ' . json_encode($this->getError()) . ' }
+            }';
         }
-        else
-        {
-            return "{
+
+
+        return '{
                  
                     validate : function( value )
                     {
-                        if( !window." . $this->jsObjectName . ".validateCaptcha() )
+                        if( !window.' . $this->jsObjectName . '.validateCaptcha() )
                         {
-                            throw " . json_encode($this->getError()) . ";
+                            throw ' . json_encode($this->getError()) . ';
                         }
                     },
                     
                     getErrorMessage : function()
                     {
-                        return " . json_encode($this->getError()) . ";
+                        return ' . json_encode($this->getError()) . ';
                     }
-            }";
-        }
+            }';
     }
 }
 
@@ -1373,32 +1284,29 @@ class RangeValidator extends OW_Validator
     {
         $errorMessage = OW::getLanguage()->text('base', 'form_validator_range_error_message');
 
-        if ( empty($errorMessage) )
-        {
+        if (empty($errorMessage)) {
             $errorMessage = 'Range Validator Error!';
         }
-        
+
         $this->setErrorMessage($errorMessage);
     }
-    
-    public function setMaxValue( $max )
+
+    public function setMaxValue($max)
     {
         $value = (int) $max;
 
-        if ( !isset($value) )
-        {
+        if (!isset($value)) {
             throw new InvalidArgumentException('Empty max value!');
         }
 
         $this->max = (int) $value;
     }
 
-    public function setMinValue( $min )
+    public function setMinValue($min)
     {
         $value = (int) $min;
 
-        if ( !isset($value) )
-        {
+        if (!isset($value)) {
             throw new InvalidArgumentException('Empty min value!');
         }
 
@@ -1410,59 +1318,51 @@ class RangeValidator extends OW_Validator
      *
      * @param mixed $value
      */
-    public function isValid( $value )
+    public function isValid($value)
     {
         // doesn't check empty values
-        if ( $value === null )
-        {
+        if ($value === null) {
             return true;
         }
-        
-        if ( is_string($value) && mb_strlen(trim($value)) === 0 )
-        {
+
+        if (is_string($value) && mb_strlen(trim($value)) === 0) {
             return true;
         }
-        
-        if ( is_array($value) )
-        {
+
+        if (is_array($value)) {
             $value = implode('-', $value);
         }
-        
+
         return $this->checkValue($value);
     }
 
-    public function checkValue( $value )
+    public function checkValue($value)
     {
         $value = trim($value);
-        
-        if ( empty($value) )
-        {
+
+        if (empty($value)) {
             return false;
         }
-        
+
         $valArray = explode('-', $value);
 
-        if ( empty($valArray) || !isset($valArray[0]) || !isset($valArray[1]) )
-        {
+        if (empty($valArray) || !isset($valArray[0]) || !isset($valArray[1])) {
             return false;
         }
 
-        if ($valArray[0] > $valArray[1])
-        {
-            return false;
-        }
-        
-        if ( isset($this->min) && ($valArray[0] < (int) $this->min || $valArray[1] < (int) $this->min) )
-        {
+        if ($valArray[0] > $valArray[1]) {
             return false;
         }
 
-        if ( isset($this->max) && ($valArray[0] > (int) $this->max || $valArray[1] > (int) $this->max) )
-        {
+        if (isset($this->min) && ($valArray[0] < (int) $this->min || $valArray[1] < (int) $this->min)) {
             return false;
         }
-        
-        return true;
+
+        return !(isset($this->max) && ($valArray[0] > (int) $this->max || $valArray[1] > (int) $this->max)) 
+
+
+
+         ;
     }
 
     public function getJsValidator()
@@ -1494,51 +1394,46 @@ class RangeValidator extends OW_Validator
         	},
     		";
 
-        $js .= "
+        $js .= '
         	getErrorMessage : function()
         	{
-        		return " . json_encode($this->getError()) . "
+        		return ' . json_encode($this->getError()) . '
     		},
-        ";
+        ';
 
-        $js .= "
+        $js .= '
             checkValue : function( value )
             {
-        ";
+        ';
 
-        if (isset($this->min) || isset($this->max))
-        {
-            if ( isset($this->min) )
-            {
-                $js .= "
-                if( $.trim(value) < " . $this->min . " )
+        if (isset($this->min) || isset($this->max)) {
+            if (isset($this->min)) {
+                $js .= '
+                if( $.trim(value) < ' . $this->min . ' )
                 {
-                    throw " . json_encode($this->getError()) . ";
+                    throw ' . json_encode($this->getError()) . ';
                 }
-               ";
+               ';
             }
 
-            if ( isset($this->max) )
-            {
-                $js .= "
-                if( $.trim(value) > " . $this->max . " )
+            if (isset($this->max)) {
+                $js .= '
+                if( $.trim(value) > ' . $this->max . ' )
                 {
-                    throw " . json_encode($this->getError()) . ";
+                    throw ' . json_encode($this->getError()) . ';
                 }
-               ";
+               ';
             }
-        }
-        else
-        {
-            $js .= "if( $.trim(value).length == 0 )
+        } else {
+            $js .= 'if( $.trim(value).length == 0 )
                 {
-                    throw " . json_encode($this->getError()) . ";
+                    throw ' . json_encode($this->getError()) . ';
                 }
-               ";
+               ';
         }
 
-        $js .= "}
-    		}";
+        $js .= '}
+    		}';
 
         return $js;
     }
@@ -1577,7 +1472,7 @@ class AgeValidator extends OW_Validator
 
     public function getJsValidator()
     {
-        return "{
+        return '{
             validate: function(value)
             {
                 if (!value) {
@@ -1590,16 +1485,16 @@ class AgeValidator extends OW_Validator
                 
                 let age = diff.getUTCFullYear() - 1970;
                 
-                if (age < " . $this->minAge . ") {
-                    throw " . json_encode($this->getError()) . ";
+                if (age < ' . $this->minAge . ') {
+                    throw ' . json_encode($this->getError()) . ';
                 }
                 
                 return;
             },
             getErrorMessage : function()
             {
-                return " . json_encode($this->getError()) . ";
+                return ' . json_encode($this->getError()) . ';
             }
-        }";
+        }';
     }
 }

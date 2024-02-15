@@ -32,16 +32,14 @@ define('OW_DIR_ROOT', dirname(__FILE__) . DS);
 
 require_once(OW_DIR_ROOT . 'ow_includes' . DS . 'init.php');
 
-if ( !defined('OW_ERROR_LOG_ENABLE') || (bool) OW_ERROR_LOG_ENABLE )
-{
+if (!defined('OW_ERROR_LOG_ENABLE') || (bool) OW_ERROR_LOG_ENABLE) {
     $logFilePath = OW_DIR_LOG . 'error.log';
     $logger = OW::getLogger('ow_core_log');
     $logger->setLogWriter(new BASE_CLASS_FileLogWriter($logFilePath));
     $errorManager->setLogger($logger);
 }
 
-if ( file_exists(OW_DIR_ROOT . 'ow_install' . DS . 'install.php') )
-{
+if (file_exists(OW_DIR_ROOT . 'ow_install' . DS . 'install.php')) {
     include OW_DIR_ROOT . 'ow_install' . DS . 'install.php';
 }
 
@@ -49,15 +47,13 @@ OW::getSession()->start();
 
 $application = OW::getApplication();
 
-if ( OW_PROFILER_ENABLE || OW_DEV_MODE )
-{
+if (OW_PROFILER_ENABLE || OW_DEV_MODE) {
     UTIL_Profiler::getInstance()->mark('before_app_init');
 }
 
 $application->init();
 
-if ( OW_PROFILER_ENABLE || OW_DEV_MODE )
-{
+if (OW_PROFILER_ENABLE || OW_DEV_MODE) {
     UTIL_Profiler::getInstance()->mark('after_app_init');
 }
 
@@ -69,8 +65,7 @@ $application->route();
 
 $event = new OW_Event(OW_EventManager::ON_AFTER_ROUTE);
 
-if ( OW_PROFILER_ENABLE || OW_DEV_MODE )
-{
+if (OW_PROFILER_ENABLE || OW_DEV_MODE) {
     UTIL_Profiler::getInstance()->mark('after_route');
 }
 
@@ -78,8 +73,7 @@ OW::getEventManager()->trigger($event);
 
 $application->handleRequest();
 
-if ( OW_PROFILER_ENABLE || OW_DEV_MODE )
-{
+if (OW_PROFILER_ENABLE || OW_DEV_MODE) {
     UTIL_Profiler::getInstance()->mark('after_controller_call');
 }
 
@@ -89,8 +83,7 @@ OW::getEventManager()->trigger($event);
 
 $application->finalize();
 
-if ( OW_PROFILER_ENABLE || OW_DEV_MODE )
-{
+if (OW_PROFILER_ENABLE || OW_DEV_MODE) {
     UTIL_Profiler::getInstance()->mark('after_finalize');
 }
 

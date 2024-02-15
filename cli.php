@@ -47,8 +47,7 @@ $event = new OW_Event(OW_EventManager::ON_CLI_RUN);
 OW::getEventManager()->trigger($event);
 
 $commands = $event->getData();
-foreach ($commands as $c)
-{
+foreach ($commands as $c) {
     $application->addCommand($c);
 }
 $application->run();

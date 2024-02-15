@@ -31,7 +31,7 @@
 class OW_ViewRenderer
 {
     use OW_Singleton;
-    
+
     /**
      * @var OW_Smarty
      */
@@ -50,10 +50,9 @@ class OW_ViewRenderer
      *
      * @param array $vars
      */
-    public function assignVars( $vars )
+    public function assignVars($vars)
     {
-        foreach ( $vars as $key => $value )
-        {
+        foreach ($vars as $key => $value) {
             $this->smarty->assignByRef($key, $vars[$key]);
         }
     }
@@ -64,7 +63,7 @@ class OW_ViewRenderer
      * @param string $key
      * @param mixed $value
      */
-    public function assignVar( $key, $value )
+    public function assignVar($key, $value)
     {
         $this->smarty->assignByRef($key, $value);
     }
@@ -75,7 +74,7 @@ class OW_ViewRenderer
      * @param string $template
      * @return string
      */
-    public function renderTemplate( $template )
+    public function renderTemplate($template)
     {
         return $this->smarty->fetch($template);
     }
@@ -86,7 +85,7 @@ class OW_ViewRenderer
      * @param string $varName
      * @return mixed
      */
-    public function getAssignedVar( $varName )
+    public function getAssignedVar($varName)
     {
         return $this->smarty->getTemplateVars($varName);
     }
@@ -113,7 +112,7 @@ class OW_ViewRenderer
      *
      * @param string $varName
      */
-    public function clearAssignedVar( $varName )
+    public function clearAssignedVar($varName)
     {
         $this->smarty->clearAssign($varName);
     }
@@ -124,10 +123,9 @@ class OW_ViewRenderer
      * @param string $name
      * @param callback $callback
      */
-    public function registerFunction( $name, $callback )
+    public function registerFunction($name, $callback)
     {
-        if ( empty($this->smarty->registered_plugins['function'][$name]) )
-        {
+        if (empty($this->smarty->registered_plugins['function'][$name])) {
             $this->smarty->registerPlugin('function', $name, $callback);
         }
     }
@@ -137,7 +135,7 @@ class OW_ViewRenderer
      *
      * @param string $name
      */
-    public function unregisterFunction( $name )
+    public function unregisterFunction($name)
     {
         $this->smarty->unregisterPlugin('function', $name);
     }
@@ -148,10 +146,9 @@ class OW_ViewRenderer
      * @param string $name
      * @param callback $callback
      */
-    public function registerBlock( $name, $callback )
+    public function registerBlock($name, $callback)
     {
-        if ( empty($this->smarty->registered_plugins['block'][$name]) )
-        {
+        if (empty($this->smarty->registered_plugins['block'][$name])) {
             $this->smarty->registerPlugin('block', $name, $callback);
         }
     }
@@ -161,7 +158,7 @@ class OW_ViewRenderer
      *
      * @param string $name
      */
-    public function unregisterBlock( $name )
+    public function unregisterBlock($name)
     {
         $this->smarty->unregisterPlugin('block', $name);
     }
@@ -172,10 +169,9 @@ class OW_ViewRenderer
      * @param string $name
      * @param string $callback 
      */
-    public function registerModifier( $name, $callback )
+    public function registerModifier($name, $callback)
     {
-        if ( empty($this->smarty->registered_plugins['modifier'][$name]) )
-        {
+        if (empty($this->smarty->registered_plugins['modifier'][$name])) {
             $this->smarty->registerPlugin('modifier', $name, $callback);
         }
     }
@@ -185,7 +181,7 @@ class OW_ViewRenderer
      * 
      * @param string $name 
      */
-    public function unregisterModifier( $name )
+    public function unregisterModifier($name)
     {
         $this->smarty->unregisterPlugin('modifier', $name);
     }

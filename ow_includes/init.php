@@ -34,13 +34,12 @@ require_once OW_DIR_CORE . 'filter.php';
 
 mb_internal_encoding('UTF-8');
 
-if ( OW_DEBUG_MODE )
-{
+if (OW_DEBUG_MODE) {
     ob_start();
 }
 
-spl_autoload_register(array('OW_Autoload', 'autoload'));
-require_once OW_DIR_LIB_VENDOR . "autoload.php";
+spl_autoload_register(['OW_Autoload', 'autoload']);
+require_once OW_DIR_LIB_VENDOR . 'autoload.php';
 
 // adding standard package pointers
 $autoloader = OW::getAutoloader();
@@ -90,13 +89,11 @@ $classesToAutoload = [
 
 OW::getAutoloader()->addClassArray($classesToAutoload);
 
-if ( defined("OW_URL_HOME") )
-{
+if (defined('OW_URL_HOME')) {
     OW::getRouter()->setBaseUrl(OW_URL_HOME);
 }
 
-if ( OW_PROFILER_ENABLE )
-{
+if (OW_PROFILER_ENABLE) {
     UTIL_Profiler::getInstance();
 }
 

@@ -75,7 +75,7 @@ class OW_View
      * 
      * @param boolean $collect 
      */
-    public static function setCollectDevInfo( $collect )
+    public static function setCollectDevInfo($collect)
     {
         self::$collectDevInfo = (bool) $collect;
     }
@@ -86,10 +86,10 @@ class OW_View
      * @param boolean $visible
      * @return OW_View
      */
-    public function setVisible( $visible )
+    public function setVisible($visible)
     {
         $this->visible = (bool) $visible;
-        
+
         return $this;
     }
 
@@ -115,10 +115,10 @@ class OW_View
      * @param string $template
      * @return OW_View
      */
-    public function setTemplate( $template )
+    public function setTemplate($template)
     {
         $this->template = $template;
-        
+
         return $this;
     }
 
@@ -129,10 +129,10 @@ class OW_View
      * @param mixed $value
      * @return OW_View
      */
-    public function assign( $name, $value )
+    public function assign($name, $value)
     {
         $this->assignedVars[$name] = $value;
-        
+
         return $this;
     }
 
@@ -140,10 +140,9 @@ class OW_View
      * @param string $varName
      * @return OW_View
      */
-    public function clearAssign( $varName )
+    public function clearAssign($varName)
     {
-        if ( isset($this->assignedVars[$varName]) )
-        {
+        if (isset($this->assignedVars[$varName])) {
             unset($this->assignedVars[$varName]);
         }
 
@@ -152,7 +151,6 @@ class OW_View
 
     public function onBeforeRender()
     {
-        
     }
 
     /**
@@ -164,15 +162,13 @@ class OW_View
     {
         $this->onBeforeRender();
 
-        if ( !$this->visible )
-        {
-            return "";
+        if (!$this->visible) {
+            return '';
         }
 
         $className = get_class($this);
 
-        if ( $this->template === null )
-        {
+        if ($this->template === null) {
             throw new LogicException("No template provided for class `{$className}`");
         }
 
@@ -191,8 +187,7 @@ class OW_View
         $viewRenderer->assignVars($prevVars);
 
         // TODO refactor - dirty data collect for dev tool
-        if ( self::$collectDevInfo )
-        {
+        if (self::$collectDevInfo) {
             self::$devInfo[$className] = $this->template;
         }
 
@@ -201,7 +196,6 @@ class OW_View
 
     protected function onRender()
     {
-        
     }
 
     /**
@@ -212,7 +206,7 @@ class OW_View
      * @param mixed $data
      * @return mixed
      */
-    protected function triggerEvent( $name, array $params = [], $data = null )
+    protected function triggerEvent($name, array $params = [], $data = null)
     {
         return OW::getEventManager()->trigger(new OW_Event($name, $params, $data));
     }
@@ -221,7 +215,7 @@ class OW_View
      * @param OW_Event $event
      * @return mixed
      */
-    protected function triggerEventForObject( OW_Event $event )
+    protected function triggerEventForObject(OW_Event $event)
     {
         return OW::getEventManager()->trigger($event);
     }

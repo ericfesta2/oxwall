@@ -29,7 +29,7 @@
  */
 class UTIL_Csrf
 {
-    const SESSION_VAR_NAME = "csrf_tokens";
+    public const SESSION_VAR_NAME = 'csrf_tokens';
 
     /**
      * Generates and returns CSRF token
@@ -52,7 +52,7 @@ class UTIL_Csrf
      * @param string $token
      * @return bool
      */
-    public static function isTokenValid( $token )
+    public static function isTokenValid($token)
     {
         $tokenList = self::getTokenList();
 
@@ -65,7 +65,7 @@ class UTIL_Csrf
         return OW::getSession()->isKeySet(self::SESSION_VAR_NAME) ? OW::getSession()->get(self::SESSION_VAR_NAME) : [];
     }
 
-    private static function saveTokenList( array $list )
+    private static function saveTokenList(array $list)
     {
         OW::getSession()->set(self::SESSION_VAR_NAME, $list);
     }
