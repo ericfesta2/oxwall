@@ -1415,7 +1415,7 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     font-weight: normal;
     display: block;
     padding: 3px 0;
-    color: #828894;
+    color: var(--main-text-color-alt);
 }
 .ow_context_action_list a:hover {
     text-decoration: none;
@@ -2297,7 +2297,10 @@ span.ow_lbutton {
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
- }
+}
+.ow_photo_item_widget {
+    border-radius: 4px;
+}
 /*File attachments*/
 .ow_file_attachment_preview {
     width: 100%;

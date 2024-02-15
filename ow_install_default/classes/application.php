@@ -16,7 +16,7 @@ final readonly class INSTALL_Application
         include INSTALL_DIR_ROOT . 'init.php';
     }
 
-    public function display( bool $dbReady )
+    public function display(bool $dbReady)
     {
         $dispatchAttrs = OW::getRouter()->route();
         $controllerClass = $dispatchAttrs['controller'];
@@ -26,16 +26,14 @@ final readonly class INSTALL_Application
         $controller->init($dispatchAttrs, $dbReady);
 
         $params = [];
-        if ( !empty($dispatchAttrs['vars']) )
-        {
+        if (!empty($dispatchAttrs['vars'])) {
             $params[] = $dispatchAttrs['vars'];
         }
 
         call_user_func_array([$controller, $dispatchAttrs['action']], $params);
 
         $template = $controller->getTemplate();
-        if ( empty($template) )
-        {
+        if (empty($template)) {
             $controllerName = OW::getAutoloader()->classToFilename($controllerClass, false);
             $template = INSTALL_DIR_VIEW_CTRL . $controllerName
                 . '_'
@@ -63,7 +61,7 @@ final readonly class INSTALL_Application
 final class INSTALL_DefaultRoute extends OW_DefaultRoute
 {
     #[\Override]
-    public function getDispatchAttrs( $uri ): array
+    public function getDispatchAttrs($uri): array
     {
         return [
             'controller' => 'INSTALL_CTRL_Error',

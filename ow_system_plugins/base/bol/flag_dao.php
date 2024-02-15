@@ -150,7 +150,7 @@ class BOL_FlagDao extends OW_BaseDao
 
         $this->deleteByExample($example);
     }
-    
+
     public function deleteEntityFlags( $entityType, $entityId )
     {
         $example = new OW_Example();

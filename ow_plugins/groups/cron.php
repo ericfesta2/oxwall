@@ -45,6 +45,7 @@ final class GROUPS_Cron extends OW_Cron
         return 1;
     }
 
+    #[\Override]
     public function run()
     {
         $config = OW::getConfig();

@@ -2,7 +2,6 @@
 
 class INSTALL_ViewRenderer
 {
-
     private static $classInstance;
 
     /**
@@ -12,8 +11,7 @@ class INSTALL_ViewRenderer
      */
     public static function getInstance()
     {
-        if( self::$classInstance === null )
-        {
+        if (self::$classInstance === null) {
             self::$classInstance = new self();
         }
 
@@ -27,7 +25,6 @@ class INSTALL_ViewRenderer
      */
     private function __construct()
     {
-
     }
 
     /**
@@ -35,10 +32,9 @@ class INSTALL_ViewRenderer
      *
      * @param array $vars
      */
-    public function assignVars( $vars )
+    public function assignVars($vars)
     {
-        foreach( $vars as $key => $value )
-        {
+        foreach ($vars as $key => $value) {
             $this->assigns[$key] = $value;
         }
     }
@@ -49,7 +45,7 @@ class INSTALL_ViewRenderer
      * @param string $key
      * @param mixed $value
      */
-    public function assignVar( $key, $value )
+    public function assignVar($key, $value)
     {
         $this->assigns[$key] = $value;
     }
@@ -60,11 +56,9 @@ class INSTALL_ViewRenderer
      * @param string $template
      * @return string
      */
-    public function render( $template )
+    public function render($template)
     {
-
-        if( empty($template) )
-        {
+        if (empty($template)) {
             throw new LogicException('No template was provided for render!');
         }
 

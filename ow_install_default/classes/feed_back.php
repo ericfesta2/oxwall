@@ -11,7 +11,7 @@ final class INSTALL_FeedBack
     {
         $installFeedback = OW::getSession()->get('OW-INSTALL-FEEDBACK');
 
-        if ( $installFeedback !== null ) {
+        if ($installFeedback !== null) {
             $this->session = $installFeedback;
         }
     }
@@ -21,7 +21,7 @@ final class INSTALL_FeedBack
         OW::getSession()->set('OW-INSTALL-FEEDBACK', $this->session);
     }
 
-    public function errorMessage( string $msg )
+    public function errorMessage(string $msg)
     {
         $this->session['message'][] = [
             'type' => 'error',
@@ -29,12 +29,12 @@ final class INSTALL_FeedBack
         ];
     }
 
-    public function errorFlag( string $flag )
+    public function errorFlag(string $flag)
     {
         $this->session['flag'][$flag] = true;
     }
 
-    public function getFlag( string $flag ): bool
+    public function getFlag(string $flag): bool
     {
         $out = !empty($this->session['flag'][$flag]);
         unset($this->session['flag'][$flag]);

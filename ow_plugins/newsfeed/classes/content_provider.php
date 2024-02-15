@@ -1,8 +1,8 @@
 <?php
 
-class NEWSFEED_CLASS_ContentProvider
+final class NEWSFEED_CLASS_ContentProvider
 {
-    const ENTITY_TYPE_USER_STATUS = "user-status";
+    private const string ENTITY_TYPE_USER_STATUS = 'user-status';
     
     /**
      * Singleton instance.
@@ -39,26 +39,26 @@ class NEWSFEED_CLASS_ContentProvider
     
     public function onCollectTypes( BASE_CLASS_EventCollector $event )
     {
-        $event->add(array(
+        $event->add([
             "pluginKey" => "newsfeed",
             "group" => "newsfeed",
             "groupLabel" => OW::getLanguage()->text("newsfeed", "content_group_label"),
             "entityType" => self::ENTITY_TYPE_USER_STATUS,
             "entityLabel" => OW::getLanguage()->text("newsfeed", "content_status_label"),
             "moderation" => array(BOL_ContentService::MODERATION_TOOL_FLAG)
-        ));
+        ]);
     }
     
     public function onGetInfo( OW_Event $event )
     {
         $params = $event->getParams();
-        
-        if ( $params["entityType"] != self::ENTITY_TYPE_USER_STATUS )
+
+        if ( $params["entityType"] !== self::ENTITY_TYPE_USER_STATUS )
         {
             return;
         }
-        
-        $out = array();
+
+        $out = [];
         foreach ( $params["entityIds"] as $entityId )
         {
             $entity = $this->service->findAction($params["entityType"], $entityId);
@@ -77,7 +77,7 @@ class NEWSFEED_CLASS_ContentProvider
                 $timeStamp = $cActivity->timeStamp;
             }
             
-            $info = array();
+            $info = [];
 
             $info["id"] = $entityId;
             $info["userId"] = $userId;
@@ -89,7 +89,7 @@ class NEWSFEED_CLASS_ContentProvider
             {
                 $info["text"] = $data["data"]["status"];
             }
-            else if ($content["format"] == "text")
+            elseif ($content["format"] === "text")
             {
                 $info["text"] = $content["vars"]["status"];
             }
@@ -134,17 +134,19 @@ class NEWSFEED_CLASS_ContentProvider
     {
         $params = $event->getParams();
         $data = $event->getData();
-        
-        $entityType = $params["entityType"];
-        
+
+        $entityType = $params['entityType'];
+
         foreach ( $data as $entityId => $info )
         {
             $status = $info["status"] == BOL_ContentService::STATUS_ACTIVE
                     ? NEWSFEED_BOL_Service::ACTION_STATUS_ACTIVE
                     : NEWSFEED_BOL_Service::ACTION_STATUS_INACTIVE;
-            
-            $cActivities = $this->service->findActivity(NEWSFEED_BOL_Service::SYSTEM_ACTIVITY_CREATE . ':' . $entityType . '.' . $entityId);
-            
+
+            $cActivities = $this->service->findActivity(
+                NEWSFEED_BOL_Service::SYSTEM_ACTIVITY_CREATE . ':' . $entityType . '.' . $entityId
+            );
+
             foreach ( $cActivities as $activity )
             {
                 $activity->status = $status;
@@ -152,19 +154,19 @@ class NEWSFEED_CLASS_ContentProvider
             }
         }
     }
-    
+
     public function onDelete( OW_Event $event )
     {
         $params = $event->getParams();
         
-        if ( $params["entityType"] != self::ENTITY_TYPE_USER_STATUS )
+        if ( $params['entityType'] !== self::ENTITY_TYPE_USER_STATUS )
         {
             return;
         }
 
-        foreach ( $params["entityIds"] as $entityId )
+        foreach ( $params['entityIds'] as $entityId )
         {
-            $this->service->removeAction($params["entityType"], $entityId);
+            $this->service->removeAction($params['entityType'], $entityId);
         }
     }
 
@@ -173,43 +175,43 @@ class NEWSFEED_CLASS_ContentProvider
     public function onBeforeActionDelete( OW_Event $event )
     {
         $params = $event->getParams();
-        
-        if ( $params["entityType"] != self::ENTITY_TYPE_USER_STATUS )
+
+        if ( $params['entityType'] !== self::ENTITY_TYPE_USER_STATUS )
         {
             return;
         }
-        
-        OW::getEventManager()->trigger(new OW_Event(BOL_ContentService::EVENT_BEFORE_DELETE, array(
-            "entityType" => $params["entityType"],
-            "entityId" => $params["entityType"]
-        )));
+
+        OW::getEventManager()->trigger(new OW_Event(BOL_ContentService::EVENT_BEFORE_DELETE, [
+            'entityType' => $params['entityType'],
+            'entityId' => $params['entityId']
+        ]));
     }
     
     public function onAfterActionAdd( OW_Event $event )
     {
         $params = $event->getParams();
         
-        if ( $params["entityType"] != self::ENTITY_TYPE_USER_STATUS )
+        if ( $params["entityType"] !== self::ENTITY_TYPE_USER_STATUS )
         {
             return;
         }
         
-        OW::getEventManager()->trigger(new OW_Event(BOL_ContentService::EVENT_AFTER_ADD, array(
-            "entityType" => $params["entityType"],
-            "entityId" => $params["entityId"]
-        ), array(
-            "string" => array("key" => "newsfeed+status_add_string")
-        )));
+        OW::getEventManager()->trigger(new OW_Event(BOL_ContentService::EVENT_AFTER_ADD, [
+            'entityType' => $params['entityType'],
+            'entityId' => $params['entityId']
+        ], [
+            'string' => ['key' => 'newsfeed+status_add_string']
+        ]));
     }
         
     public function init()
     {
-        OW::getEventManager()->bind(NEWSFEED_BOL_Service::EVENT_BEFORE_ACTION_DELETE, array($this, "onBeforeActionDelete"));
-        OW::getEventManager()->bind(NEWSFEED_BOL_Service::EVENT_AFTER_ACTION_ADD, array($this, "onAfterActionAdd"));
+        OW::getEventManager()->bind(NEWSFEED_BOL_Service::EVENT_BEFORE_ACTION_DELETE, [$this, 'onBeforeActionDelete']);
+        OW::getEventManager()->bind(NEWSFEED_BOL_Service::EVENT_AFTER_ACTION_ADD, [$this, 'onAfterActionAdd']);
         
-        OW::getEventManager()->bind(BOL_ContentService::EVENT_COLLECT_TYPES, array($this, "onCollectTypes"));
-        OW::getEventManager()->bind(BOL_ContentService::EVENT_GET_INFO, array($this, "onGetInfo"));
-        OW::getEventManager()->bind(BOL_ContentService::EVENT_UPDATE_INFO, array($this, "onUpdateInfo"));
-        OW::getEventManager()->bind(BOL_ContentService::EVENT_DELETE, array($this, "onDelete"));
+        OW::getEventManager()->bind(BOL_ContentService::EVENT_COLLECT_TYPES, [$this, 'onCollectTypes']);
+        OW::getEventManager()->bind(BOL_ContentService::EVENT_GET_INFO, [$this, 'onGetInfo']);
+        OW::getEventManager()->bind(BOL_ContentService::EVENT_UPDATE_INFO, [$this, 'onUpdateInfo']);
+        OW::getEventManager()->bind(BOL_ContentService::EVENT_DELETE, [$this, 'onDelete']);
     }
 }

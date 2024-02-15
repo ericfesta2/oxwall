@@ -18,8 +18,7 @@ final class INSTALL_CMP_Steps extends INSTALL_Component
         $this->add('install', 'Install');
 
         // allow to admin select additional plugins
-        if ( $optionalPlugins )
-        {
+        if ($optionalPlugins) {
             $this->add('plugins', 'Plugins');
         }
     }
@@ -34,8 +33,7 @@ final class INSTALL_CMP_Steps extends INSTALL_Component
 
     public function activate($key)
     {
-        foreach ( $this->steps as & $step )
-        {
+        foreach ($this->steps as &$step) {
             $step['active'] = false;
         }
 

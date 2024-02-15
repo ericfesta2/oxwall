@@ -10,8 +10,7 @@ class INSTALL_Renderable extends OW_Renderable
     {
         $this->onBeforeRender();
 
-        if( !$this->visible )
-        {
+        if (!$this->visible) {
             return '';
         }
 

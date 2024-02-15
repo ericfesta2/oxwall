@@ -5,9 +5,11 @@ class INSTALL_ActionController extends INSTALL_Renderable
     private string $title = 'Install Oxwall';
     private string $heading = 'Installation Process';
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
-    protected function setPageTitle( string $title )
+    protected function setPageTitle(string $title)
     {
         $this->title = $title;
     }
@@ -17,7 +19,7 @@ class INSTALL_ActionController extends INSTALL_Renderable
         return $this->title;
     }
 
-    protected function setPageHeading( string $heading )
+    protected function setPageHeading(string $heading)
     {
         $this->heading = $heading;
     }
@@ -30,14 +32,13 @@ class INSTALL_ActionController extends INSTALL_Renderable
     /**
      * Makes permanent redirect to provided URL or URI.
      */
-    public function redirect( ?string $redirectTo = null )
+    public function redirect(?string $redirectTo = null)
     {
         // if empty redirect location -> current URI is used
         $redirectUrl = $redirectTo ?? OW::getRequest()->getRequestUri();
 
         // if URI is provided need to add site home URL
-        if ( !strstr($redirectUrl, 'http://') && !strstr($redirectUrl, 'https://') )
-        {
+        if (!strstr($redirectUrl, 'http://') && !strstr($redirectUrl, 'https://')) {
             $redirectUrl = OW::getRouter()->getBaseUrl() . UTIL_String::removeFirstAndLastSlashes($redirectUrl);
         }
 

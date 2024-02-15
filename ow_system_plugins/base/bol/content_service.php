@@ -194,7 +194,7 @@ class BOL_ContentService
         return empty($this->contentTypes[$entityType]) ? null : $this->contentTypes[$entityType];
     }
     
-    public function getContentList( $entityType, array $entityIds )
+    public function getContentList( $entityType, array $entityIds ): array
     {
         $typeInfo = $this->getContentTypeByEntityType($entityType);
         

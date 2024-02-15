@@ -45,7 +45,7 @@ abstract class OW_Cron
      * @param string $methodName
      * @param int $runInterval in minutes
      */
-    protected function addJob( $methodName, $runInterval = 1 )
+    protected function addJob($methodName, $runInterval = 1)
     {
         $this->jobs[$methodName] = $runInterval;
     }
@@ -63,5 +63,5 @@ abstract class OW_Cron
         return 1;
     }
 
-    public abstract function run();
+    abstract public function run();
 }

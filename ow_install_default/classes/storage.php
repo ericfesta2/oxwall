@@ -1,6 +1,6 @@
 <?php
 
-final class INSTALL_Storage 
+final class INSTALL_Storage
 {
     private array $storage = [];
 
@@ -11,15 +11,11 @@ final class INSTALL_Storage
 
     public function __destruct()
     {
-        if ( empty($this->storage) )
-        {
+        if (empty($this->storage)) {
             OW::getSession()->delete('OW-INSTALL-DATA');
-        }
-        else
-        {
+        } else {
             OW::getSession()->set('OW-INSTALL-DATA', $this->storage);
         }
-
     }
 
     public function set($name, $value)

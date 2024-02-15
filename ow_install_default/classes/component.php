@@ -2,7 +2,7 @@
 
 class INSTALL_Component extends INSTALL_Renderable
 {
-    public function __construct( ?string $template = null )
+    public function __construct(?string $template = null)
     {
         parent::__construct();
 

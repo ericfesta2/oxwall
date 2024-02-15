@@ -6,7 +6,7 @@ final class INSTALL
     {
         static $installStorage;
 
-        if ( !isset($installStorage) ) {
+        if (!isset($installStorage)) {
             $installStorage = new INSTALL_Storage();
         }
 
@@ -17,23 +17,22 @@ final class INSTALL
     {
         static $installFeedback;
 
-        if ( !isset($installFeedback) ) {
+        if (!isset($installFeedback)) {
             $installFeedback = new INSTALL_FeedBack();
         }
 
-        return $installFeedback;    
+        return $installFeedback;
     }
 
     public static function getStepIndicator(): INSTALL_CMP_Steps
     {
         static $stepIndicator;
 
-        if ( empty($stepIndicator) )
-        {
-            $stepIndicator = new INSTALL_CMP_Steps( self::getPredefinedPluginList(true) );
+        if (empty($stepIndicator)) {
+            $stepIndicator = new INSTALL_CMP_Steps(self::getPredefinedPluginList(true));
         }
 
-        return $stepIndicator;    
+        return $stepIndicator;
     }
 
     public static function getViewRenderer(): INSTALL_ViewRenderer
@@ -47,13 +46,11 @@ final class INSTALL
         $pluginForInstall = explode("\n", $fileContent);
         $resultPluginList = [];
 
-        foreach ( $pluginForInstall as $pluginLine )
-        {
+        foreach ($pluginForInstall as $pluginLine) {
             $plInfo = explode(':', $pluginLine);
             $isAutoInstall = !empty($plInfo[1]) && trim($plInfo[1]) === 'auto';
 
-            if ( !$onlyOptional || !$isAutoInstall )
-            {
+            if (!$onlyOptional || !$isAutoInstall) {
                 $resultPluginList[] = [
                     'plugin' => $plInfo[0],
                     'auto' => $isAutoInstall
