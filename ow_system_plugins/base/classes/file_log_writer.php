@@ -29,27 +29,26 @@
  * @package ow_system_plugins.base.class
  * @since 1.0
  */
-class BASE_CLASS_FileLogWriter extends OW_LogWriter {
-
+class BASE_CLASS_FileLogWriter extends OW_LogWriter
+{
     public function __construct(
         private readonly string $path
-    ) {}
+    ) {
+    }
 
     public function processEntries(array $entries): void
     {
-        $stringToWrite = "";
+        $stringToWrite = '';
 
-        foreach ( $entries as $entry )
-        {
-            $date = date("D M j G:i:s Y", $entry[OW_Log::TIME_STAMP]);
+        foreach ($entries as $entry) {
+            $date = date('D M j G:i:s Y', $entry[OW_Log::TIME_STAMP]);
             $stringToWrite .= "[$date] [{$entry[OW_Log::TYPE]}] [{$entry[OW_Log::KEY]}] {$entry[OW_Log::MESSAGE]}" . PHP_EOL;
         }
 
         $changePerm = !file_exists($this->path);
         file_put_contents($this->path, $stringToWrite, FILE_APPEND);
 
-        if ( $changePerm )
-        {
+        if ($changePerm) {
             chmod($this->path, 0666);
         }
     }

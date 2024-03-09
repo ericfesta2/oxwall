@@ -154,7 +154,6 @@ body, html {
     font-family: var(--font-stack);
     font-size: 18px;
     height: 100%;
-    min-width: 1000px;
 }
 
 a {
@@ -1819,7 +1818,6 @@ select:focus,
 }
 
 .jhtmlarea {
-    background-color: var(--main-sect-color) !important;
     color: var(--main-text-color) !important;
     width: 100% !important;
     box-sizing: border-box;
@@ -2833,8 +2831,6 @@ div .ow_bg_controls .ow_green{
 .ow_table_2 tr td,
 .ow_user_list .ow_alt1,
 .ow_user_list .ow_alt2,
-.ow_video_list .ow_alt1,
-.ow_video_list .ow_alt2,
 .ow_photo_list .ow_alt1,
 .ow_photo_list .ow_alt2 {
     border-style: solid;
@@ -4478,10 +4474,6 @@ span.ow_chat_item_text,
     align-content: stretch;
     justify-content: center;
 }
-.ow_video_list .ow_alt1.clearfix,
-.ow_video_list .ow_alt2.clearfix {
-    display: flex;
-}
 .ow_video_player{
     text-align: center;
 }
@@ -4490,7 +4482,6 @@ span.ow_chat_item_text,
 }
 .ow_video_list_item{
     margin: 0 3.5%;
-    max-height: 165px;
     width: 120px;
 }
 .ow_other_video_item_title{
@@ -4504,8 +4495,8 @@ span.ow_chat_item_text,
 }
 .ow_video_thumb,
 .ow_video_list_item img{
-    height: 90px;
-    width: 120px;
+    width: 145px;
+    box-shadow: 0 2px 3px rgba(0,0,0,.2);
 }
 .ow_other_video_thumb{
     display: block;
@@ -4547,7 +4538,9 @@ span.ow_chat_item_text,
     text-align: right;
 }
 .ow_video_player object,
-.ow_video_player embed {
+.ow_video_player embed,
+.ow_video_player iframe {
+    width: 100%;
     max-width: 100%;
 }
 /* ---- End of Video styles ---- */
@@ -5617,9 +5610,6 @@ h1.page_title{
 /* Responsive styles */
 @media (max-width: 979px) {
     /*General*/
-    body, html {
-        min-width: 767px;
-    }
     .ow_page_container, .ow_site_panel_wrap, #ow_footer {
         width: 100%;
     }
@@ -5666,7 +5656,7 @@ h1.page_title{
         word-wrap: break-word;
     }
     .ow_page_container .ow_page {
-        padding-top: 16px;
+        padding: 16px 12px;
     }
     /*Photo*/
     .ow_photo_list_wrap.ow_photo_no_sidebar div.ow_photo_item_wrap,
@@ -5756,12 +5746,6 @@ h1.page_title{
         width: 100% !important; 
         margin-bottom: 10px;
         clear: both;
-    }
-    body, html {
-        min-width: 480px;
-    }
-    .ow_site_panel {
-        min-width: 320px;
     }
     .floatbox_container {
         max-width: 100%;
