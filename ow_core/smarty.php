@@ -33,7 +33,6 @@
  */
 final class OW_Smarty extends Smarty
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -43,8 +42,7 @@ final class OW_Smarty extends Smarty
         $this->caching = false;
         $this->debugging = false;
 
-        if ( OW_DEV_MODE )
-        {
+        if (OW_DEV_MODE) {
             $this->compile_check = true;
             $this->force_compile = true;
         }
@@ -58,8 +56,7 @@ final class OW_Smarty extends Smarty
 
 final class OW_Smarty_Security extends Smarty_Security
 {
-
-    public function __construct( Smarty $smarty )
+    public function __construct(Smarty $smarty)
     {
         parent::__construct($smarty);
         $this->secure_dir = [OW_DIR_THEME, OW_DIR_SYSTEM_PLUGIN, OW_DIR_PLUGIN];
