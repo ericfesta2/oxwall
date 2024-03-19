@@ -18,7 +18,6 @@ build
 owr.sh
 owr.py
 composer.phar
-composer.lock
 
 ow_libraries/vendor
 
