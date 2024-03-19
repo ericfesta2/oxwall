@@ -31,32 +31,32 @@ use PHPMailer\PHPMailer\Exception as phpMailerException;
  */
 final class BOL_UserService
 {
-    const CREATE_USER_INVALID_USERNAME = -1;
-    const CREATE_USER_INVALID_EMAIL = -2;
-    const CREATE_USER_INVALID_PASSWORD = -3;
-    const CREATE_USER_DUPLICATE_USERNAME = -4;
-    const CREATE_USER_DUPLICATE_EMAIL = -5;
-    const PERMISSIONS_ANYONE_CAN_JOIN = 1;
-    const PERMISSIONS_JOIN_BY_INVITATIONS = 2;
-    const PERMISSIONS_MEMBERS_CAN_INVITE = 1;
-    const PERMISSIONS_ADMIN_CAN_INVITE = 2;
-    const PERMISSIONS_GUESTS_CAN_VIEW = 1;
-    const PERMISSIONS_GUESTS_CANT_VIEW = 2;
-    const PERMISSIONS_GUESTS_PASSWORD_VIEW = 3;
-    const CONFIG_JOIN_DISPLAY_PHOTO_UPLOAD = 'display';
-    const CONFIG_JOIN_DISPLAY_AND_SET_REQUIRED_PHOTO_UPLOAD = 'display_and_required';
-    const CONFIG_JOIN_NOT_DISPLAY_PHOTO_UPLOAD = 'not_display';
-    const USER_CONTEXT_DESKTOP = BOL_UserOnlineDao::CONTEXT_VAL_DESKTOP;
-    const USER_CONTEXT_MOBILE = BOL_UserOnlineDao::CONTEXT_VAL_MOBILE;
-    const USER_CONTEXT_API = BOL_UserOnlineDao::CONTEXT_VAL_API;
-    const USER_CONTEXT_CLI = BOL_UserOnlineDao::CONTEXT_VAL_CLI;
-    const PASSWORD_RESET_CODE_EXPIRATION_TIME = 1200;
-    const PASSWORD_RESET_CODE_UPDATE_TIME = 600;
-    const BEFORE_USER_ONLINE = 'base.before_user_online';
-    const EVENT_GET_USER_VIEW_QUESTIONS = 'base.get_user_view_questions';
-    
-    const EVENT_USER_QUERY_FILTER = BOL_UserDao::EVENT_QUERY_FILTER;
-    const EVENT_ON_GET_DISPLAY_NAME = 'base.get_display_name';
+    public const CREATE_USER_INVALID_USERNAME = -1;
+    public const CREATE_USER_INVALID_EMAIL = -2;
+    public const CREATE_USER_INVALID_PASSWORD = -3;
+    public const CREATE_USER_DUPLICATE_USERNAME = -4;
+    public const CREATE_USER_DUPLICATE_EMAIL = -5;
+    public const PERMISSIONS_ANYONE_CAN_JOIN = 1;
+    public const PERMISSIONS_JOIN_BY_INVITATIONS = 2;
+    public const PERMISSIONS_MEMBERS_CAN_INVITE = 1;
+    public const PERMISSIONS_ADMIN_CAN_INVITE = 2;
+    public const PERMISSIONS_GUESTS_CAN_VIEW = 1;
+    public const PERMISSIONS_GUESTS_CANT_VIEW = 2;
+    public const PERMISSIONS_GUESTS_PASSWORD_VIEW = 3;
+    public const CONFIG_JOIN_DISPLAY_PHOTO_UPLOAD = 'display';
+    public const CONFIG_JOIN_DISPLAY_AND_SET_REQUIRED_PHOTO_UPLOAD = 'display_and_required';
+    public const CONFIG_JOIN_NOT_DISPLAY_PHOTO_UPLOAD = 'not_display';
+    public const USER_CONTEXT_DESKTOP = BOL_UserOnlineDao::CONTEXT_VAL_DESKTOP;
+    public const USER_CONTEXT_MOBILE = BOL_UserOnlineDao::CONTEXT_VAL_MOBILE;
+    public const USER_CONTEXT_API = BOL_UserOnlineDao::CONTEXT_VAL_API;
+    public const USER_CONTEXT_CLI = BOL_UserOnlineDao::CONTEXT_VAL_CLI;
+    public const PASSWORD_RESET_CODE_EXPIRATION_TIME = 1200;
+    public const PASSWORD_RESET_CODE_UPDATE_TIME = 600;
+    public const BEFORE_USER_ONLINE = 'base.before_user_online';
+    public const EVENT_GET_USER_VIEW_QUESTIONS = 'base.get_user_view_questions';
+
+    public const EVENT_USER_QUERY_FILTER = BOL_UserDao::EVENT_QUERY_FILTER;
+    public const EVENT_ON_GET_DISPLAY_NAME = 'base.get_display_name';
 
     /**
      * @var BOL_UserDao
@@ -131,8 +131,7 @@ final class BOL_UserService
      */
     public static function getInstance()
     {
-        if ( self::$classInstance === null )
-        {
+        if (self::$classInstance === null) {
             self::$classInstance = new self();
         }
 
@@ -163,7 +162,7 @@ final class BOL_UserService
      * @param string $password
      * @return BOL_User
      */
-    public function findUserForStandardAuth( $var )
+    public function findUserForStandardAuth($var)
     {
         return $this->userDao->findUserByUsernameOrEmail($var);
     }
@@ -174,7 +173,7 @@ final class BOL_UserService
      * @param int $id
      * @return BOL_User
      */
-    public function findUserById( $id )
+    public function findUserById($id)
     {
         return $this->userDao->findById((int) $id);
     }
@@ -185,7 +184,7 @@ final class BOL_UserService
      * @param integer $id
      * @return BOL_User
      */
-    public function findByIdWithoutCache( $id )
+    public function findByIdWithoutCache($id)
     {
         return $this->userDao->findByIdWithoutCache((int) $id);
     }
@@ -196,19 +195,19 @@ final class BOL_UserService
      * @param integer $userId
      * @return string
      */
-    public function getDisplayName( $userId )
+    public function getDisplayName($userId)
     {
         $questionName = OW::getConfig()->getValue('base', 'display_name_question');
 
-        $questionValue = BOL_QuestionService::getInstance()->getQuestionData(array($userId), array($questionName));
-        
-        $event = OW::getEventManager()->trigger(new OW_Event(self::EVENT_ON_GET_DISPLAY_NAME, array(
-            'userIdList' => array($userId),
+        $questionValue = BOL_QuestionService::getInstance()->getQuestionData([$userId], [$questionName]);
+
+        $event = OW::getEventManager()->trigger(new OW_Event(self::EVENT_ON_GET_DISPLAY_NAME, [
+            'userIdList' => [$userId],
             'questionName' => $questionName
-        ), $questionValue));
+        ], $questionValue));
         $questionValue = $event->getData();
 
-        $displayName = isset($questionValue[$userId]) ? ( isset($questionValue[$userId][$questionName]) ? $questionValue[$userId][$questionName] : '' ) : OW::getLanguage()->text('base', 'deleted_user');
+        $displayName = isset($questionValue[$userId]) ? ($questionValue[$userId][$questionName] ?? '') : OW::getLanguage()->text('base', 'deleted_user');
 
         return strip_tags($displayName);
     }
@@ -219,49 +218,44 @@ final class BOL_UserService
      * @param array $userIdList
      * @return array
      */
-    public function getDisplayNamesForList( array $userIdList )
+    public function getDisplayNamesForList(array $userIdList)
     {
         $userIdList = array_unique($userIdList);
 
         $questionName = OW::getConfig()->getValue('base', 'display_name_question');
 
-        $questionValues = BOL_QuestionService::getInstance()->getQuestionData($userIdList, array($questionName));
+        $questionValues = BOL_QuestionService::getInstance()->getQuestionData($userIdList, [$questionName]);
 
-        $event = OW::getEventManager()->trigger(new OW_Event(self::EVENT_ON_GET_DISPLAY_NAME, array(
+        $event = OW::getEventManager()->trigger(new OW_Event(self::EVENT_ON_GET_DISPLAY_NAME, [
             'userIdList' => $userIdList,
             'questionName' => $questionName
-        ), $questionValues));
+        ], $questionValues));
         $questionValues = $event->getData();
 
         $resultArray = [];
         $emptyDisplayNames = [];
 
-        foreach ( $userIdList as $value )
-        {
+        foreach ($userIdList as $value) {
             $resultArray[$value] = OW::getLanguage()->text('base', 'deleted_user');
 
-            if ( isset($questionValues[$value]) )
-            {
+            if (isset($questionValues[$value])) {
                 $resultArray[$value] = isset($questionValues[$value][$questionName]) ? htmlspecialchars($questionValues[$value][$questionName], ENT_HTML5, 'UTF-8') : '';
 
-                if ( !$resultArray[$value] )
-                {
+                if (!$resultArray[$value]) {
                     $emptyDisplayNames[] = $value;
                 }
             }
         }
 
-        if ( $emptyDisplayNames )
-        {
-            $event = new BASE_CLASS_EventCollector('base.event.on_get_empty_display_names', array(
+        if ($emptyDisplayNames) {
+            $event = new BASE_CLASS_EventCollector('base.event.on_get_empty_display_names', [
                 'users' => $emptyDisplayNames
-            ));
+            ]);
 
             OW::getEventManager()->trigger($event);
             $displayNames = $event->getData();
 
-            if ( !empty($displayNames) )
-            {
+            if (!empty($displayNames)) {
                 foreach ($displayNames as $items) {
                     $resultArray = $items + $resultArray;
                 }
@@ -271,14 +265,14 @@ final class BOL_UserService
         return $resultArray;
     }
 
-    public function getUserName( $userId )
+    public function getUserName($userId)
     {
         $user = $this->findUserById($userId);
 
-        return ( $user === null ? null : $user->getUsername() );
+        return  $user === null ? null : $user->getUsername() ;
     }
 
-    public function getUserNamesForList( array $userIdList )
+    public function getUserNamesForList(array $userIdList)
     {
         $userIdList = array_unique($userIdList);
 
@@ -287,39 +281,36 @@ final class BOL_UserService
         $resultArray = [];
 
         /* @var $user BOL_User */
-        foreach ( $userList as $user )
-        {
+        foreach ($userList as $user) {
             $resultArray[$user->getId()] = $user->getUsername();
         }
 
         $returnArray = [];
 
-        foreach ( $userIdList as $id )
-        {
-            $returnArray[$id] = isset($resultArray[$id]) ? $resultArray[$id] : null; //todo check and replace with lang value
+        foreach ($userIdList as $id) {
+            $returnArray[$id] = $resultArray[$id] ?? null; //todo check and replace with lang value
         }
 
         return $returnArray;
     }
 
-    public function getUserUrl( $id )
+    public function getUserUrl($id)
     {
         $user = $this->findUserById($id);
 
         return $this->getUserUrlForUsername(($user === null ? 'deleted-user' : $user->getUsername()));
     }
 
-    public function getUserUrlForUsername( $username )
+    public function getUserUrlForUsername($username)
     {
-        if ( empty($username) )
-        {
+        if (empty($username)) {
             $username = 'deleted-user';
         }
 
-        return OW::getRouter()->urlForRoute('base_user_profile', array('username' => $username));
+        return OW::getRouter()->urlForRoute('base_user_profile', ['username' => $username]);
     }
 
-    public function getUserUrlsForList( array $userIdList )
+    public function getUserUrlsForList(array $userIdList)
     {
         $userIdList = array_unique($userIdList);
 
@@ -328,29 +319,26 @@ final class BOL_UserService
         $resultArray = [];
 
         /* @var $user BOL_User */
-        foreach ( $userList as $user )
-        {
+        foreach ($userList as $user) {
             $resultArray[$user->getId()] = $this->getUserUrlForUsername($user->getUsername());
         }
 
         $returnArray = [];
 
-        foreach ( $userIdList as $id )
-        {
-            $returnArray[$id] = isset($resultArray[$id]) ? $resultArray[$id] : $this->getUserUrlForUsername('deleted-user');
+        foreach ($userIdList as $id) {
+            $returnArray[$id] = $resultArray[$id] ?? $this->getUserUrlForUsername('deleted-user');
         }
 
         return $returnArray;
     }
 
-    public function getUserUrlsListForUsernames( array $usernamesList )
+    public function getUserUrlsListForUsernames(array $usernamesList)
     {
         $usernamesList = array_unique($usernamesList);
 
         $returnArray = [];
 
-        foreach ( $usernamesList as $key => $value )
-        {
+        foreach ($usernamesList as $key => $value) {
             $returnArray[$key] = $this->getUserUrlForUsername($value);
         }
 
@@ -361,12 +349,12 @@ final class BOL_UserService
      * @param string $username
      * @return BOL_User
      */
-    public function findByUsername( $username )
+    public function findByUsername($username)
     {
         return $this->userDao->findByUsername($username);
     }
 
-    public function findRestrictedUsername( $username )
+    public function findRestrictedUsername($username)
     {
         return $this->restrictedUsernamesDao->findRestrictedUsername($username);
     }
@@ -376,7 +364,7 @@ final class BOL_UserService
      * @param string $email
      * @return BOL_User
      */
-    public function findByEmail( $email )
+    public function findByEmail($email)
     {
         return $this->userDao->findByUseEmail($email);
     }
@@ -387,12 +375,11 @@ final class BOL_UserService
      * @param integer $userId
      * @return BOL_LoginCookie
      */
-    public function saveLoginCookie( $userId )
+    public function saveLoginCookie($userId)
     {
         $loginCookie = $this->loginCookieDao->findByUserId($userId);
 
-        if ( $loginCookie === null )
-        {
+        if ($loginCookie === null) {
             $loginCookie = new BOL_LoginCookie();
         }
 
@@ -404,11 +391,11 @@ final class BOL_UserService
         return $loginCookie;
     }
 
-    public function findUserIdByCookie( $cookie )
+    public function findUserIdByCookie($cookie)
     {
         $obj = $this->loginCookieDao->findByCookie($cookie);
 
-        return ( $obj === null ? null : $obj->getUserId() );
+        return  $obj === null ? null : $obj->getUserId() ;
     }
 
     /**
@@ -416,7 +403,7 @@ final class BOL_UserService
      * @param integer $userId
      * @return BOL_LoginCookie
      */
-    public function findLoginCookieByUserId( $userId )
+    public function findLoginCookieByUserId($userId)
     {
         return $this->loginCookieDao->findByUserId($userId);
     }
@@ -428,78 +415,71 @@ final class BOL_UserService
      * @param integer $count
      * @return array
      */
-    public function findLatestUserIdsList( $offset, $count )
+    public function findLatestUserIdsList($offset, $count)
     {
         return $this->userDao->findLatestUserIdsList($offset, $count);
     }
 
-    public function findList( $first, $count, $isAdmin = false )
+    public function findList($first, $count, $isAdmin = false)
     {
         return $this->userDao->findList($first, $count, $isAdmin);
     }
 
-    public function findRecentlyActiveList( $first, $count, $isAdmin = false )
+    public function findRecentlyActiveList($first, $count, $isAdmin = false)
     {
         return $this->userDao->findRecentlyActiveList($first, $count, $isAdmin);
     }
 
-    public function getRecentlyActiveOrderedIdList( $userIdList )
+    public function getRecentlyActiveOrderedIdList($userIdList)
     {
         return $this->userDao->getRecentlyActiveOrderedIdList($userIdList);
     }
 
-    public function findOnlineList( $first, $count )
+    public function findOnlineList($first, $count)
     {
         $onlineList = $this->userDao->findOnlineList($first, $count);
         $list = [];
 
         $userIdList = [];
 
-        foreach ( $onlineList as $id => $user )
-        {
+        foreach ($onlineList as $id => $user) {
             $userIdList[] = $user->id;
         }
         // Check privacy permissions
-        $eventParams = array(
+        $eventParams = [
             'action' => 'base_view_my_presence_on_site',
             'ownerIdList' => $userIdList,
             'viewerId' => OW::getUser()->getId()
-        );
+        ];
 
         $permission = OW::getEventManager()->getInstance()->call('privacy_check_permission_for_user_list', $eventParams);
 
-        foreach ( $onlineList as $user )
-        {
+        foreach ($onlineList as $user) {
             $show = true;
-            if ( isset($permission[$user->id]['blocked']) && $permission[$user->id]['blocked'] == true )
-            {
+            if (isset($permission[$user->id]['blocked']) && $permission[$user->id]['blocked'] === true) {
                 $show = false;
                 continue;
             }
 
-            if ( $show )
-            {
+            if ($show) {
                 $list[] = $user;
             }
         }
         return $list;
     }
 
-    public function findOnlineUserById( $userId )
+    public function findOnlineUserById($userId)
     {
         // Check privacy permissions
-        $eventParams = array(
+        $eventParams = [
             'action' => 'base_view_my_presence_on_site',
             'ownerId' => $userId,
             'viewerId' => OW::getUser()->getId()
-        );
-        try
-        {
+        ];
+        try {
             OW::getEventManager()->getInstance()->call('privacy_check_permission', $eventParams);
-        }
-        catch ( RedirectException $e )
-        {
-            return null;
+        } catch (RedirectException $e) {
+            return;
         }
         return $this->userOnlineDao->findByUserId($userId);
     }
@@ -509,12 +489,12 @@ final class BOL_UserService
         return (int) $this->userDao->countOnline();
     }
 
-    public function count( $isAdmin = false )
+    public function count($isAdmin = false)
     {
         return (int) $this->userDao->count($isAdmin);
     }
 
-    public function findSuspendedList( $first, $count )
+    public function findSuspendedList($first, $count)
     {
         return $this->userDao->findSuspendedList($first, $count);
     }
@@ -524,7 +504,7 @@ final class BOL_UserService
         return $this->userDao->countSuspended();
     }
 
-    public function findUnverifiedList( $first, $count )
+    public function findUnverifiedList($first, $count)
     {
         return $this->userDao->findUnverifiedList($first, $count);
     }
@@ -534,7 +514,7 @@ final class BOL_UserService
         return $this->userDao->countUnverified();
     }
 
-    public function findUnapprovedList( $first, $count )
+    public function findUnapprovedList($first, $count)
     {
         return $this->userDao->findUnapprovedList($first, $count);
     }
@@ -544,124 +524,114 @@ final class BOL_UserService
         return $this->userDao->countUnapproved();
     }
 
-    public function saveOrUpdate( BOL_User $user )
+    public function saveOrUpdate(BOL_User $user)
     {
-        $event = new OW_Event('base.before_save_user', array('dto' => $user));
+        $event = new OW_Event('base.before_save_user', ['dto' => $user]);
         OW::getEventManager()->trigger($event);
 
         $this->userDao->save($user);
 
-        if ( !empty($this->cachedUsers[$user->getId()]) )
-        {
+        if (!empty($this->cachedUsers[$user->getId()])) {
             unset($this->cachedUsers[$user->getId()]);
         }
     }
 
-    public function isExistUserName( $value )
+    public function isExistUserName($value)
     {
-        if ( $value === null )
-        {
+        if ($value === null) {
             return false;
         }
 
         $user = $this->findByUsername(trim($value));
 
-        if ( isset($user) )
-        {
-            return true;
-        }
+        return (bool) (isset($user)) 
 
-        return false;
+
+
+         ;
     }
 
-    public function isRestrictedUsername( $value )
+    public function isRestrictedUsername($value)
     {
-        if ( $value === null )
-        {
+        if ($value === null) {
             return false;
         }
 
         $user = $this->findRestrictedUsername(trim($value));
 
-        if ( isset($user) )
-        {
-            return true;
-        }
+        return (bool) (isset($user)) 
 
-        return false;
+
+
+         ;
     }
 
-    public function isExistEmail( $value )
+    public function isExistEmail($value)
     {
-        if ( $value === null )
-        {
+        if ($value === null) {
             return false;
         }
 
         $email = $this->findByEmail(trim($value));
 
-        if ( isset($email) )
-        {
-            return true;
-        }
+        return (bool) (isset($email)) 
 
-        return false;
+
+
+         ;
     }
 
-    public function isValidPassword( $userId, $value )
+    public function isValidPassword($userId, $value)
     {
         $user = $this->findUserById($userId);
 
-        if ( $value === null || $user === null )
-        {
+        if ($value === null || $user === null) {
             return false;
         }
 
         $password = $this->hashPassword($value);
 
-        if ( $user->password === $password )
-        {
-            return true;
-        }
+        return (bool) ($user->password === $password) 
 
-        return false;
+
+
+         ;
     }
 
-    public function markAsFeatured( $userId )
+    public function markAsFeatured($userId)
     {
         $dto = new BOL_UserFeatured();
         $dto->setUserId($userId);
 
         $result = $this->userFeaturedDao->save($dto);
 
-        $event = new OW_Event(OW_EventManager::ON_USER_MARK_FEATURED, array('userId' => $userId));
+        $event = new OW_Event(OW_EventManager::ON_USER_MARK_FEATURED, ['userId' => $userId]);
         OW::getEventManager()->trigger($event);
 
         return $result;
     }
 
-    public function cancelFeatured( $userId )
+    public function cancelFeatured($userId)
     {
         $this->userFeaturedDao->deleteByUserId($userId);
 
-        $event = new OW_Event(OW_EventManager::ON_USER_UNMARK_FEATURED, array('userId' => $userId));
+        $event = new OW_Event(OW_EventManager::ON_USER_UNMARK_FEATURED, ['userId' => $userId]);
         OW::getEventManager()->trigger($event);
     }
 
-    public function isUserFeatured( $id )
+    public function isUserFeatured($id)
     {
         $dto = $this->userFeaturedDao->findByUserId($id);
 
         return !empty($dto);
     }
 
-    public function findBlockedUserList( $userId, $first, $count )
+    public function findBlockedUserList($userId, $first, $count)
     {
-        $list =  $this->userBlockDao->findBlockedUserList($userId, $first, $count);
+        $list = $this->userBlockDao->findBlockedUserList($userId, $first, $count);
         $processedList = [];
 
-        foreach($list as $item)
-        {
+        foreach ($list as $item) {
             $processedList[] = $item->getBlockedUserId();
         }
 
@@ -673,10 +643,9 @@ final class BOL_UserService
         return  $this->userBlockDao->countBlockedUsers($userId);
     }
 
-    public function isBlocked( $id, $byUserId = null )
+    public function isBlocked($id, $byUserId = null)
     {
-        if ( $byUserId === null )
-        {
+        if ($byUserId === null) {
             $byUserId = OW::getUser()->getId();
         }
         $dto = $this->userBlockDao->findBlockedUser($byUserId, $id);
@@ -684,34 +653,30 @@ final class BOL_UserService
         return !empty($dto);
     }
 
-    public function findBlockedListByUserIdList( $userId, array $userIdList )
+    public function findBlockedListByUserIdList($userId, array $userIdList)
     {
-        if ( !$userId )
-        {
-            return null;
+        if (!$userId) {
+            return;
         }
 
         $list = $this->userBlockDao->findBlockedList($userId, $userIdList);
 
         $users = [];
-        if ( $list )
-        {
-            foreach ( $list as $user )
-            {
+        if ($list) {
+            foreach ($list as $user) {
                 $users[$user->blockedUserId] = $user;
             }
         }
 
         $blockList = [];
-        foreach ( $userIdList as $blockedUserId )
-        {
+        foreach ($userIdList as $blockedUserId) {
             $blockList[$blockedUserId] = array_key_exists($blockedUserId, $users);
         }
 
         return $blockList;
     }
 
-    public function findFeaturedList( $first, $count )
+    public function findFeaturedList($first, $count)
     {
         return $this->userDao->findFeaturedList($first, $count);
     }
@@ -721,15 +686,14 @@ final class BOL_UserService
         return $this->userDao->countFeatured();
     }
 
-    public function onLogin( $userId, $context )
+    public function onLogin($userId, $context)
     {
         $this->updateActivityStamp($userId, $context);
     }
 
-    public function onLogout( $userId )
+    public function onLogout($userId)
     {
-        if ( (int) $userId < 1 )
-        {
+        if ((int) $userId < 1) {
             return;
         }
 
@@ -737,8 +701,7 @@ final class BOL_UserService
         $user = $this->userDao->findById($userId);
         $userOnline = $this->userOnlineDao->findByUserId($userId);
 
-        if ( $user === null || $userOnline === null )
-        {
+        if ($user === null || $userOnline === null) {
             return;
         }
 
@@ -749,25 +712,22 @@ final class BOL_UserService
         $this->userOnlineDao->deleteById($userOnline->getId());
     }
 
-    public function updateActivityStamp( $userId, $context )
+    public function updateActivityStamp($userId, $context)
     {
-        if ( !$userId )
-        {
+        if (!$userId) {
             return;
         }
 
         $user = $this->userDao->findById((int) $userId);
 
-        if ( $user === null )
-        {
+        if ($user === null) {
             return;
         }
 
         $activityStamp = time();
         $userOnline = $this->userOnlineDao->findByUserId($userId);
 
-        if ( $userOnline === null )
-        {
+        if ($userOnline === null) {
             $userOnline = new BOL_UserOnline();
             $userOnline->setUserId($userId);
         }
@@ -775,12 +735,11 @@ final class BOL_UserService
         $userOnline->setActivityStamp($activityStamp);
         $userOnline->setContext($context);
 
-        $event = new OW_Event(self::BEFORE_USER_ONLINE, array('userId' => $userId, 'context' => $context), $userOnline);
+        $event = new OW_Event(self::BEFORE_USER_ONLINE, ['userId' => $userId, 'context' => $context], $userOnline);
         OW_EventManager::getInstance()->trigger($event);
         $data = $event->getData();
 
-        if ( $data instanceof BOL_UserOnline && !empty($data) )
-        {
+        if ($data instanceof BOL_UserOnline && !empty($data)) {
             $this->userOnlineDao->saveDelayed($data);
         }
 
@@ -789,37 +748,35 @@ final class BOL_UserService
         $this->userDao->saveDelayed($user);
     }
 
-    public function findUserListByIdList( array $idList )
+    public function findUserListByIdList(array $idList)
     {
         $idList = array_unique($idList);
 
         return $this->userDao->findByIdList($idList);
     }
 
-    public function findUserIdListByIdList( array $idList )
+    public function findUserIdListByIdList(array $idList)
     {
         $idList = array_unique($idList);
 
         return $this->userDao->findIdListByIdList($idList);
     }
 
-    public function findOnlineStatusForUserList( $idList )
+    public function findOnlineStatusForUserList($idList)
     {
         // Check privacy permissions
-        $eventParams = array(
+        $eventParams = [
             'action' => 'base_view_my_presence_on_site',
             'ownerIdList' => $idList,
             'viewerId' => OW::getUser()->getId()
-        );
+        ];
 
         $permission = OW::getEventManager()->getInstance()->call('privacy_check_permission_for_user_list', $eventParams);
 
         $showPresenceList = [];
 
-        foreach ( $idList as $user )
-        {
-            if ( isset($permission[$user]['blocked']) && $permission[$user]['blocked'] == true )
-            {
+        foreach ($idList as $user) {
+            if (isset($permission[$user]['blocked']) && $permission[$user]['blocked'] === true) {
                 continue;
             }
 
@@ -830,43 +787,41 @@ final class BOL_UserService
 
         $onlineUsersArr = [];
 
-        foreach ( $onlineUsers as $item )
-        {
+        foreach ($onlineUsers as $item) {
             $onlineUsersArr[$item['userId']] = $item['context'];
         }
 
         $resultArray = [];
 
-        foreach ( $idList as $userId )
-        {
+        foreach ($idList as $userId) {
             $resultArray[$userId] = array_key_exists($userId, $onlineUsersArr) ? $onlineUsersArr[$userId] : false;
         }
 
         return $resultArray;
     }
 
-    public function deleteUser( $userId, $deleteContent = true )
+    public function deleteUser($userId, $deleteContent = true)
     {
-        $event = new OW_Event(OW_EventManager::ON_USER_UNREGISTER, array('userId' => $userId, 'deleteContent' => $deleteContent));
+        $event = new OW_Event(OW_EventManager::ON_USER_UNREGISTER, ['userId' => $userId, 'deleteContent' => $deleteContent]);
         OW::getEventManager()->trigger($event);
 
         BOL_QuestionService::getInstance()->deleteQuestionDataByUserId((int) $userId);
         BOL_AvatarService::getInstance()->deleteUserAvatar($userId);
-        
+
         $this->userSuspendDao->deleteById($userId);
         $this->userBlockDao->deleteByUserId($userId);
-        
+
         $this->userDao->deleteById($userId);
 
         return true;
     }
 
-    public function addRestrictedUsername( $username )
+    public function addRestrictedUsername($username)
     {
         $this->restrictedUsernamesDao->addRestrictedUsername($username);
     }
 
-    public function getRestrictedUsername( $username )
+    public function getRestrictedUsername($username)
     {
         return $this->restrictedUsernamesDao->getRestrictedUsername($username);
     }
@@ -876,49 +831,42 @@ final class BOL_UserService
         return $this->restrictedUsernamesDao->getRestrictedUsernameList();
     }
 
-    public function replaceAccountTypeForUsers( $oldType, $newType )
+    public function replaceAccountTypeForUsers($oldType, $newType)
     {
         $this->userDao->replaceAccountTypeForUsers($oldType, $newType);
     }
 
-    public function findMassMailingUsers( $start, $count, $ignoreUnsubscribe = false, $roles = [] )
+    public function findMassMailingUsers($start, $count, $ignoreUnsubscribe = false, $roles = [])
     {
         return $this->userDao->findMassMailingUsers($start, $count, $ignoreUnsubscribe, $roles);
     }
 
-    public function findMassMailingUserCount( $ignoreUnsubscribe = false, $roles = [] )
+    public function findMassMailingUserCount($ignoreUnsubscribe = false, $roles = [])
     {
         return $this->userDao->findMassMailingUserCount($ignoreUnsubscribe, $roles);
     }
 
-    public function updateEmail( $userId, $email )
+    public function updateEmail($userId, $email)
     {
-        if ( UTIL_Validator::isEmailValid($email) )
-        {
+        if (UTIL_Validator::isEmailValid($email)) {
             $this->userDao->updateEmail((int) $userId, $email);
-        }
-        else
-        {
+        } else {
             throw new InvalidArgumentException('Invalid email!');
         }
     }
 
-    public function updatePassword( $userId, $password )
+    public function updatePassword($userId, $password)
     {
-        if ( !empty($password) )
-        {
+        if (!empty($password)) {
             $this->userDao->updatePassword((int) $userId, $this->hashPassword($password));
-        }
-        else
-        {
+        } else {
             throw new InvalidArgumentException('Invalid password!');
         }
     }
 
-    public function suspend( $userId, $message )
+    public function suspend($userId, $message)
     {
-        if ( $this->isSuspended($userId) )
-        {
+        if ($this->isSuspended($userId)) {
             return;
         }
 
@@ -929,14 +877,13 @@ final class BOL_UserService
 
         $this->userSuspendDao->save($dto);
 
-        $event = new OW_Event(OW_EventManager::ON_USER_SUSPEND, array('userId' => $userId, 'message' => $message));
+        $event = new OW_Event(OW_EventManager::ON_USER_SUSPEND, ['userId' => $userId, 'message' => $message]);
         OW::getEventManager()->trigger($event);
     }
 
-    public function unsuspend( $userId )
+    public function unsuspend($userId)
     {
-        if ( !$this->isSuspended($userId) )
-        {
+        if (!$this->isSuspended($userId)) {
             return;
         }
 
@@ -944,14 +891,13 @@ final class BOL_UserService
 
         $this->userSuspendDao->delete($dto);
 
-        $event = new OW_Event(OW_EventManager::ON_USER_UNSUSPEND, array('userId' => $userId));
+        $event = new OW_Event(OW_EventManager::ON_USER_UNSUSPEND, ['userId' => $userId]);
         OW::getEventManager()->trigger($event);
     }
 
-    public function block( $userId )
+    public function block($userId)
     {
-        if ( $this->isBlocked($userId) )
-        {
+        if ($this->isBlocked($userId)) {
             return;
         }
 
@@ -962,14 +908,13 @@ final class BOL_UserService
 
         $this->userBlockDao->save($dto);
 
-        $event = new OW_Event(OW_EventManager::ON_USER_BLOCK, array('userId' => OW::getUser()->getId(), 'blockedUserId' => $userId));
+        $event = new OW_Event(OW_EventManager::ON_USER_BLOCK, ['userId' => OW::getUser()->getId(), 'blockedUserId' => $userId]);
         OW::getEventManager()->trigger($event);
     }
 
-    public function unblock( $userId )
+    public function unblock($userId)
     {
-        if ( !$this->isBlocked($userId) )
-        {
+        if (!$this->isBlocked($userId)) {
             return;
         }
 
@@ -977,7 +922,7 @@ final class BOL_UserService
 
         $this->userBlockDao->delete($dto);
 
-        $event = new OW_Event(OW_EventManager::ON_USER_UNBLOCK, array('userId' => OW::getUser()->getId(), 'blockedUserId' => $userId));
+        $event = new OW_Event(OW_EventManager::ON_USER_UNBLOCK, ['userId' => OW::getUser()->getId(), 'blockedUserId' => $userId]);
         OW::getEventManager()->trigger($event);
     }
 
@@ -987,27 +932,27 @@ final class BOL_UserService
      * @param integer $userId
      * @return string
      */
-    public function getSuspendReason( $userId )
+    public function getSuspendReason($userId)
     {
         return $this->userSuspendDao->getSuspendReason($userId);
     }
 
-    public function isSuspended( $userId )
+    public function isSuspended($userId)
     {
         return $this->userSuspendDao->findByUserId($userId) !== null;
     }
 
-    public function hashPassword( $password )
+    public function hashPassword($password)
     {
         return hash('sha256', OW_PASSWORD_SALT . $password);
     }
 
-    public function findListByRoleId( $roleId, $first, $count )
+    public function findListByRoleId($roleId, $first, $count)
     {
         return $this->userDao->findListByRoleId($roleId, $first, $count);
     }
 
-    public function countByRoleId( $roleId )
+    public function countByRoleId($roleId)
     {
         return $this->userDao->countByRoleId($roleId);
     }
@@ -1018,47 +963,40 @@ final class BOL_UserService
         $this->userOnlineDao->deleteExpired($timestamp);
     }
 
-    public function findListByEmailList( $emailList )
+    public function findListByEmailList($emailList)
     {
         return $this->userDao->findListByEmailList($emailList);
     }
 
-    public function createUser( $username, $password, $email, $accountType = null, $emailVerify = false, $ip = null )
+    public function createUser($username, $password, $email, $accountType = null, $emailVerify = false, $ip = null)
     {
-        if ( !UTIL_Validator::isEmailValid($email) )
-        {
+        if (!UTIL_Validator::isEmailValid($email)) {
             throw new InvalidArgumentException('Invalid email!', self::CREATE_USER_INVALID_EMAIL);
         }
 
-        if ( !UTIL_Validator::isUserNameValid($username) )
-        {
+        if (!UTIL_Validator::isUserNameValid($username)) {
             throw new InvalidArgumentException('Invalid username!', self::CREATE_USER_INVALID_USERNAME);
         }
 
-        if ( !isset($password) || strlen($password) === 0 )
-        {
+        if (!isset($password) || strlen($password) === 0) {
             throw new InvalidArgumentException('Invalid password!', self::CREATE_USER_INVALID_PASSWORD);
         }
 
-        if ( $this->isExistUserName($username) )
-        {
+        if ($this->isExistUserName($username)) {
             throw new LogicException('Duplicate username!', self::CREATE_USER_DUPLICATE_USERNAME);
         }
 
-        if ( $this->isExistEmail($email) )
-        {
+        if ($this->isExistEmail($email)) {
             throw new LogicException('Duplicate email!', self::CREATE_USER_DUPLICATE_EMAIL);
         }
 
         $userAccountType = $accountType;
 
-        if ( $userAccountType === null )
-        {
+        if ($userAccountType === null) {
             $userAccountType = '';
             $accountTypes = BOL_QuestionService::getInstance()->findAllAccountTypes();
 
-            if ( count($accountTypes) === 1 )
-            {
+            if (count($accountTypes) === 1) {
                 $userAccountType = $accountTypes[0]->name;
             }
         }
@@ -1073,8 +1011,7 @@ final class BOL_UserService
         $user->accountType = $userAccountType;
         $user->joinIp = $ip ? $ip : ip2long(OW::getRequest()->getRemoteAddress());
 
-        if ( $emailVerify === true )
-        {
+        if ($emailVerify === true) {
             $user->emailVerify = true;
         }
 
@@ -1090,17 +1027,17 @@ final class BOL_UserService
      * @param string $code
      * @return BOL_InviteCode
      */
-    public function findInvitationInfo( $code )
+    public function findInvitationInfo($code)
     {
         return $this->inviteCodeDao->findByCode($code);
     }
-    
-    public function deleteInvitationCode( $code )
+
+    public function deleteInvitationCode($code)
     {
         return $this->inviteCodeDao->deleteByCode($code);
     }
 
-    public function sendAdminInvitation( $email )
+    public function sendAdminInvitation($email)
     {
         $inviteCodeDto = new BOL_InviteCode();
         $inviteCodeDto->setCode(UTIL_String::getRandomString(20));
@@ -1108,18 +1045,18 @@ final class BOL_UserService
         $inviteCodeDto->setExpiration_stamp(time() + 3600 * 24 * 30);
         $this->inviteCodeDao->save($inviteCodeDto);
 
-        $inviteUrl = OW::getRequest()->buildUrlQueryString(OW::getRouter()->urlForRoute('base_join'), array('code' => $inviteCodeDto->getCode()));
+        $inviteUrl = OW::getRequest()->buildUrlQueryString(OW::getRouter()->urlForRoute('base_join'), ['code' => $inviteCodeDto->getCode()]);
 
         $mail = OW::getMailer()->createMail();
         $mail->addRecipientEmail($email);
         $mail->setSubject(OW::getLanguage()->text('base', 'mail_template_admin_invite_user_subject'));
-        $mail->setHtmlContent(OW::getLanguage()->text('base', 'mail_template_admin_invite_user_content_html', array('url' => $inviteUrl)));
-        $mail->setTextContent(OW::getLanguage()->text('base', 'mail_template_admin_invite_user_content_text', array('url' => $inviteUrl)));
+        $mail->setHtmlContent(OW::getLanguage()->text('base', 'mail_template_admin_invite_user_content_html', ['url' => $inviteUrl]));
+        $mail->setTextContent(OW::getLanguage()->text('base', 'mail_template_admin_invite_user_content_text', ['url' => $inviteUrl]));
 
         OW::getMailer()->addToQueue($mail);
     }
 
-    public function saveUserInvitation( $userId, $code )
+    public function saveUserInvitation($userId, $code)
     {
         $dto = new BOL_InviteCode();
         $dto->setCode($code);
@@ -1132,16 +1069,14 @@ final class BOL_UserService
      *
      * @param int $userId
      */
-    public function disapprove( $userId )
+    public function disapprove($userId)
     {
-        if ( empty($userId) )
-        {
+        if (empty($userId)) {
             throw new InvalidArgumentException('invalid $userId param');
         }
 
         $dto = $this->approveDao->findByUserId($userId);
-        if ( !empty($dto) )
-        {
+        if (!empty($dto)) {
             return;
         }
 
@@ -1150,7 +1085,7 @@ final class BOL_UserService
 
         $this->approveDao->save($dto);
 
-        $event = new OW_Event(OW_EventManager::ON_USER_DISAPPROVE, array('userId' => $userId));
+        $event = new OW_Event(OW_EventManager::ON_USER_DISAPPROVE, ['userId' => $userId]);
         OW::getEventManager()->trigger($event);
     }
 
@@ -1158,43 +1093,39 @@ final class BOL_UserService
      *
      * @param int $userId
      */
-    public function approve( $userId )
+    public function approve($userId)
     {
-        if ( empty($userId) )
-        {
+        if (empty($userId)) {
             throw new InvalidArgumentException('invalid $userId param');
         }
 
         $dto = $this->approveDao->findByUserId($userId);
 
-        if ( empty($dto) )
-        {
+        if (empty($dto)) {
             throw new Exception('User already approved');
         }
 
         $this->approveDao->delete($dto);
 
-        $event = new OW_Event(OW_EventManager::ON_USER_APPROVE, array('userId' => $userId));
+        $event = new OW_Event(OW_EventManager::ON_USER_APPROVE, ['userId' => $userId]);
         OW::getEventManager()->trigger($event);
     }
 
-    public function sendApprovalNotification( $userId )
+    public function sendApprovalNotification($userId)
     {
-        if ( !$userId )
-        {
+        if (!$userId) {
             return false;
         }
 
         $user = $this->findUserById($userId);
-        if ( !$user )
-        {
+        if (!$user) {
             return false;
         }
 
         $language = OW::getLanguage();
 
         $mail = OW::getMailer()->createMail();
-        $vars = array('user_name' => $this->getDisplayName($userId));
+        $vars = ['user_name' => $this->getDisplayName($userId)];
         $mail->addRecipientEmail($user->getEmail());
         $mail->setSubject($language->text('base', 'user_approved_mail_subject', $vars));
         $mail->setTextContent($language->text('base', 'user_approved_mail_txt', $vars));
@@ -1204,17 +1135,16 @@ final class BOL_UserService
         return true;
     }
 
-    public function isApproved( $userId = null )
+    public function isApproved($userId = null)
     {
-        if ( $userId == null )
-        {
+        if ($userId === null) {
             $userId = OW::getUser()->getId();
         }
 
         return null === $this->approveDao->findByUserId($userId);
     }
 
-    public function findDisapprovedList( $first, $count )
+    public function findDisapprovedList($first, $count)
     {
         return $this->userDao->findDisapprovedList($first, $count);
     }
@@ -1224,24 +1154,22 @@ final class BOL_UserService
         return $this->userDao->countDisapproved();
     }
 
-    public function deleteDisaproveByUserId( $userId )
+    public function deleteDisaproveByUserId($userId)
     {
-        if ( empty($userId) )
-        {
+        if (empty($userId)) {
             return;
         }
 
         $this->approveDao->deleteByUserId($userId);
     }
 
-    public function findSupsendStatusForUserList( $idList )
+    public function findSupsendStatusForUserList($idList)
     {
         $onlineUsers = $this->userSuspendDao->findSupsendStatusForUserList($idList);
 
         $resultArray = [];
 
-        foreach ( $idList as $userId )
-        {
+        foreach ($idList as $userId) {
             $resultArray[$userId] = in_array($userId, $onlineUsers) ? true : false;
         }
 
@@ -1256,44 +1184,43 @@ final class BOL_UserService
      * @param bool $isAdmin
      * @return array
      */
-    public function findUserListByQuestionValues( $questionValues, $first, $count, $isAdmin = false )
+    public function findUserListByQuestionValues($questionValues, $first, $count, $isAdmin = false)
     {
         return $this->userDao->findUserListByQuestionValues($questionValues, $first, $count, $isAdmin);
     }
 
-    public function countUsersByQuestionValues( $questionValues, $isAdmin = false )
+    public function countUsersByQuestionValues($questionValues, $isAdmin = false)
     {
         return $this->userDao->countUsersByQuestionValues($questionValues, $isAdmin);
     }
 
-    public function findUnverifiedStatusForUserList( $idList )
+    public function findUnverifiedStatusForUserList($idList)
     {
         $unverifiedUsers = $this->userDao->findUnverifyStatusForUserList($idList);
 
         $resultArray = [];
 
-        foreach ( $idList as $userId )
-        {
+        foreach ($idList as $userId) {
             $resultArray[$userId] = in_array($userId, $unverifiedUsers) ? true : false;
         }
 
         return $resultArray;
     }
 
-    public function findUserIdListByQuestionValues( $questionValues, $first, $count, $isAdmin = false, $aditionalParams = [] )
+    public function findUserIdListByQuestionValues($questionValues, $first, $count, $isAdmin = false, $aditionalParams = [])
     {
         $first = (int) $first;
         $count = (int) $count;
 
-        $data = array(
+        $data = [
             'data' => $questionValues,
             'first' => $first,
             'count' => $count,
             'isAdmin' => $isAdmin,
             'aditionalParams' => $aditionalParams
-        );
+        ];
 
-        $event = new OW_Event("base.question.before_user_search", $data, $data);
+        $event = new OW_Event('base.question.before_user_search', $data, $data);
 
         OW_EventManager::getInstance()->trigger($event);
 
@@ -1302,18 +1229,17 @@ final class BOL_UserService
         return $this->userDao->findUserIdListByQuestionValues($data['data'], $data['first'], $data['count'], $data['isAdmin'], $data['aditionalParams']);
     }
 
-    public function findSearchResultList( $listId, $first, $count )
+    public function findSearchResultList($listId, $first, $count)
     {
         return $this->userDao->findSearchResultList($listId, $first, $count);
     }
 
-    public function findUnapprovedStatusForUserList( $idList )
+    public function findUnapprovedStatusForUserList($idList)
     {
         $unapprovedUsers = $this->userApproveDao->findUnapproveStatusForUserList($idList);
         $resultArray = [];
 
-        foreach ( $idList as $userId )
-        {
+        foreach ($idList as $userId) {
             $resultArray[$userId] = in_array($userId, $unapprovedUsers) ? true : false;
         }
 
@@ -1323,7 +1249,7 @@ final class BOL_UserService
     /**
      * @deprecated
      */
-    public function findListByBirthdayPeriod( $start, $end, $first, $count )
+    public function findListByBirthdayPeriod($start, $end, $first, $count)
     {
         return [];
     }
@@ -1331,7 +1257,7 @@ final class BOL_UserService
     /**
      * @deprecated
      */
-    public function countByBirthdayPeriod( $start, $end )
+    public function countByBirthdayPeriod($start, $end)
     {
         return 0;
     }
@@ -1339,7 +1265,7 @@ final class BOL_UserService
     /**
      * @deprecated
      */
-    public function findListByBirthdayPeriodAndUserIdList( $start, $end, $first, $count, $idList )
+    public function findListByBirthdayPeriodAndUserIdList($start, $end, $first, $count, $idList)
     {
         return [];
     }
@@ -1347,7 +1273,7 @@ final class BOL_UserService
     /**
      * @deprecated
      */
-    public function countByBirthdayPeriodAndUserIdList( $start, $end, $idList )
+    public function countByBirthdayPeriodAndUserIdList($start, $end, $idList)
     {
         return 0;
     }
@@ -1356,7 +1282,7 @@ final class BOL_UserService
      * @param integer $userId
      * @return BOL_UserResetPassword
      */
-    public function findResetPasswordByUserId( $userId )
+    public function findResetPasswordByUserId($userId)
     {
         return $this->resetPasswordDao->findByUserId($userId);
     }
@@ -1365,10 +1291,10 @@ final class BOL_UserService
      * @param integer $userId
      * @return string
      */
-    public function getNewResetPasswordCode( $userId )
+    public function getNewResetPasswordCode($userId)
     {
-    	$code = sha1(UTIL_String::getRandomString(8, 5));
-    	$hashedCode = md5($code);
+        $code = sha1(UTIL_String::getRandomString(8, 5));
+        $hashedCode = md5($code);
 
         $event = new OW_Event('base.on_after_generate_password_reset_code', [], $hashedCode);
         OW::getEventManager()->trigger($event);
@@ -1377,7 +1303,7 @@ final class BOL_UserService
 
         $resetPassword = new BOL_UserResetPassword();
         $resetPassword->setUserId($userId);
-        $resetPassword->setExpirationTimeStamp(( time() + self::PASSWORD_RESET_CODE_EXPIRATION_TIME));
+        $resetPassword->setExpirationTimeStamp((time() + self::PASSWORD_RESET_CODE_EXPIRATION_TIME));
         $resetPassword->setUpdateTimeStamp(time() + self::PASSWORD_RESET_CODE_UPDATE_TIME);
         $resetPassword->setCode($hashedCode);
 
@@ -1390,7 +1316,7 @@ final class BOL_UserService
      * @param string $code
      * @return BOL_UserResetPassword
      */
-    public function findResetPasswordByCode( $code )
+    public function findResetPasswordByCode($code)
     {
         $code = md5(trim($code));
 
@@ -1402,26 +1328,24 @@ final class BOL_UserService
         $this->resetPasswordDao->deleteExpiredEntities();
     }
 
-    public function deleteResetCode( $resetCodeId )
+    public function deleteResetCode($resetCodeId)
     {
         $this->resetPasswordDao->deleteById($resetCodeId);
     }
 
-    public function sendWellcomeLetter( BOL_User $user )
+    public function sendWellcomeLetter(BOL_User $user)
     {
-        if ( $user === null || empty($user->email) )
-        {
+        if ($user === null || empty($user->email)) {
             return;
         }
 
-        if ( OW::getConfig()->getValue('base', 'confirm_email') && $user->emailVerify != true )
-        {
+        if (OW::getConfig()->getValue('base', 'confirm_email') && $user->emailVerify !== true) {
             return;
         }
 
-        $vars = array(
+        $vars = [
             'username' => $this->getDisplayName($user->id),
-        );
+        ];
 
         $language = OW::getLanguage();
 
@@ -1435,12 +1359,9 @@ final class BOL_UserService
         $mail->setHtmlContent($template_html);
         $mail->setTextContent($template_text);
 
-        try
-        {
+        try {
             OW::getMailer()->send($mail);
-        }
-        catch (phpMailerException $e )
-        {
+        } catch (phpMailerException $e) {
             $user->emailVerify = false;
             $this->saveOrUpdate($user);
         }
@@ -1451,19 +1372,17 @@ final class BOL_UserService
 
     public function cronSendWellcomeLetter()
     {
-        $preferenceValues = array('send_wellcome_letter' => 1);
+        $preferenceValues = ['send_wellcome_letter' => 1];
 
         $userIdList = $this->userDao->findUserIdListByPreferenceValues($preferenceValues);
 
-        if ( empty($userIdList) )
-        {
+        if (empty($userIdList)) {
             return;
         }
 
         $users = $this->findUserListByIdList($userIdList);
 
-        foreach ( $users as $user )
-        {
+        foreach ($users as $user) {
             $this->sendWellcomeLetter($user);
         }
     }
@@ -1473,7 +1392,7 @@ final class BOL_UserService
      * @param string $submitDecorator
      * @return Form
      */
-    public function getSignInForm( $formName = 'sign-in', $submitDecorator = 'button' )
+    public function getSignInForm($formName = 'sign-in', $submitDecorator = 'button')
     {
         $form = new Form($formName, 'base');
 
@@ -1491,7 +1410,6 @@ final class BOL_UserService
 
         $rememberMe = new CheckboxField('remember', 'base');
         $rememberMe->setLabel(OW::getLanguage()->text('base', 'sign_in_remember_me_label'));
-        $rememberMe->setValue(true);
         $form->addElement($rememberMe);
 
         $submit = new Submit('submit', 'base', $submitDecorator);
@@ -1508,19 +1426,16 @@ final class BOL_UserService
      * @param bool $rememberMe
      * @return OW_AuthResult
      */
-    public function processSignIn( $identity, $password, $rememberMe = false )
+    public function processSignIn($identity, $password, $rememberMe = false)
     {
-        if ( empty($identity) || empty($password) )
-        {
-            throw new LogicException("Invalid auth attrs");
+        if (empty($identity) || empty($password)) {
+            throw new LogicException('Invalid auth attrs');
         }
 
         $result = OW::getUser()->authenticate(new BASE_CLASS_StandardAuth($identity, $password));
 
-        if ( $result->isValid() )
-        {
-            if ( $rememberMe )
-            {
+        if ($result->isValid()) {
+            if ($rememberMe) {
                 $loginCookie = $this->saveLoginCookie(OW::getUser()->getId());
 
                 setcookie('ow_login', $loginCookie->getCookie(), (time() + 86400 * 7), '/', '', false, true);
@@ -1530,7 +1445,7 @@ final class BOL_UserService
         return $result;
     }
 
-    public function getResetForm( $formName = 'forgot-password' )
+    public function getResetForm($formName = 'forgot-password')
     {
         $language = OW::getLanguage();
         $form = new Form($formName);
@@ -1549,34 +1464,31 @@ final class BOL_UserService
         return $form;
     }
 
-    public function processResetForm( $data )
+    public function processResetForm($data)
     {
         $language = OW::getLanguage();
         $email = trim($data['email']);
         $user = $this->findByEmail($email);
 
-        if ( $user === null )
-        {
+        if ($user === null) {
             throw new LogicException($language->text('base', 'forgot_password_no_user_error_message'));
         }
 
         $resetPassword = $this->findResetPasswordByUserId($user->getId());
 
-        if ( $resetPassword !== null )
-        {
+        if ($resetPassword !== null) {
             $this->resetPasswordDao->deleteById($resetPassword->getId());
         }
 
         $resetPasswordCode = $this->getNewResetPasswordCode($user->getId());
 
-        try
-        {
-            $vars = array(
+        try {
+            $vars = [
                 'code' => $resetPasswordCode,
                 'username' => $user->getUsername(),
                 'requestUrl' => OW::getRouter()->urlForRoute('base.reset_user_password_request'),
-                'resetUrl' => OW::getRouter()->urlForRoute('base.reset_user_password', array('code' => $resetPasswordCode))
-            );
+                'resetUrl' => OW::getRouter()->urlForRoute('base.reset_user_password', ['code' => $resetPasswordCode])
+            ];
 
             $mail = OW::getMailer()->createMail();
             $mail->addRecipientEmail($email);
@@ -1585,14 +1497,11 @@ final class BOL_UserService
             $mail->setHtmlContent($language->text('base', 'reset_password_mail_template_content_html', $vars));
 
             OW::getMailer()->send($mail);
-        }
-        catch ( Exception $e )
-        {
-
+        } catch (Exception $e) {
         }
     }
 
-    public function getResetPasswordRequestFrom( $formName = 'reset-password-request' )
+    public function getResetPasswordRequestFrom($formName = 'reset-password-request')
     {
         $language = OW::getLanguage();
 
@@ -1608,7 +1517,7 @@ final class BOL_UserService
         return $form;
     }
 
-    public function getResetPasswordForm( $formName = 'reset-password' )
+    public function getResetPasswordForm($formName = 'reset-password')
     {
         $language = OW::getLanguage();
 
@@ -1628,18 +1537,16 @@ final class BOL_UserService
         return $form;
     }
 
-    public function processResetPasswordForm( $data, BOL_User $user, $resetCode )
+    public function processResetPasswordForm($data, BOL_User $user, $resetCode)
     {
         $language = OW::getLanguage();
 
-        if ( trim($data['password']) !== trim($data['repeatPassword']) )
-        {
+        if (trim($data['password']) !== trim($data['repeatPassword'])) {
             throw new LogicException($language->text('base', 'reset_password_not_equal_error_message'));
         }
 
-        if ( strlen(trim($data['password'])) > UTIL_Validator::PASSWORD_MAX_LENGTH || strlen(trim($data['password'])) < UTIL_Validator::PASSWORD_MIN_LENGTH )
-        {
-            throw new LogicException(OW::getLanguage()->text('base', 'reset_password_length_error_message', array('min' => UTIL_Validator::PASSWORD_MIN_LENGTH, 'max' => UTIL_Validator::PASSWORD_MAX_LENGTH)));
+        if (strlen(trim($data['password'])) > UTIL_Validator::PASSWORD_MAX_LENGTH || strlen(trim($data['password'])) < UTIL_Validator::PASSWORD_MIN_LENGTH) {
+            throw new LogicException(OW::getLanguage()->text('base', 'reset_password_length_error_message', ['min' => UTIL_Validator::PASSWORD_MIN_LENGTH, 'max' => UTIL_Validator::PASSWORD_MAX_LENGTH]));
         }
 
         $user->setPassword($this->hashPassword($data['password']));
@@ -1647,49 +1554,46 @@ final class BOL_UserService
         $this->deleteResetCode($resetCode->getId());
     }
 
-    public function getDataForUsersList( $listKey, $first, $count )
+    public function getDataForUsersList($listKey, $first, $count)
     {
-        switch ( $listKey )
-        {
+        switch ($listKey) {
             case 'latest':
-                return array(
+                return [
                     $this->findList($first, $count),
                     $this->count()
-                );
+                ];
 
             case 'online':
-                return array(
+                return [
                     $this->findOnlineList($first, $count),
                     $this->countOnline()
-                );
+                ];
 
             case 'featured':
 
-                return array(
+                return [
                     $this->findFeaturedList($first, $count),
                     $this->countFeatured()
-                );
+                ];
 
             case 'waiting-for-approval':
-                return array(
+                return [
                     $this->findDisapprovedList($first, $count),
                     $this->countDisapproved()
-                );
+                ];
 
             default:
                 $event = new BASE_CLASS_EventCollector('base.add_user_list');
                 OW::getEventManager()->trigger($event);
                 $data = $event->getData();
 
-                foreach ( $data as $value )
-                {
-                    if ( $value['key'] == $listKey )
-                    {
-                        return call_user_func_array($value['dataProvider'], array($first, $count));
+                foreach ($data as $value) {
+                    if ($value['key'] === $listKey) {
+                        return call_user_func_array($value['dataProvider'], [$first, $count]);
                     }
                 }
 
-                return array([], 0);
+                return [[], 0];
         }
     }
 
@@ -1697,7 +1601,7 @@ final class BOL_UserService
      * @param string $token
      * @return int
      */
-    public function findUserIdByAuthToken( $token )
+    public function findUserIdByAuthToken($token)
     {
         return (int) $this->tokenDao->findUserIdByToken($token);
     }
@@ -1706,7 +1610,7 @@ final class BOL_UserService
      * @param integer $userId
      * @return string
      */
-    public function addTokenForUser( $userId )
+    public function addTokenForUser($userId)
     {
         $token = new BOL_AuthToken();
         $token->setUserId($userId);
@@ -1722,12 +1626,12 @@ final class BOL_UserService
     /**
      * @param integer $userId
      */
-    public function deleteTokenForUser( $userId )
+    public function deleteTokenForUser($userId)
     {
         $this->tokenDao->deleteByUserId($userId);
     }
 
-    public function getUserViewQuestions( $userId, $adminMode = false, $questionNames = [], $sectionNames = null )
+    public function getUserViewQuestions($userId, $adminMode = false, $questionNames = [], $sectionNames = null)
     {
         $questionService = BOL_QuestionService::getInstance();
         $user = BOL_UserService::getInstance()->findUserById($userId);
@@ -1735,32 +1639,25 @@ final class BOL_UserService
         $language = OW::getLanguage();
 
 
-        if ( empty($questionNames) )
-        {
-            if ( $adminMode )
-            {
+        if (empty($questionNames)) {
+            if ($adminMode) {
                 $questions = $questionService->findAllQuestionsForAccountType($accountType);
-            }
-            else
-            {
+            } else {
                 $questions = $questionService->findViewQuestionsForAccountType($accountType);
             }
-        }
-        else
-        {
+        } else {
             $questions = $questionService->findQuestionByNameList($questionNames);
-            foreach ( $questions as &$q )
-            {
+            foreach ($questions as &$q) {
                 $q = (array) $q;
             }
         }
 
-        $event = new OW_Event(self::EVENT_GET_USER_VIEW_QUESTIONS, array(
+        $event = new OW_Event(self::EVENT_GET_USER_VIEW_QUESTIONS, [
             'userId' => $userId,
             'adminMode' => $adminMode,
             'questionNames' => $questionNames,
             'sectionNames' => $sectionNames
-        ), $questions);
+        ], $questions);
 
         OW::getEventManager()->trigger($event);
 
@@ -1770,22 +1667,18 @@ final class BOL_UserService
         $questionArray = [];
         $questionNameList = [];
 
-        foreach ( $questions as $sort => $question )
-        {
-            if ( !empty($sectionNames) && !in_array($question['sectionName'], $sectionNames) )
-            {
+        foreach ($questions as $sort => $question) {
+            if (!empty($sectionNames) && !in_array($question['sectionName'], $sectionNames)) {
                 continue;
             }
 
-            if ( $section !== $question['sectionName'] )
-            {
+            if ($section !== $question['sectionName']) {
                 $section = $question['sectionName'];
             }
 
             $questions[$sort]['hidden'] = false;
 
-            if ( !$questions[$sort]['onView'] )
-            {
+            if (!$questions[$sort]['onView']) {
                 $questions[$sort]['hidden'] = true;
             }
 
@@ -1793,20 +1686,18 @@ final class BOL_UserService
             $questionNameList[] = $questions[$sort]['name'];
         }
 
-        $questionData = $questionService->getQuestionData(array($userId), $questionNameList);
+        $questionData = $questionService->getQuestionData([$userId], $questionNameList);
         $questionLabelList = [];
 
         // add form fields
-        foreach ( $questionArray as $sectionKey => $section )
-        {
-            foreach ( $section as $questionKey => $question )
-            {
-                $event = new OW_Event('base.questions_field_get_label', array(
+        foreach ($questionArray as $sectionKey => $section) {
+            foreach ($section as $questionKey => $question) {
+                $event = new OW_Event('base.questions_field_get_label', [
                     'presentation' => $question['presentation'],
                     'fieldName' => $question['name'],
                     'configs' => $question['custom'],
                     'type' => 'view'
-                ));
+                ]);
 
                 OW::getEventManager()->trigger($event);
 
@@ -1814,38 +1705,32 @@ final class BOL_UserService
 
                 $questionLabelList[$question['name']] = !empty($label) ? $label : BOL_QuestionService::getInstance()->getQuestionLang($question['name']);
 
-                $event = new OW_Event('base.questions_field_get_value', array(
+                $event = new OW_Event('base.questions_field_get_value', [
                     'presentation' => $question['presentation'],
                     'fieldName' => $question['name'],
                     'value' => empty($questionData[$userId][$question['name']]) ? null : $questionData[$userId][$question['name']],
                     'questionInfo' => $question,
                     'userId' => $userId
-                ));
+                ]);
 
                 OW::getEventManager()->trigger($event);
 
                 $eventValue = $event->getData();
 
-                if ( !empty($eventValue) )
-                {
+                if (!empty($eventValue)) {
                     $questionData[$userId][$question['name']] = $eventValue;
 
                     continue;
                 }
 
 
-                if ( !empty($questionData[$userId][$question['name']]) )
-                {
-                    switch ( $question['presentation'] )
-                    {
+                if (!empty($questionData[$userId][$question['name']])) {
+                    switch ($question['presentation']) {
                         case BOL_QuestionService::QUESTION_PRESENTATION_CHECKBOX:
 
-                            if ( (int) $questionData[$userId][$question['name']] === 1 )
-                            {
+                            if ((int) $questionData[$userId][$question['name']] === 1) {
                                 $questionData[$userId][$question['name']] = OW::getLanguage()->text('base', 'yes');
-                            }
-                            else
-                            {
+                            } else {
                                 unset($questionArray[$sectionKey][$questionKey]);
                             }
 
@@ -1857,14 +1742,12 @@ final class BOL_UserService
 
                             $value = 0;
 
-                            switch ( $question['type'] )
-                            {
+                            switch ($question['type']) {
                                 case BOL_QuestionService::QUESTION_VALUE_TYPE_DATETIME:
 
                                     $date = UTIL_DateTime::parseDate($questionData[$userId][$question['name']], UTIL_DateTime::MYSQL_DATETIME_DATE_FORMAT);
 
-                                    if ( isset($date) )
-                                    {
+                                    if (isset($date)) {
                                         $format = OW::getConfig()->getValue('base', 'date_field_format');
                                         $value = mktime(0, 0, 0, $date['month'], $date['day'], $date['year']);
                                     }
@@ -1878,13 +1761,10 @@ final class BOL_UserService
                                     break;
                             }
 
-                            if ( $format === 'dmy' )
-                            {
-                                $questionData[$userId][$question['name']] = date("d/m/Y", $value);
-                            }
-                            else
-                            {
-                                $questionData[$userId][$question['name']] = date("m/d/Y", $value);
+                            if ($format === 'dmy') {
+                                $questionData[$userId][$question['name']] = date('d/m/Y', $value);
+                            } else {
+                                $questionData[$userId][$question['name']] = date('m/d/Y', $value);
                             }
 
                             break;
@@ -1899,25 +1779,23 @@ final class BOL_UserService
                         case BOL_QuestionService::QUESTION_PRESENTATION_AGE:
 
                             $date = UTIL_DateTime::parseDate($questionData[$userId][$question['name']], UTIL_DateTime::MYSQL_DATETIME_DATE_FORMAT);
-                            $questionData[$userId][$question['name']] = UTIL_DateTime::getAge($date['year'], $date['month'], $date['day']) . " " . $language->text('base', 'questions_age_year_old');
+                            $questionData[$userId][$question['name']] = UTIL_DateTime::getAge($date['year'], $date['month'], $date['day']) . ' ' . $language->text('base', 'questions_age_year_old');
 
                             break;
 
                         case BOL_QuestionService::QUESTION_PRESENTATION_RANGE:
 
                             $range = explode('-', $questionData[$userId][$question['name']]);
-                            $questionData[$userId][$question['name']] = $language->text('base', 'form_element_from') . " " . $range[0] . " " . $language->text('base', 'form_element_to') . " " . $range[1];
+                            $questionData[$userId][$question['name']] = $language->text('base', 'form_element_from') . ' ' . $range[0] . ' ' . $language->text('base', 'form_element_to') . ' ' . $range[1];
 
                             break;
                         case BOL_QuestionService::QUESTION_PRESENTATION_FSELECT:
                             $questionValue = (int) $questionData[$userId][$question['name']];
                             $parentName = $question['name'];
-                            if ( !empty($question['parent']) )
-                            {
+                            if (!empty($question['parent'])) {
                                 $parent = BOL_QuestionService::getInstance()->findQuestionByName($question['parent']);
 
-                                if ( !empty($parent) )
-                                {
+                                if (!empty($parent)) {
                                     $parentName = $parent->name;
                                 }
                             }
@@ -1925,21 +1803,16 @@ final class BOL_UserService
                             $questionValues = BOL_QuestionService::getInstance()->findQuestionValues($parentName);
                             $value = [];
 
-                            foreach ( $questionValues as $val )
-                            {
+                            foreach ($questionValues as $val) {
                                 /* @var $val BOL_QuestionValue */
-                                if ( ( (int) $val->value ) == $questionValue  )
-                                {
+                                if (((int) $val->value) === $questionValue) {
                                     $value[$val->value] = BOL_QuestionService::getInstance()->getQuestionValueLang($val->questionName, $val->value);
                                 }
                             }
 
-                            if ( !empty($value) )
-                            {
+                            if (!empty($value)) {
                                 $questionData[$userId][$question['name']] = $value;
-                            }
-                            else
-                            {
+                            } else {
                                 unset($questionArray[$sectionKey][$questionKey]);
                             }
 
@@ -1949,17 +1822,15 @@ final class BOL_UserService
                         case BOL_QuestionService::QUESTION_PRESENTATION_RADIO:
                         case BOL_QuestionService::QUESTION_PRESENTATION_MULTICHECKBOX:
 
-                            $value = "";
+                            $value = '';
                             $multicheckboxValue = (int) $questionData[$userId][$question['name']];
 
                             $parentName = $question['name'];
 
-                            if ( !empty($question['parent']) )
-                            {
+                            if (!empty($question['parent'])) {
                                 $parent = BOL_QuestionService::getInstance()->findQuestionByName($question['parent']);
 
-                                if ( !empty($parent) )
-                                {
+                                if (!empty($parent)) {
                                     $parentName = $parent->name;
                                 }
                             }
@@ -1967,11 +1838,9 @@ final class BOL_UserService
                             $questionValues = BOL_QuestionService::getInstance()->findQuestionValues($parentName);
                             $value = [];
 
-                            foreach ( $questionValues as $val )
-                            {
+                            foreach ($questionValues as $val) {
                                 /* @var $val BOL_QuestionValue */
-                                if ( ( (int) $val->value ) & $multicheckboxValue )
-                                {
+                                if (((int) $val->value) & $multicheckboxValue) {
                                     /* if ( strlen($value) > 0 )
                                       {
                                       $value .= ', ';
@@ -1983,12 +1852,9 @@ final class BOL_UserService
                                 }
                             }
 
-                            if ( !empty($value) )
-                            {
+                            if (!empty($value)) {
                                 $questionData[$userId][$question['name']] = $value;
-                            }
-                            else
-                            {
+                            } else {
                                 unset($questionArray[$sectionKey][$questionKey]);
                             }
 
@@ -1997,19 +1863,15 @@ final class BOL_UserService
                         case BOL_QuestionService::QUESTION_PRESENTATION_URL:
                         case BOL_QuestionService::QUESTION_PRESENTATION_TEXT:
                         case BOL_QuestionService::QUESTION_PRESENTATION_TEXTAREA:
-                            if ( !is_string($questionData[$userId][$question['name']]) )
-                            {
+                            if (!is_string($questionData[$userId][$question['name']])) {
                                 break;
                             }
 
                             $value = trim($questionData[$userId][$question['name']]);
 
-                            if ( strlen($value) > 0 )
-                            {
+                            if (strlen($value) > 0) {
                                 $questionData[$userId][$question['name']] = UTIL_HtmlTag::autoLink(nl2br($value));
-                            }
-                            else
-                            {
+                            } else {
                                 unset($questionArray[$sectionKey]);
                             }
 
@@ -2018,22 +1880,19 @@ final class BOL_UserService
                         default:
                             unset($questionArray[$sectionKey][$questionKey]);
                     }
-                }
-                else
-                {
+                } else {
                     unset($questionArray[$sectionKey][$questionKey]);
                 }
             }
 
-            if ( isset($questionArray[$sectionKey]) && count($questionArray[$sectionKey]) === 0 )
-            {
+            if (isset($questionArray[$sectionKey]) && count($questionArray[$sectionKey]) === 0) {
                 unset($questionArray[$sectionKey]);
             }
         }
 
-        return array('questions' => $questionArray, 'data' => $questionData, 'labels' => $questionLabelList);
+        return ['questions' => $questionArray, 'data' => $questionData, 'labels' => $questionLabelList];
     }
-    
+
     /**
      * Returns query parts for filtering users ( by default: suspended, not approved, not verified ). 
      * Result array includes strings: join, where, order
@@ -2043,7 +1902,7 @@ final class BOL_UserService
      * @param array $params
      * @return array
      */
-    public function getQueryFilter( array $tables, array $fields, $params = [] )
+    public function getQueryFilter(array $tables, array $fields, $params = [])
     {
         return $this->userDao->getQueryFilter($tables, $fields, $params);
     }
@@ -2053,32 +1912,26 @@ final class BOL_UserService
      * @param array $userIds
      * @return void
      */
-    public function sendReActivationNotification( array $userIds )
+    public function sendReActivationNotification(array $userIds)
     {
         $language = OW::getLanguage();
 
-        if ( is_array($userIds) )
-        {
-            foreach ( $userIds as $item => $userId )
-            {
+        if (is_array($userIds)) {
+            foreach ($userIds as $item => $userId) {
                 $user = $this->findUserById($userId);
 
-                if ( !$user )
-                {
+                if (!$user) {
                     return false;
                 }
 
-                try
-                {
+                try {
                     $mail = OW::getMailer()->createMail();
                     $mail->addRecipientEmail($user->getEmail());
                     $mail->setSubject($language->text('base', 'user_reactivation_mail_subject'));
-                    $mail->setTextContent($language->text('base', 'user_reactivation_mail_txt', array('userName' => $this->getDisplayName($user->id))));
-                    $mail->setHtmlContent($language->text('base', 'user_reactivation_mail_html', array('userName' => $this->getDisplayName($user->id))));
+                    $mail->setTextContent($language->text('base', 'user_reactivation_mail_txt', ['userName' => $this->getDisplayName($user->id)]));
+                    $mail->setHtmlContent($language->text('base', 'user_reactivation_mail_html', ['userName' => $this->getDisplayName($user->id)]));
                     OW::getMailer()->send($mail);
-                }
-                catch ( Exception $e )
-                {
+                } catch (Exception $e) {
                     OW::getLogger()->addEntry(json_encode($e));
                 }
             }
