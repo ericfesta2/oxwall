@@ -117,7 +117,9 @@ final class OW_Database
                 password: $params['password'],
                 options: [
                     PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES UTF8MB4;',
-                    PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true
+                    PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                    PDO::MYSQL_ATTR_SSL_CA => true,
+                    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
                 ]
             );
 

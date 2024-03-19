@@ -1,17 +1,20 @@
 services:
   oxwall:
     build:
-      dockerfile: ./Dockerfile
+      dockerfile: ./server.Dockerfile
     ports:
       - '8080:80'
     networks:
       - oxwall
     volumes:
       - .:/var/www/html
+      - ow_mysql:/var/lib/mysql
     depends_on:
       - database
   database:
     image: mysql:latest
+    command:
+      - '--require_secure_transport=ON'
     environment:
       MYSQL_ROOT_PASSWORD: testing
     ports:
@@ -24,3 +27,4 @@ networks:
   oxwall:
 volumes:
   ow_mysql:
+  ow_mysql_tls:
