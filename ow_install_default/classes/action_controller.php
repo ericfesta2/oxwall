@@ -38,7 +38,7 @@ class INSTALL_ActionController extends INSTALL_Renderable
         $redirectUrl = $redirectTo ?? OW::getRequest()->getRequestUri();
 
         // if URI is provided need to add site home URL
-        if (!strstr($redirectUrl, 'http://') && !strstr($redirectUrl, 'https://')) {
+        if (!str_contains($redirectUrl, 'http://') && !str_contains($redirectUrl, 'https://')) {
             $redirectUrl = OW::getRouter()->getBaseUrl() . UTIL_String::removeFirstAndLastSlashes($redirectUrl);
         }
 

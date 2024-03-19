@@ -4472,7 +4472,9 @@ span.ow_chat_item_text,
 .ow_video_list .ow_alt2 {
     padding: 24px 0 24px 0;
     align-content: stretch;
-    justify-content: center;
+    display: flex;
+    justify-content: left;
+    gap: 0 7%;
 }
 .ow_video_player{
     text-align: center;
@@ -4481,8 +4483,7 @@ span.ow_chat_item_text,
     margin: 8px 0 20px;
 }
 .ow_video_list_item{
-    margin: 0 3.5%;
-    width: 120px;
+    width: 145px;
 }
 .ow_other_video_item_title{
     margin-left: 88px;
@@ -4527,6 +4528,9 @@ span.ow_chat_item_text,
     vertical-align: middle;
 }
 .ow_video_item_title{
+    font-size: 18px;
+    font-weight: 550;
+    color: var(--main-text-color);
     padding-bottom: 3px;
 }
 .ow_video_item_rate{
