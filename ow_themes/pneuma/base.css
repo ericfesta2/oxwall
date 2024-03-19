@@ -4169,7 +4169,7 @@ tr.forum_placeholder td{
     background-image: url(images/chat_btn_sound.png);
 }
 .ow_count_block .ow_count_txt {
-    color: var(--main-text-color);
+    color: var(--accent-color);
     font-weight: normal;
     font-size: 14px;
 }

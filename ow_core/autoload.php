@@ -50,7 +50,6 @@ class OW_Autoload
      */
     private function __construct()
     {
-
     }
     /**
      * Singleton instance.
@@ -66,8 +65,7 @@ class OW_Autoload
      */
     public static function getInstance()
     {
-        if ( self::$classInstance === null )
-        {
+        if (self::$classInstance === null) {
             self::$classInstance = new self();
         }
 
@@ -85,7 +83,7 @@ class OW_Autoload
     /**
      * @param array $classPathArray
      */
-    public function setClassPathArray( array $classPathArray )
+    public function setClassPathArray(array $classPathArray)
     {
         $this->classPathArray = $classPathArray;
     }
@@ -94,7 +92,7 @@ class OW_Autoload
      * Main static method registered as autoloader.
      * Don't call it manually.
      */
-    public static function autoload( $className )
+    public static function autoload($className)
     {
         $thisObj = self::getInstance();
 
@@ -103,8 +101,7 @@ class OW_Autoload
             if (!$path) {
                 return;
             }
-        }
-        catch ( Exception $e ) {
+        } catch (Exception $e) {
             return;
         }
 
@@ -118,16 +115,14 @@ class OW_Autoload
      * @param string $class
      * @return string
      */
-    public function getClassPath( $className )
+    public function getClassPath($className)
     {
         // if class isn't found in class path array
-        if ( !isset($this->classPathArray[$className]) )
-        {
+        if (!isset($this->classPathArray[$className])) {
             $packagePointer = $this->getPackagePointer($className);
 
             // throw exception if package pointer is not registered
-            if ( !isset($this->packagePointers[$packagePointer]) )
-            {
+            if (!isset($this->packagePointers[$packagePointer])) {
                 throw new Redirect404Exception();
             }
 
@@ -144,13 +139,12 @@ class OW_Autoload
      * @param string $className
      * @param string $filePath
      */
-    public function addClass( $className, $filePath )
+    public function addClass($className, $filePath)
     {
         $className = trim($className);
 
-        if ( isset($this->classPathArray[$className]) )
-        {
-            throw new LogicException("Can't register `" . $className . "` in autoloader. Duplicated class name!");
+        if (isset($this->classPathArray[$className])) {
+            throw new LogicException("Can't register `" . $className . '` in autoloader. Duplicated class name!');
         }
 
         $this->classPathArray[$className] = $filePath;
@@ -162,10 +156,9 @@ class OW_Autoload
      * @throws LogicException
      * @param array $classArray
      */
-    public function addClassArray( array $classArray )
+    public function addClassArray(array $classArray)
     {
-        foreach ( $classArray as $className => $filePath )
-        {
+        foreach ($classArray as $className => $filePath) {
             $this->addClass($className, $filePath);
         }
     }
@@ -182,12 +175,13 @@ class OW_Autoload
      * @param boolean $extension
      * @return string
      */
-    public function classToFilename( $className, $extension = true )
+    public function classToFilename($className, $extension = true)
     {
+        $uscoreRPos = strrpos($className, '_');
+
         // need to remove package pointer
-        if ( strstr($className, '_') )
-        {
-            $className = substr($className, (strrpos($className, '_') + 1));
+        if ($uscoreRPos !== false) {
+            $className = substr($className, $uscoreRPos + 1);
         }
 
         return substr(UTIL_String::capsToDelimiter($className), 1) . ($extension ? '.php' : '');
@@ -200,9 +194,9 @@ class OW_Autoload
      * @param string $packagePointer
      * @return string
      */
-    public function filenameToClass( $fileName, $packagePointer = null )
+    public function filenameToClass($fileName, $packagePointer = null)
     {
-        $packagePointer = ( ( $packagePointer === null ) ? '' : strtoupper($packagePointer) . '_' );
+        $packagePointer = (($packagePointer === null) ? '' : strtoupper($packagePointer) . '_');
 
         return $packagePointer . UTIL_String::delimiterToCaps('_' . substr($fileName, 0, -4));
     }
@@ -214,15 +208,16 @@ class OW_Autoload
      * @param string $className
      * @return string
      */
-    public function getPackagePointer( $className )
+    public function getPackagePointer($className)
     {
+        $uscoreRPos = strrpos($className, '_');
+
         // throw exception if class doesn't have package pointer
-        if ( !strstr($className, '_') )
-        {
-            throw new InvalidArgumentException("Can't find package pointer in class `" . $className . "` !");
+        if ($uscoreRPos === false) {
+            throw new InvalidArgumentException("Can't find package pointer in class `" . $className . '` !');
         }
 
-        return substr($className, 0, strrpos($className, '_'));
+        return substr($className, 0, $uscoreRPos);
     }
 
     /**
@@ -232,15 +227,16 @@ class OW_Autoload
      * @param string $className
      * @return string
      */
-    public function getPluginKey( $className )
+    public function getPluginKey($className)
     {
+        $uscorePos = strpos($className, '_');
+
         // throw exception if class doesn't contain underscore symbols
-        if ( !strstr($className, '_') )
-        {
-            throw new InvalidArgumentException("Can't find plugin key in class `" . $className . "` !");
+        if ($uscorePos === false) {
+            throw new InvalidArgumentException("Can't find plugin key in class `" . $className . '` !');
         }
 
-        return substr($className, 0, strpos($className, '_'));
+        return substr($className, 0, $uscorePos);
     }
 
     /**
@@ -250,20 +246,18 @@ class OW_Autoload
      * @param string $packagePointer
      * @param string $dir
      */
-    public function addPackagePointer( $packagePointer, $dir )
+    public function addPackagePointer($packagePointer, $dir)
     {
         $packagePointer = trim($packagePointer);
         $dir = trim($dir);
 
         // throw exception if package pointer already registered
-        if ( isset($this->packagePointers[$packagePointer]) )
-        {
-            throw new InvalidArgumentException("Can't add package pointer `" . $packagePointer . "`! Duplicated package pointer!");
+        if (isset($this->packagePointers[$packagePointer])) {
+            throw new InvalidArgumentException("Can't add package pointer `" . $packagePointer . '`! Duplicated package pointer!');
         }
 
         // add directory separator if needed
-        if ( substr($dir, -1) !== DS )
-        {
+        if (substr($dir, -1) !== DS) {
             $dir = trim($dir) . DS;
         }
 

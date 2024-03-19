@@ -85,28 +85,23 @@ final class OW_Database
         return $this->useCashe;
     }
 
-    public function setUseCashe( bool $useCashe ): void
+    public function setUseCashe(bool $useCashe): void
     {
         $this->useCashe = $useCashe;
     }
 
-    private function __construct( array $params )
+    private function __construct(array $params)
     {
         $port = isset($params['port']) ? (int) $params['port'] : null;
-        $socket = isset($params['socket']) ? $params['socket'] : null;
+        $socket = $params['socket'] ?? null;
 
-        try
-        {
-            if ( $socket === null )
-            {
+        try {
+            if ($socket === null) {
                 $dsn = "mysql:host={$params['host']};";
-                if ( $port !== null )
-                {
+                if ($port !== null) {
                     $dsn .= "port={$params['port']};";
                 }
-            }
-            else
-            {
+            } else {
                 $dsn = "mysql:unix_socket={$socket};";
             }
             $dsn .= "dbname={$params['dbname']}";
@@ -123,8 +118,7 @@ final class OW_Database
                 ]
             );
 
-            if ( !$this->isMysqlValidVersion() )
-            {
+            if (!$this->isMysqlValidVersion()) {
                 throw new InvalidArgumentException(
                     'Can\'t connect to database. Connection needs MySQL version 8.0 or higher!'
                 );
@@ -132,8 +126,7 @@ final class OW_Database
 
             $this->prepareMysql();
 
-            if ( !empty($params['profilerEnable']) )
-            {
+            if (!empty($params['profilerEnable'])) {
                 $this->isProfilerEnabled = true;
                 $this->profiler = UTIL_Profiler::getInstance('db');
                 $this->queryCount = 0;
@@ -142,16 +135,13 @@ final class OW_Database
                 $this->queryLog = [];
             }
 
-            if ( !empty($params['debugMode']) )
-            {
+            if (!empty($params['debugMode'])) {
                 $this->debugMode = true;
             }
 
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->useCashe = false;
-        }
-        catch ( PDOException $e )
-        {
+        } catch (PDOException $e) {
             throw new InvalidArgumentException($e->getMessage());
         }
     }
@@ -164,10 +154,9 @@ final class OW_Database
      * @return OW_Database
      *
      */
-    public static function getInstance( array $params ): OW_Database
+    public static function getInstance(array $params): OW_Database
     {
-        if ( !isset(self::$classInstances) )
-        {
+        if (!isset(self::$classInstances)) {
             self::$classInstances = [];
         }
 
@@ -175,9 +164,8 @@ final class OW_Database
 
         $connectionKey = serialize($params);
 
-        if ( empty(self::$classInstances[$connectionKey]) )
-        {
-            if ( !isset($params['host'], $params['username'], $params['password'], $params['dbname']) ) {
+        if (empty(self::$classInstances[$connectionKey])) {
+            if (!isset($params['host'], $params['username'], $params['password'], $params['dbname'])) {
                 throw new InvalidArgumentException(
                     'Can\'t connect to database. Please provide valid connection attributes.'
                 );
@@ -197,8 +185,7 @@ final class OW_Database
     ): mixed {
         $dataFromCache = $this->getFromCache($sql, $params, $cacheLifeTime);
 
-        if ( $dataFromCache !== self::NO_CACHE_ENTRY )
-        {
+        if ($dataFromCache !== self::NO_CACHE_ENTRY) {
             return $dataFromCache;
         }
 
@@ -206,8 +193,7 @@ final class OW_Database
         $result = $stmt->fetchColumn(); // (PDO::FETCH_COLUMN);
         $stmt->closeCursor();
 
-        if ( $result === false )
-        {
+        if ($result === false) {
             $result = null;
         }
 
@@ -224,8 +210,7 @@ final class OW_Database
     ): mixed {
         $dataFromCache = $this->getFromCache($sql, $params, $cacheLifeTime);
 
-        if ( $dataFromCache !== self::NO_CACHE_ENTRY )
-        {
+        if ($dataFromCache !== self::NO_CACHE_ENTRY) {
             return $dataFromCache;
         }
 
@@ -234,12 +219,9 @@ final class OW_Database
         $result = $stmt->fetch();
         $stmt->closeCursor();
 
-        if ( $result === false )
-        {
+        if ($result === false) {
             $result = null;
-        }
-        else
-        {
+        } else {
             $result->generateFieldsHash();
         }
 
@@ -260,16 +242,14 @@ final class OW_Database
     ) {
         $dataFromCache = $this->getFromCache($sql, $params, $cacheLifeTime);
 
-        if ( $dataFromCache !== self::NO_CACHE_ENTRY )
-        {
+        if ($dataFromCache !== self::NO_CACHE_ENTRY) {
             return $dataFromCache;
         }
 
         $stmt = $this->execute($sql, $params);
         $result = $stmt->fetchAll(PDO::FETCH_CLASS, $className);
 
-        foreach ( $result as $item )
-        {
+        foreach ($result as $item) {
             $item->generateFieldsHash();
         }
 
@@ -279,18 +259,17 @@ final class OW_Database
 
     public function setTimezone(): void
     {
-        $date = new DateTime;
+        $date = new DateTime();
         $this->query('SET TIME_ZONE = ?', [
             $date->format('P')
         ]);
     }
 
-    public function queryForRow( string $sql, ?array $params = null, int $cacheLifeTime = 0, array $tags = [] ): array
+    public function queryForRow(string $sql, ?array $params = null, int $cacheLifeTime = 0, array $tags = []): array
     {
         $dataFromCache = $this->getFromCache($sql, $params, $cacheLifeTime);
 
-        if ( $dataFromCache !== self::NO_CACHE_ENTRY )
-        {
+        if ($dataFromCache !== self::NO_CACHE_ENTRY) {
             return $dataFromCache;
         }
 
@@ -298,8 +277,7 @@ final class OW_Database
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
-        if ( $result === false )
-        {
+        if ($result === false) {
             $result = [];
         }
 
@@ -307,12 +285,11 @@ final class OW_Database
         return $result;
     }
 
-    public function queryForList( string $sql, array $params = null, int $cacheLifeTime = 0, array $tags = [] ): array
+    public function queryForList(string $sql, array $params = null, int $cacheLifeTime = 0, array $tags = []): array
     {
         $dataFromCache = $this->getFromCache($sql, $params, $cacheLifeTime);
 
-        if ( $dataFromCache !== self::NO_CACHE_ENTRY )
-        {
+        if ($dataFromCache !== self::NO_CACHE_ENTRY) {
             return $dataFromCache;
         }
 
@@ -330,8 +307,7 @@ final class OW_Database
     ): array|false {
         $dataFromCache = $this->getFromCache($sql, $params, $cacheLifeTime);
 
-        if ( $dataFromCache !== self::NO_CACHE_ENTRY )
-        {
+        if ($dataFromCache !== self::NO_CACHE_ENTRY) {
             return $dataFromCache;
         }
 
@@ -341,7 +317,7 @@ final class OW_Database
         return $result;
     }
 
-    public function query( string $sql, ?array $params = null ): int
+    public function query(string $sql, ?array $params = null): int
     {
         $stmt = $this->execute($sql, $params);
         $rowCount = $stmt->rowCount();
@@ -349,7 +325,7 @@ final class OW_Database
         return $rowCount;
     }
 
-    public function delete( string $sql, ?array $params = null ): int
+    public function delete(string $sql, ?array $params = null): int
     {
         return $this->query($sql, $params);
     }
@@ -361,7 +337,7 @@ final class OW_Database
      * @param array $params
      * @return int last_insert_id
      */
-    public function insert( string $sql, ?array $params = null )
+    public function insert(string $sql, ?array $params = null)
     {
         $stmt = $this->execute($sql, $params);
         $lastInsertId = $this->connection->lastInsertId();
@@ -369,7 +345,7 @@ final class OW_Database
         return $lastInsertId;
     }
 
-    public function update( string $sql, ?array $params = null ): int
+    public function update(string $sql, ?array $params = null): int
     {
         return $this->query($sql, $params);
     }
@@ -382,22 +358,20 @@ final class OW_Database
      * @param object $obj
      * @return int
      */
-    public function insertObject( string $tableName, $obj, bool $delayed = false ): int
+    public function insertObject(string $tableName, $obj, bool $delayed = false): int
     {
-        if ( $obj != null && is_object($obj) )
-        {
+        if ($obj !== null && is_object($obj)) {
             $params = get_object_vars($obj);
             $paramNames = array_keys($params);
             $columns = UTIL_String::arrayToDelimitedString($paramNames, ',', '`', '`');
             $values = UTIL_String::arrayToDelimitedString($paramNames, ',', ':');
-            $sql = "INSERT" . ($delayed ? " DELAYED" : "") . " INTO `{$tableName}` ({$columns}) VALUES ({$values})";
+            $sql = 'INSERT' . ($delayed ? ' DELAYED' : '') . " INTO `{$tableName}` ({$columns}) VALUES ({$values})";
 
             return $this->insert($sql, $params);
         }
-        else
-        {
-            throw new InvalidArgumentException('object expected');
-        }
+
+
+        throw new InvalidArgumentException('object expected');
     }
 
     /**
@@ -415,22 +389,19 @@ final class OW_Database
         $paramNames = [];
         $number = 1;
 
-        foreach ( $objList as $obj )
-        {
-            if ( $obj != null && is_object($obj) )
-            {
+        foreach ($objList as $obj) {
+            if ($obj !== null && is_object($obj)) {
                 $objectVars = get_object_vars($obj);
-                foreach ( $objectVars as $objKey => $objVar )
-                {
+                foreach ($objectVars as $objKey => $objVar) {
                     $params["{$objKey}_$number"] = $objVar;
                     $paramNames[] = "{$objKey}_$number";
                 }
                 $columns = UTIL_String::arrayToDelimitedString(array_keys($objectVars), ',', '`', '`');
                 $values = UTIL_String::arrayToDelimitedString($paramNames, ',', ':');
-                $sqlList .= "INSERT" . ($delayed ? " DELAYED" : "") . " INTO `{$tableName}` ({$columns}) VALUES ({$values});";
+                $sqlList .= 'INSERT' . ($delayed ? ' DELAYED' : '') . " INTO `{$tableName}` ({$columns}) VALUES ({$values});";
 
                 $paramNames = [];
-                $number++;
+                ++$number;
             }
         }
 
@@ -448,33 +419,25 @@ final class OW_Database
         string $primaryKeyName = 'id',
         bool $lowPriority = false
     ) {
-        if ( $obj != null && is_object($obj) )
-        {
+        if ($obj !== null && is_object($obj)) {
             $params = get_object_vars($obj);
 
-            if ( !array_key_exists($primaryKeyName, $params) )
-            {
+            if (!array_key_exists($primaryKeyName, $params)) {
                 throw new InvalidArgumentException('object property not found');
             }
 
             $fieldsToUpdate = $obj->getEntinyUpdatedFields();
 
-            if ( empty($fieldsToUpdate) )
-            {
+            if (empty($fieldsToUpdate)) {
                 return true;
             }
 
             $updateArray = [];
-            foreach ( $params as $key => $value )
-            {
-                if ( $key !== $primaryKeyName )
-                {
-                    if ( in_array($key, $fieldsToUpdate) )
-                    {
+            foreach ($params as $key => $value) {
+                if ($key !== $primaryKeyName) {
+                    if (in_array($key, $fieldsToUpdate)) {
                         $updateArray[] = '`' . $key . '`=:' . $key;
-                    }
-                    else
-                    {
+                    } else {
                         unset($params[$key]);
                     }
                 }
@@ -484,10 +447,9 @@ final class OW_Database
             $sql = 'UPDATE' . ($lowPriority ? ' LOW_PRIORITY' : '') . " `{$tableName}` SET {$updateStmt} WHERE {$primaryKeyName}=:{$primaryKeyName}";
             return $this->update($sql, $params);
         }
-        else
-        {
-            throw new InvalidArgumentException('object expected');
-        }
+
+
+        throw new InvalidArgumentException('object expected');
     }
 
     public function updateObjectList(
@@ -500,93 +462,74 @@ final class OW_Database
         $number = 1;
         $updatedParams = [];
 
-        foreach ( $objList as $obj )
-        {
-            if ( $obj != null && is_object($obj) )
-            {
+        foreach ($objList as $obj) {
+            if ($obj !== null && is_object($obj)) {
                 $params = get_object_vars($obj);
 
-                if ( !array_key_exists($primaryKeyName, $params) )
-                {
+                if (!array_key_exists($primaryKeyName, $params)) {
                     continue;
                 }
 
                 $fieldsToUpdate = $obj->getEntinyUpdatedFields();
 
-                if ( empty($fieldsToUpdate) )
-                {
+                if (empty($fieldsToUpdate)) {
                     continue;
                 }
 
                 $updateArray = [];
-                foreach ( $params as $key => $value )
-                {
-                    if ( $key !== $primaryKeyName )
-                    {
-                        if ( in_array($key, $fieldsToUpdate) )
-                        {
+                foreach ($params as $key => $value) {
+                    if ($key !== $primaryKeyName) {
+                        if (in_array($key, $fieldsToUpdate)) {
                             $updateArray[] = "`$key`=:{$key}_$number";
                             $updatedParams["{$key}_$number"] = $value;
-                        }
-                        else
-                        {
+                        } else {
                             unset($params[$key]);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $updatedParams["{$primaryKeyName}_$number"] = $value;
                     }
                 }
 
                 $updateStmt = UTIL_String::arrayToDelimitedString($updateArray);
-                $sqlList .= "UPDATE" . ($lowPriority ? " LOW_PRIORITY" : "") . " `{$tableName}` SET {$updateStmt} WHERE {$primaryKeyName}=:{$primaryKeyName}_$number;";
+                $sqlList .= 'UPDATE' . ($lowPriority ? ' LOW_PRIORITY' : '') . " `{$tableName}` SET {$updateStmt} WHERE {$primaryKeyName}=:{$primaryKeyName}_$number;";
 
-                $number++;
+                ++$number;
             }
         }
 
-        if ( empty($sqlList) )
-        {
+        if (empty($sqlList)) {
             return false;
         }
 
         return $this->execute($sqlList, $updatedParams);
     }
 
-    public function mergeInClause( array $valueList ): string
+    public function mergeInClause(array $valueList): string
     {
-        if ( $valueList === null )
-        {
+        if ($valueList === null) {
             return '';
         }
 
         $result = '';
-        foreach ( $valueList as $value )
-        {
-            $result .= ( '\'' . $this->escapeString($value) . '\',' );
+        foreach ($valueList as $value) {
+            $result .= ('\'' . $this->escapeString($value) . '\',');
         }
 
         return mb_substr($result, 0, mb_strlen($result) - 1);
     }
 
-    public function batchInsertOrUpdateObjectList( string $tableName, $objects, int $batchSize = 50 ): void
+    public function batchInsertOrUpdateObjectList(string $tableName, $objects, int $batchSize = 50): void
     {
-        if ( $objects != null && is_array($objects) )
-        {
-            if ( count($objects) > 0 )
-            {
+        if ($objects !== null && is_array($objects)) {
+            if (count($objects) > 0) {
                 $columns = '';
                 $paramNames = [];
 
-                if ( is_object($objects[0]) )
-                {
+                if (is_object($objects[0])) {
                     $params = get_object_vars($objects[0]);
                     $paramNames = array_keys($params);
                     $columns = UTIL_String::arrayToDelimitedString($paramNames, ',', '`', '`');
-                }
-                else
-                {
+                } else {
                     throw new InvalidArgumentException('Array of objects expected');
                 }
 
@@ -595,17 +538,12 @@ final class OW_Database
                 $objectsCount = count($objects);
                 $inserts = [];
 
-                foreach ( $objects as $obj )
-                {
+                foreach ($objects as $obj) {
                     $values = '(';
-                    foreach ( $paramNames as $property )
-                    {
-                        if ( $obj->$property !== null )
-                        {
-                            $values .= ( '\'' . $this->escapeString($obj->$property) . '\',' );
-                        }
-                        else
-                        {
+                    foreach ($paramNames as $property) {
+                        if ($obj->$property !== null) {
+                            $values .= ('\'' . $this->escapeString($obj->$property) . '\',');
+                        } else {
                             $values .= 'NULL,';
                         }
                     }
@@ -613,11 +551,10 @@ final class OW_Database
                     $values .= ')';
                     $inserts[] = $values;
 
-                    $i++;
-                    $totalInsertsCount++;
+                    ++$i;
+                    ++$totalInsertsCount;
 
-                    if ( $i === $batchSize || $totalInsertsCount === $objectsCount )
-                    {
+                    if ($i === $batchSize || $totalInsertsCount === $objectsCount) {
                         $sql = "REPLACE INTO `$tableName` ($columns) VALUES" . implode(',', $inserts);
                         $inserts = [];
                         $i = 0;
@@ -626,14 +563,12 @@ final class OW_Database
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             throw new InvalidArgumentException('Array expected');
         }
     }
 
-    public function escapeString( ?string $string ): string
+    public function escapeString(?string $string): string
     {
         $quotedString = $this->connection->quote($string ?? ''); // real_escape_string( $string );
         return mb_substr($quotedString, 1, mb_strlen($quotedString) - 2); //dirty hack to delete quotes
@@ -654,7 +589,7 @@ final class OW_Database
      *
      * @return integer
      */
-    public function getInsertId( ?string $seqname = null )
+    public function getInsertId(?string $seqname = null)
     {
         return $this->connection->lastInsertId($seqname);
     }
@@ -664,8 +599,7 @@ final class OW_Database
      */
     public function __destruct()
     {
-        if ( isset($this->connection) )
-        {
+        if (isset($this->connection)) {
             $this->connection = null;
         }
     }
@@ -675,24 +609,22 @@ final class OW_Database
      *
      * @return PDOStatement
      */
-    private function execute( string $sql, ?array $params = null )
+    private function execute(string $sql, ?array $params = null)
     {
-        if ( $this->isProfilerEnabled )
-        {
+        if ($this->isProfilerEnabled) {
             $this->profiler->reset();
         }
 
         /* @var $stmt PDOStatement */
         $stmt = $this->connection->prepare($sql);
-        if ( $params !== null )
-        {
-            foreach ( $params as $key => $value )
-            {
+        if ($params !== null) {
+            foreach ($params as $key => $value) {
                 $paramType = PDO::PARAM_STR;
-                if ( is_int($value) )
+                if (is_int($value)) {
                     $paramType = PDO::PARAM_INT;
-                elseif ( is_bool($value) )
+                } elseif (is_bool($value)) {
                     $paramType = PDO::PARAM_BOOL;
+                }
 
                 $stmt->bindValue(is_int($key) ? $key + 1 : $key, $value, $paramType);
             }
@@ -701,12 +633,11 @@ final class OW_Database
         $stmt->execute(); //TODO setup profiler
         $this->affectedRows = $stmt->rowCount();
 
-        if ( $this->isProfilerEnabled )
-        {
+        if ($this->isProfilerEnabled) {
             $this->queryExecTime = $this->profiler->getTotalTime();
             $this->totalQueryExecTime += $this->queryExecTime;
 
-            $this->queryCount++;
+            ++$this->queryCount;
             $this->queryLog[] = ['query' => $sql, 'execTime' => $this->queryExecTime, 'params' => $params];
         }
 
@@ -727,25 +658,23 @@ final class OW_Database
      */
     private function prepareMysql(): void
     {
-        if ( $this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql' )
-        {
+        if ($this->connection->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
             $verArray = explode('.', $this->connection->getAttribute(PDO::ATTR_SERVER_VERSION));
 
-            if ( intval($verArray[0]) == 5 && intval($verArray[1]) >= 7 && intval($verArray[2]) >= 9 )
-            {
+            if (intval($verArray[0]) === 5 && intval($verArray[1]) >= 7 && intval($verArray[2]) >= 9) {
                 $this->connection->exec('SET SESSION sql_mode = ""');
             }
         }
     }
 
-    private function getCacheKeyForQuery( string $query, $params ): string
+    private function getCacheKeyForQuery(string $query, $params): string
     {
         return 'core.sql.' . md5(trim($query) . serialize($params));
     }
 
-    private function cacheEnabled( $expTime ): bool
+    private function cacheEnabled($expTime): bool
     {
-        return !OW_DEV_MODE && $this->useCashe && ( $expTime === false || $expTime > 0 );
+        return !OW_DEV_MODE && $this->useCashe && ($expTime === false || $expTime > 0);
     }
 
     private function getCacheManager(): OW_CacheManager
@@ -753,33 +682,29 @@ final class OW_Database
         return OW::getCacheManager();
     }
 
-    private function getFromCache( string $sql, $params, int $cacheLifeTime )
+    private function getFromCache(string $sql, $params, int $cacheLifeTime)
     {
-        if ( $this->cacheEnabled($cacheLifeTime) )
-        {
+        if ($this->cacheEnabled($cacheLifeTime)) {
             $cacheKey = $this->getCacheKeyForQuery($sql, $params ? $params : []);
             $cacheData = $this->getCacheManager()->load($cacheKey);
 
-            if ( $cacheData !== null )
-            {
+            if ($cacheData !== null) {
                 return unserialize($cacheData);
             }
         }
 
         $data = OW::getEventManager()->call('core.sql.get_query_result', ['sql' => $sql, 'params' => $params]);
 
-        if ( is_array($data) && isset($data['result']) && $data['result'] === true )
-        {
+        if (is_array($data) && isset($data['result']) && $data['result'] === true) {
             return $data['value'];
         }
 
         return self::NO_CACHE_ENTRY;
     }
 
-    private function saveToCache( $result, string $sql, $params, int $cacheLifeTime, array $tags ): void
+    private function saveToCache($result, string $sql, $params, int $cacheLifeTime, array $tags): void
     {
-        if ( $this->cacheEnabled($cacheLifeTime) )
-        {
+        if ($this->cacheEnabled($cacheLifeTime)) {
             $cacheKey = $this->getCacheKeyForQuery($sql, $params ? $params : []);
             $this->getCacheManager()->save(serialize($result), $cacheKey, $tags, $cacheLifeTime);
         }

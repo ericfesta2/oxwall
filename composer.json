@@ -11,12 +11,12 @@
     },
     "require": {
         "php": ">=8.3",
-        "smarty/smarty": "^4.3",
-        "guzzlehttp/guzzle": "^7.5",
-        "phpmailer/phpmailer": "^6.7",
+        "smarty/smarty": "^4.5",
+        "guzzlehttp/guzzle": "^7.8",
+        "phpmailer/phpmailer": "^6.9",
         "symfony/console": "^5.4"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.49"
+        "friendsofphp/php-cs-fixer": "^3.52"
     }
 }
