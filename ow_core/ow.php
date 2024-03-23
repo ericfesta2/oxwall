@@ -59,15 +59,6 @@ final class OW
 
         $context = self::CONTEXT_DESKTOP;
 
-        try
-        {
-            $isSmart = UTIL_Browser::isSmartphone() ? true : UTIL_Browser::isTierTablet();
-        }
-        catch ( Exception $e )
-        {
-            return;
-        }
-
         if ( defined('OW_CRON') )
         {
             $context = self::CONTEXT_DESKTOP;
@@ -75,10 +66,6 @@ final class OW
         else if ( self::getSession()->isKeySet(OW_Application::CONTEXT_NAME) )
         {
             $context = self::getSession()->get(OW_Application::CONTEXT_NAME);
-        }
-        else if ( $isSmart )
-        {
-            $context = self::CONTEXT_MOBILE;
         }
 
         if ( defined('OW_USE_CONTEXT') )
@@ -103,17 +90,16 @@ final class OW
         //TODO remake
         $uri = UTIL_Url::getRealRequestUri(OW::getRouter()->getBaseUrl(), $_SERVER['REQUEST_URI']);
 
-
         if ( mb_strstr($uri, '/') )
         {
-            if ( trim(mb_substr($uri, 0, mb_strpos($uri, '/'))) == 'api' )
+            if ( trim(mb_substr($uri, 0, mb_strpos($uri, '/'))) === 'api' )
             {
                 $context = self::CONTEXT_API;
             }
         }
         else
         {
-            if ( trim($uri) == 'api' )
+            if ( trim($uri) === 'api' )
             {
                 $context = self::CONTEXT_API;
             }
