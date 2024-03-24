@@ -33,25 +33,19 @@ interface OW_IAuthenticator
 {
     /**
      * Checks if current user is authenticated.
-     *
-     * @return boolean
      */
-    public function isAuthenticated();
+    public function isAuthenticated(): bool;
 
     /**
      * Returns current user id.
      * If user is not authenticated 0 returned.
-     *
-     * @return integer
      */
-    public function getUserId();
+    public function getUserId(): int;
 
     /**
      * Logins user by provided user id.
-     *
-     * @param integer $userId
      */
-    public function login( $userId );
+    public function login( int $userId );
 
     /**
      * Logs out current user.
@@ -61,5 +55,5 @@ interface OW_IAuthenticator
     /**
      * Returns auth id
      */
-    public function getId();
+    public function getId(): string;
 }

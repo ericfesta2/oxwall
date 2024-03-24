@@ -29,62 +29,61 @@
  */
 class OW_TokenAuthenticator implements OW_IAuthenticator
 {
+    private const int NO_AUTH_USER_ID = 0;
+
     /**
      * @var BOL_UserService
      */
-    private $service;
+    private BOL_UserService $service;
 
     /**
      * @var integer
      */
-    private $userId;
+    private int $userId;
 
     /**
      * @var string
      */
-    private $token;
+    private string $token;
 
     public function __construct( $token = null )
     {
         $this->service = BOL_UserService::getInstance();
 
-        $this->userId = 0;
+        $this->userId = self::NO_AUTH_USER_ID;
 
         $this->token = $token;
 
         if ( $token !== null )
         {
-            $this->userId = (int) $this->service->findUserIdByAuthToken($token);
+            $this->userId = $this->service->findUserIdByAuthToken($token);
         }
     }
 
     /**
      * Checks if current user is authenticated.
-     *
-     * @return boolean
      */
-    public function isAuthenticated()
+    #[\Override]
+    public function isAuthenticated(): bool
     {
-        return $this->userId !== 0;
+        return $this->userId !== self::NO_AUTH_USER_ID;
     }
 
     /**
      * Returns current user id.
      * If user is not authenticated 0 returned.
-     *
-     * @return integer
      */
-    public function getUserId()
+    #[\Override]
+    public function getUserId(): int
     {
         return $this->userId;
     }
 
     /**
      * Logins user by provided user id.
-     *
-     * @param integer $userId
      */
-    public function login( $userId )
+    #[\Override]
+    public function login( int $userId )
     {
         $this->userId = $userId;
         $this->token = $this->service->addTokenForUser($this->userId);
@@ -93,6 +92,7 @@ class OW_TokenAuthenticator implements OW_IAuthenticator
     /**
      * Logs out current user.
      */
+    #[\Override]
     public function logout()
     {
         if ( $this->isAuthenticated() )
@@ -105,7 +105,8 @@ class OW_TokenAuthenticator implements OW_IAuthenticator
     /**
      * Returns auth id
      */
-    public function getId()
+    #[\Override]
+    public function getId(): string
     {
         return $this->token;
     }

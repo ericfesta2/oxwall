@@ -31,40 +31,34 @@
  */
 class OW_SessionAuthenticator implements OW_IAuthenticator
 {
-    const USER_ID_SESSION_KEY = 'userId';
+    private const string USER_ID_SESSION_KEY = 'userId';
 
-    public function __construct()
-    {
-        
-    }
+    public function __construct() {}
 
     /**
      * Checks if current user is authenticated.
-     *
-     * @return boolean
      */
-    public function isAuthenticated()
+    #[\Override]
+    public function isAuthenticated(): bool
     {
-        return ( OW::getSession()->isKeySet(self::USER_ID_SESSION_KEY) && $this->getUserId() > 0 );
+        return OW::getSession()->isKeySet(self::USER_ID_SESSION_KEY) && $this->getUserId() > 0;
     }
 
     /**
      * Returns current user id.
      * If user is not authenticated 0 returned.
-     *
-     * @return integer
      */
-    public function getUserId()
+    #[\Override]
+    public function getUserId(): int
     {
         return (int) OW::getSession()->get(self::USER_ID_SESSION_KEY);
     }
 
     /**
      * Logins user by provided user id.
-     *
-     * @param integer $userId
      */
-    public function login( $userId )
+    #[\Override]
+    public function login( int $userId )
     {
         OW::getSession()->set(self::USER_ID_SESSION_KEY, $userId);
     }
@@ -72,6 +66,7 @@ class OW_SessionAuthenticator implements OW_IAuthenticator
     /**
      * Logs out current user.
      */
+    #[\Override]
     public function logout()
     {
         OW::getSession()->delete(self::USER_ID_SESSION_KEY);
@@ -79,11 +74,10 @@ class OW_SessionAuthenticator implements OW_IAuthenticator
 
     /**
      * Returns auth id
-     *
-     * @return string
      */
-    public function getId()
+    #[\Override]
+    public function getId(): string
     {
-        return session_id();
+        return session_id() ?? '';
     }
 }

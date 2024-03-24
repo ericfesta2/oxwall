@@ -544,7 +544,7 @@ final class BOL_UserService
 
         $user = $this->findByUsername(trim($value));
 
-        return (bool) (isset($user)) 
+        return (bool) (isset($user))
 
 
 
@@ -559,7 +559,7 @@ final class BOL_UserService
 
         $user = $this->findRestrictedUsername(trim($value));
 
-        return (bool) (isset($user)) 
+        return (bool) (isset($user))
 
 
 
@@ -574,7 +574,7 @@ final class BOL_UserService
 
         $email = $this->findByEmail(trim($value));
 
-        return (bool) (isset($email)) 
+        return (bool) (isset($email))
 
 
 
@@ -591,7 +591,7 @@ final class BOL_UserService
 
         $password = $this->hashPassword($value);
 
-        return (bool) ($user->password === $password) 
+        return (bool) ($user->password === $password)
 
 
 
@@ -1615,7 +1615,7 @@ final class BOL_UserService
         $token = new BOL_AuthToken();
         $token->setUserId($userId);
         $token->setTimeStamp(time());
-        $token->setToken(uniqid($userId));
+        $token->setToken(bin2hex(random_bytes(23)));
 
         $this->tokenDao->deleteByUserId($userId);
         $this->tokenDao->save($token);
@@ -1894,9 +1894,9 @@ final class BOL_UserService
     }
 
     /**
-     * Returns query parts for filtering users ( by default: suspended, not approved, not verified ). 
+     * Returns query parts for filtering users ( by default: suspended, not approved, not verified ).
      * Result array includes strings: join, where, order
-     * 
+     *
      * @param array $tables
      * @param array $fields
      * @param array $params
