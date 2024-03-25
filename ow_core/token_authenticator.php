@@ -31,27 +31,14 @@ class OW_TokenAuthenticator implements OW_IAuthenticator
 {
     private const int NO_AUTH_USER_ID = 0;
 
-    /**
-     * @var BOL_UserService
-     */
     private BOL_UserService $service;
-
-    /**
-     * @var integer
-     */
     private int $userId;
-
-    /**
-     * @var string
-     */
     private string $token;
 
-    public function __construct( $token = null )
+    public function __construct( ?string $token = null )
     {
         $this->service = BOL_UserService::getInstance();
-
         $this->userId = self::NO_AUTH_USER_ID;
-
         $this->token = $token;
 
         if ( $token !== null )
