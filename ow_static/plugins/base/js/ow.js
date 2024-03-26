@@ -84,12 +84,12 @@ var OwUtils = function(){
 
     var loadedScriptFiles = {};
     this.loadScriptFiles = function( urlList, callback, options ){
-        
+
         if ( $.isPlainObject(callback) ) {
             options = callback;
             callback = null;
         }
-        
+
         var addScript = function(url) {
             return jQuery.ajax($.extend({
                 dataType: "script",
@@ -99,7 +99,7 @@ var OwUtils = function(){
                 loadedScriptFiles[url] = true;
             });
         };
-        
+
         if( urlList && urlList.length > 0 ) {
             var recursiveInclude = function(urlList, i) {
                 if( (i+1) === urlList.length )
@@ -117,17 +117,17 @@ var OwUtils = function(){
             callback.apply(this);
         }
     };
-    
+
     this.addScriptFiles = function( urlList, callback, once ) {
         if ( once === false ) {
             this.loadScriptFiles(urlList, callback);
             return;
         }
-        
+
         $("script").each(function() {
             loadedScriptFiles[this.src] = true;
         });
-        
+
         var requiredScripts = $.grep(urlList, function(url) {
             return !loadedScriptFiles[url];
         });
@@ -153,7 +153,7 @@ var OwUtils = function(){
         if ( $('link[href="'+ $.trim(url) +'"]').length ) {
             return;
         }
-        
+
         $('head').append($('<link type="text/css" rel="stylesheet" href="'+$.trim(url)+'" />'));
     },
 
@@ -879,36 +879,21 @@ $( //8aa: resize fullsize images to fit to it's parendt width
 function OW_FloatBox(options)
 {
     var fl_box = this;
-    var fb_class;
     this.parentBox = OW.getActiveFloatBox();
     this.options = options;
     this.verion = 2;
 
     this.events = {close: [], show: []};
 
-    if (typeof document.body.style.maxHeight === 'undefined') { //if IE 6
-            jQuery('body').css({height: '100%', width: '100%'});
-            jQuery('html').css('overflow', 'hidden');
-            if (document.getElementById('floatbox_HideSelect') === null)
-            { //iframe to hide select elements in ie6
-                jQuery('body').append('<iframe id="floatbox_HideSelect"></iframe><div id="floatbox_overlay"></div>');
-                fb_class = OW_FloatBox.detectMacXFF() ? 'floatbox_overlayMacFFBGHack' : 'floatbox_overlayBG';
-                jQuery('#floatbox_overlay').addClass(fb_class);
-            }
-    }
-    else { //all others
-        if (document.getElementById('floatbox_overlay') === null)
-        {
-            jQuery('body').append('<div id="floatbox_overlay"></div>');
-            fb_class = OW_FloatBox.detectMacXFF() ? 'floatbox_overlayMacFFBGHack' : 'floatbox_overlayBG';
-            jQuery('#floatbox_overlay').addClass(fb_class).click(function()
-            {
-                fl_box.close({
-                    sender: "overlay",
-                    overlay: this
-                });
+    if (document.getElementById('floatbox_overlay') === null)
+    {
+        jQuery('body').append('<div id="floatbox_overlay"></div>');
+        jQuery('#floatbox_overlay').addClass('floatbox_overlayBG').click(function() {
+            fl_box.close({
+                sender: "overlay",
+                overlay: this
             });
-        }
+        });
     }
 
     options.layout = options.layout || 'default';
@@ -941,22 +926,11 @@ function OW_FloatBox(options)
         });
     }
 
-    // this.$canvas.click(function(e)
-    // {
-    //     if ( $(e.target).is(this) )
-    //     {
-    //         fl_box.close({
-    //             sender: "canvas",
-    //             canvas: this
-    //         });
-    //     }
-    // });
-
     this.$container = jQuery('.floatbox_container', this.$canvas);
 
     if ( options.$title )
     {
-        if (typeof options.$title == 'string')
+        if (typeof options.$title === 'string')
         {
             options.$title = jQuery('<span>'+options.$title+'</span>');
         }
@@ -967,9 +941,9 @@ function OW_FloatBox(options)
 
         this.$header = jQuery('.floatbox_header', this.$container);
 
-        var $fbTitle = jQuery('.floatbox_cap', this.$header)
+        jQuery('.floatbox_cap', this.$header)
             .find('.floatbox_title')
-                .append(options.$title);
+            .append(options.$title);
     }
 
     /*if (typeof options.icon_class == 'string')
@@ -1046,11 +1020,6 @@ function OW_FloatBox(options)
 }
 
 OW_FloatBox.version = 3;
-OW_FloatBox.detectMacXFF = function()
-{
-    var userAgent = navigator.userAgent.toLowerCase();
-    return (userAgent.indexOf('mac') != -1 && userAgent.indexOf('firefox') != -1);
-}
 
 OW_FloatBox.prototype = {
 
@@ -1169,7 +1138,7 @@ OW_FloatBox.prototype = {
         options = $.extend({
             sender: "custom"
         }, options || {});
-        
+
         if (this.trigger('close', [options]) === false) {
             return false;
         }
@@ -1250,7 +1219,7 @@ OwFormElement.prototype = {
         try{
 
             var data = this.filter(this.getValue());
-            
+
             for( var i = 0; i < this.validators.length; i++ ){
                 this.validators[i].validate(data);
             }
@@ -1263,7 +1232,7 @@ OwFormElement.prototype = {
     addValidator: function( validator ){
         this.validators.push(validator);
     },
-    
+
     addFilter: function( filter ){
         this.filters.push(filter);
     },
@@ -1276,7 +1245,7 @@ OwFormElement.prototype = {
         for( var i = 0; i < this.filters.length; i++ ){
             data = this.filters[i].filter(data);
         }
-        
+
         return data;
     },
 
@@ -1372,17 +1341,17 @@ OwForm.prototype = {
         if( this.events[event] == undefined || this.events[event].length == 0 ){
             return;
         }
-        
+
         var result = undefined, returnVal;
 
         for( var i = 0; i < this.events[event].length; i++ ){
-            
+
             returnVal = this.events[event][i].apply(this.form, [data]);
             if(returnVal === false || returnVal === true ){
                 result = returnVal;
             }
         }
-        
+
         if( result !== undefined ){
             return result;
         }
@@ -1722,7 +1691,7 @@ var OwAvatarField = function( id, name, params ){
 
     $preview.find("span").click(function(e){
         e.stopPropagation();
- 
+
         $img.attr("src", "");
         formElement.resetValue();
         $preview.hide();
@@ -1916,16 +1885,16 @@ var OwComments = function( params ){
     this.eventParams = {entityType:self.entityType, entityId:self.entityId, customId:self.customId};
     this.submitHandler = function(){OW.error('FORM IS NOT INITIALIZED!');};
     this.attachmentInProgressHandler = function(){OW.error(params.labels.attachmentLoading);};
-    
+
     var checkAddress = function( data ){
         if( data.customId && data.customId != self.customId  ){
             return false;
         }
-        
+
         return ( data.entityType == self.entityType && data.entityId == self.entityId );
     };
-    
-    OW.bind('base.comments_sleep', 
+
+    OW.bind('base.comments_sleep',
         function(data){
             if( checkAddress(data) ){
                 sleeping = true;
@@ -1936,8 +1905,8 @@ var OwComments = function( params ){
             }
         }
     );
-    
-    OW.bind('base.comments_wakeup', 
+
+    OW.bind('base.comments_wakeup',
         function(data){
             if( checkAddress(data) ){
                 sleeping = false;
@@ -1945,19 +1914,19 @@ var OwComments = function( params ){
             }
         }
     );
-    
-    OW.bind('base.comments_destroy', 
+
+    OW.bind('base.comments_destroy',
         function(data){
             if( checkAddress(data) ){
                 self.$cmpContext.remove();
             }
         }
     );
-    
+
     if( !this.userAuthorized ){
         return;
     }
-    
+
     this.$textarea = $('#'+this.textAreaId);
     this.$attchCont = $('#'+this.attchId);
     this.$formWrapper = $('.ow_comments_form_wrap', this.$cmpContext);
@@ -1979,7 +1948,7 @@ var OwComments = function( params ){
 
     OW.bind('base.add_photo_attachment_submit',
         function(data){
-            if( sleeping ) return;            
+            if( sleeping ) return;
             if( data.uid == self.attchUid ){
                 self.oembedInfo = false;
                 self.$attchCont.empty();
@@ -1992,8 +1961,8 @@ var OwComments = function( params ){
 
     OW.bind('base.attachment_added',
         function(data){
-            if( sleeping ) return;            
-            if( data.uid == self.attchUid ){                
+            if( sleeping ) return;
+            if( data.uid == self.attchUid ){
                 self.attachmentInfo = data;
                 self.$textarea.focus();
                 self.submitHandler = self.realSubmitHandler;
@@ -2038,7 +2007,7 @@ OwComments.prototype = {
             return;
         }
         //OW.trigger('base.comments_list_update', {entityType: data.entityType, entityId: data.entityId, id:this.uid});
-        $('.comments_list_cont', this.$cmpContext).empty().append($(data.commentList));        
+        $('.comments_list_cont', this.$cmpContext).empty().append($(data.commentList));
         OW.addScript(data.onloadScript);
     },
 
@@ -2075,7 +2044,7 @@ OwComments.prototype = {
                 self.eventParams.commentCount = data.commentCount;
                 OW.trigger('base.comment_added', self.eventParams);
                 self.attchUid = data.newAttachUid;
-                
+
                 self.$formWrapper.removeClass('ow_preloader');
                 self.$commentsInputCont.show();
             },
@@ -2083,17 +2052,17 @@ OwComments.prototype = {
                 OW.error(textStatus);
             },
             complete: function(){
-                
+
             }
         });
-        
+
         this.$textarea.val('').keyup().trigger('input.autosize');
     },
 
     initTextarea: function(){
         var self = this;
         this.realSubmitHandler = function(){
-            self.initialCount++;                         
+            self.initialCount++;
             self.sendMessage(self.$textarea.val());
             self.attachmentInfo = false;
             self.oembedInfo = false;
@@ -2104,14 +2073,14 @@ OwComments.prototype = {
             self.$attchCont.empty();
             OW.trigger('base.photo_attachment_reset', {pluginKey:self.pluginKey, uid:self.attchUid});
             OW.trigger('base.comment_add', self.eventParams);
-            
+
             self.$formWrapper.addClass('ow_preloader');
             self.$commentsInputCont.hide();
-            
+
         };
-        
+
         this.submitHandler = this.realSubmitHandler;
-        
+
         this.$textarea
             .bind('keypress',
                 function(e){
@@ -2123,7 +2092,7 @@ OwComments.prototype = {
                              OW.error(self.labels.emptyCommentMsg);
                             return false;
                          }
-                        
+
                         self.submitHandler();
                         return false;
                     }
@@ -2143,8 +2112,8 @@ OwComments.prototype = {
 
                      OW.trigger('base.comment_attach_media', {})
                  });
-                 this.onResult = function( r ){ 
-                     self.oembedInfo = r; 
+                 this.onResult = function( r ){
+                     self.oembedInfo = r;
                      if( $.isEmptyObject(r) ){
                          self.$hiddenBtnCont.hide();
                      }
@@ -2299,7 +2268,7 @@ OwCommentsList.prototype = {
 	},
 
 	reload:function( page ){
-		var self = this;        
+		var self = this;
 		$.ajax({
             type: 'POST',
             url: self.respondUrl,
@@ -2579,7 +2548,7 @@ OW_Attachment = function(uniqId, data)
             self.data = [];
             self.onChange.call(self, self.data);
         }
-        
+
         return false;
     });
 };
@@ -3270,23 +3239,23 @@ OW.postRequest = function(url, params)
 }
 
 OW.ResponsiveMenu = (function() {
-    
+
     // Timer
     var interval, tickCommands = [];
-    
+
     function timer(fnc) {
         interval = interval || window.setInterval(function() {
             tickCommands.forEach(window.setTimeout);
         }, 100);
-        
+
         return tickCommands.push(fnc) - 1;
     }
-    
+
     // observer
     function observe(obj, prop, fnc)
     {
         var value = obj[prop];
-        
+
         return timer(function() {
             if ( obj[prop] !== value ) {
                 fnc(obj[prop], value);
@@ -3294,38 +3263,38 @@ OW.ResponsiveMenu = (function() {
             }
         });
     }
-    
+
     // Private methods
     function changed() {
         this.node[this.moreItems.length ? "addClass" : "removeClass"]("ow_main_menu_more_active");
     }
-    
+
     function resized() {
         var items = this.menu.find("[data-el=item]");
-        
+
         var more = items.filter(function(index, item) {
             return $(item).position().top > 0;
         }.bind(this));
-        
+
         if ( more.length !== this.moreItems.length ) {
             this.moreItems = more.clone();
             this.visibleItems = items.not(more);
             this.more.html(this.moreItems);
-            
+
             changed.call(this);
         }
     }
-    
+
     function ResponsiveMenu(uniqId) {
         this.node = $(document.getElementById(uniqId));
         this.more = this.node.find("[data-el=more-list]");
         this.menu = this.node.find("[data-el=list]");
         this.visibleItems = $();
         this.moreItems = $();
-        
+
         resized.call(this);
         observe(this.node.get(0), "clientWidth", resized.bind(this));
     };
-        
+
     return ResponsiveMenu;
 })();

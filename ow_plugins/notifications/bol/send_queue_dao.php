@@ -83,9 +83,12 @@ class NOTIFICATIONS_BOL_SendQueueDao extends OW_BaseDao
         $usersDao = BOL_UserDao::getInstance();
         $scheduleDao = NOTIFICATIONS_BOL_ScheduleDao::getInstance();
 
-        $query = "REPLACE INTO " . $this->getTableName() . " (`userId`, `timeStamp`) SELECT DISTINCT u.id, UNIX_TIMESTAMP() FROM " . $usersDao->getTableName() . " u
-                    LEFT JOIN " . $scheduleDao->getTableName() . " s ON u.id = s.userId
-                    WHERE (IF( s.schedule IS NULL, :ds, s.schedule )=:as  AND u.activityStamp < :activityStamp ) OR IF( s.schedule IS NULL, :ds, s.schedule )=:is ORDER BY u.activityStamp DESC";
+        $query = "REPLACE INTO " . $this->getTableName() . " (`userId`, `timeStamp`)
+            SELECT DISTINCT u.id, UNIX_TIMESTAMP(), u.activityStamp FROM " . $usersDao->getTableName() . " u
+            LEFT JOIN " . $scheduleDao->getTableName() . " s ON u.id = s.userId
+            WHERE (
+                IF( s.schedule IS NULL, :ds, s.schedule )=:as AND u.activityStamp < :activityStamp ) OR
+                IF( s.schedule IS NULL, :ds, s.schedule )=:is ORDER BY u.activityStamp DESC";
 
         return $this->dbo->query($query, array(
             'activityStamp' => time() - $period,

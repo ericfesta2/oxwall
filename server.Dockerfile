@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install -y \
     docker-php-ext-install gd mbstring pdo_mysql zip ftp intl && \
     a2enmod rewrite && a2enmod headers && \
     service apache2 restart && \
-    crontab -l | { cat; echo '* * * * * curl localhost:8080/ow_cron/run.php'; } | crontab - && \
+    crontab -l | { cat; echo '* * * * * curl localhost/ow_cron/run.php'; } | crontab - && \
     cron
 
 CMD ["apache2-foreground"]
