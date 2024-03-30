@@ -32,7 +32,7 @@
  */
 class OW_ApiDocument extends OW_Document
 {
-    public function  __construct()
+    public function __construct()
     {
         $this->type = OW_Document::JSON;
     }
@@ -44,7 +44,7 @@ class OW_ApiDocument extends OW_Document
         return $this->body;
     }
 
-    public function setBody( $body )
+    public function setBody($body)
     {
         $this->body = $body;
     }
@@ -54,23 +54,22 @@ class OW_ApiDocument extends OW_Document
      */
     public function render()
     {
-        if( $this->type == OW_Document::JSON )
-        {
+        if ($this->type === OW_Document::JSON) {
             return $this->renderJson();
         }
     }
 
     private function renderJson()
     {
-        OW::getResponse()->setHeader(OW_Response::HD_CNT_TYPE, "application/json");
+        OW::getResponse()->setHeader(OW_Response::HD_CNT_TYPE, 'application/json');
 
         $body = $this->getBody();
-        
-        $apiResponse = array(
-            "type" => "success",
-            "data" => empty($body) ? new stdClass() : $body
-        );
-        
+
+        $apiResponse = [
+            'type' => 'success',
+            'data' => empty($body) ? new stdClass() : $body
+        ];
+
         return json_encode($apiResponse);
     }
 }

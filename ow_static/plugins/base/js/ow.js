@@ -913,6 +913,14 @@ function OW_FloatBox(options)
 
     activeCanvas.removeClass('floatbox_canvas_active');
     this.$canvas.addClass('floatbox_canvas_active');
+    this.$canvas.click(function(e) {
+        if (!e.target.closest('.floatbox_container')) {
+            fl_box.close({
+                sender: "overlay",
+                overlay: this
+            });
+        }
+    });
 
     if (this.parentBox)
     {
@@ -945,11 +953,6 @@ function OW_FloatBox(options)
             .find('.floatbox_title')
             .append(options.$title);
     }
-
-    /*if (typeof options.icon_class == 'string')
-    {
-    	$fbTitle.addClass(options.icon_class);
-    }*/
 
     this.$body = jQuery('.floatbox_body', this.$container);
     this.$bottom = jQuery('.floatbox_bottom', this.$container);
