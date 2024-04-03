@@ -38,7 +38,6 @@
  */
 class FORUM_CTRL_Customize extends OW_ActionController
 {
-
     /**
      * Controller's default action
      */
@@ -49,13 +48,12 @@ class FORUM_CTRL_Customize extends OW_ActionController
         $sectionGroupList = $forumService->getCustomSectionGroupList();
         $isModerator = OW::getUser()->isAuthorized('forum');
 
-        if ( !$isModerator )
-        {
+        if (!$isModerator) {
             throw new Redirect404Exception();
         }
 
         $this->assign('sectionGroupList', $sectionGroupList);
-        
+
         $plugin = OW::getPluginManager()->getPlugin('forum');
 
         //add langs for javascript
@@ -64,7 +62,7 @@ class FORUM_CTRL_Customize extends OW_ActionController
         OW::getLanguage()->addKeyForJs('forum', 'add_new_forum_title');
         OW::getLanguage()->addKeyForJs('forum', 'edit_section_title');
         OW::getLanguage()->addKeyForJs('forum', 'edit_group_title');
-        
+
         OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('base')->getStaticJsUrl() . 'jquery-ui.min.js');
         OW::getDocument()->addScript($plugin->getStaticJsUrl() . 'forum.js');
 
@@ -105,7 +103,7 @@ class FORUM_CTRL_Customize extends OW_ActionController
 
         OW::getDocument()->setHeading(OW::getLanguage()->text('forum', 'forum'));
         OW::getDocument()->setHeadingIconClass('ow_ic_forum');
-        
+
         OW::getNavigation()->activateMenuItem(OW_Navigation::MAIN, 'forum', 'forum');
     }
 
@@ -116,15 +114,13 @@ class FORUM_CTRL_Customize extends OW_ActionController
     {
         $isModerator = OW::getUser()->isAuthorized('forum');
 
-        if ( OW::getRequest()->isAjax() && $_POST['data'] && $isModerator )
-        {
+        if (OW::getRequest()->isAjax() && $_POST['data'] && $isModerator) {
             $forumService = FORUM_BOL_ForumService::getInstance();
 
-            $postData = array();
+            $postData = [];
             parse_str($_POST['data'], $postData);
 
-            if ( !$postData['section'] )
-            {
+            if (!$postData['section']) {
                 return false;
             }
 
@@ -132,8 +128,7 @@ class FORUM_CTRL_Customize extends OW_ActionController
 
             $sectionDtoList = $forumService->findSectionList();
 
-            foreach ( $sectionDtoList as $sectionDto )
-            {
+            foreach ($sectionDtoList as $sectionDto) {
                 $sectionDto->order = $sectionOrderList[$sectionDto->id] + 1;
                 $forumService->saveOrUpdateSection($sectionDto);
             }
@@ -149,30 +144,26 @@ class FORUM_CTRL_Customize extends OW_ActionController
     {
         $isModerator = OW::getUser()->isAuthorized('forum');
 
-        if ( OW::getRequest()->isAjax() && $_POST['data'] && $isModerator )
-        {
+        if (OW::getRequest()->isAjax() && $_POST['data'] && $isModerator) {
             $forumService = FORUM_BOL_ForumService::getInstance();
 
             $sectionGroupList = json_decode($_POST['data'], true);
 
-            foreach ( $sectionGroupList as $sectionGroup )
-            {
-                if ( !$sectionGroup['order'] )
-                {
+            foreach ($sectionGroupList as $sectionGroup) {
+                if (!$sectionGroup['order']) {
                     continue;
                 }
 
                 $sectionId = (int) $sectionGroup['sectionId'];
 
-                $postData = array();
+                $postData = [];
                 parse_str($sectionGroup['order'], $postData);
 
                 $groupOrderList = array_flip($postData['group']);
 
                 $groupDtoList = $forumService->findGroupByIdList($postData['group']);
                 $groupDto = new FORUM_BOL_Group();
-                foreach ( $groupDtoList as $groupDto )
-                {
+                foreach ($groupDtoList as $groupDto) {
                     $groupDto->sectionId = $sectionId;
                     $groupDto->order = $groupOrderList[$groupDto->id] + 1;
 
@@ -193,8 +184,7 @@ class FORUM_CTRL_Customize extends OW_ActionController
 
         $sectionId = (int) $_POST['sectionId'];
 
-        if ( OW::getRequest()->isAjax() && $sectionId && $isModerator )
-        {
+        if (OW::getRequest()->isAjax() && $sectionId && $isModerator) {
             $forumService = FORUM_BOL_ForumService::getInstance();
 
             $forumService->deleteSection($sectionId);
@@ -214,8 +204,7 @@ class FORUM_CTRL_Customize extends OW_ActionController
 
         $groupId = (int) $_POST['groupId'];
 
-        if ( OW::getRequest()->isAjax() && $groupId && $isModerator )
-        {
+        if (OW::getRequest()->isAjax() && $groupId && $isModerator) {
             $forumService = FORUM_BOL_ForumService::getInstance();
 
             $forumService->deleteGroup($groupId);
@@ -233,16 +222,14 @@ class FORUM_CTRL_Customize extends OW_ActionController
     {
         $isModerator = OW::getUser()->isAuthorized('forum');
 
-        if ( OW::getRequest()->isAjax() && $_POST && $isModerator )
-        {
+        if (OW::getRequest()->isAjax() && $_POST && $isModerator) {
             $groupName = trim($_POST['group-name']);
             $sectionName = trim($_POST['section']);
             $groupDescription = trim($_POST['description']);
-            $isPrivate = $_POST['is-private'] == 'on';
+            $isPrivate = $_POST['is-private'] === 'on';
             $roles = !empty($_POST['roles']) ? $_POST['roles'] : null;
 
-            if ( !$groupName || !$sectionName || !$groupDescription )
-            {
+            if (!$groupName || !$sectionName || !$groupDescription) {
                 exit();
             }
 
@@ -251,8 +238,7 @@ class FORUM_CTRL_Customize extends OW_ActionController
             $sectionDto = $forumService->getPublicSection($sectionName, 0);
 
             //create forum section
-            if ( $sectionDto === null )
-            {
+            if ($sectionDto === null) {
                 $sectionDto = new FORUM_BOL_Section();
                 $sectionDto->name = $sectionName;
                 $sectionDto->order = $forumService->getNewSectionOrder();
@@ -282,17 +268,14 @@ class FORUM_CTRL_Customize extends OW_ActionController
      */
     public function suggestSection()
     {
-        if ( OW::getRequest()->isAjax() && isset($_GET['q']) )
-        {
-            $sectionName = trim($_GET['q']);
+        if (OW::getRequest()->isAjax() && isset($_GET['q'])) {
+            $sectionName = htmlspecialchars(trim($_GET['q']));
 
             $forumService = FORUM_BOL_ForumService::getInstance();
             $sectionDtoList = $forumService->suggestSection($sectionName);
 
-            if ( $sectionDtoList )
-            {
-                foreach ( $sectionDtoList as $sectionDto )
-                {
+            if ($sectionDtoList) {
+                foreach ($sectionDtoList as $sectionDto) {
                     echo "$sectionDto->name\t$sectionDto->id\n";
                 }
             }
@@ -308,21 +291,18 @@ class FORUM_CTRL_Customize extends OW_ActionController
     {
         $isModerator = OW::getUser()->isAuthorized('forum');
 
-        if ( OW::getRequest()->isAjax() && $_POST && $isModerator )
-        {
+        if (OW::getRequest()->isAjax() && $_POST && $isModerator) {
             $sectionName = trim($_POST['section-name']);
             $sectionId = (int) $_POST['section-id'];
 
-            if ( !$sectionName || !$sectionId )
-            {
+            if (!$sectionName || !$sectionId) {
                 exit();
             }
 
             $forumService = FORUM_BOL_ForumService::getInstance();
             $sectionDto = $forumService->findSectionById($sectionId);
 
-            if ( $sectionDto === null )
-            {
+            if ($sectionDto === null) {
                 exit();
             }
 
@@ -342,24 +322,21 @@ class FORUM_CTRL_Customize extends OW_ActionController
     {
         $isModerator = OW::getUser()->isAuthorized('forum');
 
-        if ( OW::getRequest()->isAjax() && $_POST && $isModerator )
-        {
+        if (OW::getRequest()->isAjax() && $_POST && $isModerator) {
             $groupId = (int) $_POST['group-id'];
             $groupName = trim($_POST['group-name']);
             $groupDescription = trim($_POST['description']);
-            $isPrivate = $_POST['is-private'] == 'on';
+            $isPrivate = $_POST['is-private'] === 'on';
             $roles = !empty($_POST['roles']) ? $_POST['roles'] : null;
 
-            if ( !$groupId || !$groupName || !$groupDescription )
-            {
+            if (!$groupId || !$groupName || !$groupDescription) {
                 exit();
             }
 
             $forumService = FORUM_BOL_ForumService::getInstance();
             $groupDto = $forumService->findGroupById($groupId);
 
-            if ( $groupDto === null )
-            {
+            if ($groupDto === null) {
                 exit();
             }
 
@@ -380,8 +357,7 @@ class FORUM_CTRL_Customize extends OW_ActionController
      */
     public function getSection()
     {
-        if ( OW::getRequest()->isAjax() && $_POST['sectionId'] )
-        {
+        if (OW::getRequest()->isAjax() && $_POST['sectionId']) {
             $sectionId = (int) $_POST['sectionId'];
 
             $forumService = FORUM_BOL_ForumService::getInstance();
@@ -398,8 +374,7 @@ class FORUM_CTRL_Customize extends OW_ActionController
      */
     public function getGroup()
     {
-        if ( OW::getRequest()->isAjax() && $_POST['groupId'] )
-        {
+        if (OW::getRequest()->isAjax() && $_POST['groupId']) {
             $groupId = (int) $_POST['groupId'];
 
             $forumService = FORUM_BOL_ForumService::getInstance();
@@ -418,7 +393,7 @@ class FORUM_CTRL_Customize extends OW_ActionController
      * @param string $action
      * @return Form
      */
-    private function generateAddForumForm( $action )
+    private function generateAddForumForm($action)
     {
         $language = OW::getLanguage();
         $form = new Form('add-forum-form');
@@ -428,7 +403,7 @@ class FORUM_CTRL_Customize extends OW_ActionController
         $groupName = new TextField('group-name');
         $groupName->setRequired(true);
         $sValidator = new StringValidator(1, 255);
-        $sValidator->setErrorMessage($language->text('forum', 'chars_limit_exceeded', array('limit' => 255)));
+        $sValidator->setErrorMessage($language->text('forum', 'chars_limit_exceeded', ['limit' => 255]));
         $groupName->addValidator($sValidator);
         $form->addElement($groupName);
 
@@ -439,8 +414,7 @@ class FORUM_CTRL_Customize extends OW_ActionController
         $sectionField->setResponderUrl($responderUrl);
 
         $firstSection = FORUM_BOL_ForumService::getInstance()->getFirstSection();
-        if ( $firstSection )
-        {
+        if ($firstSection) {
             $sectionField->setValue($firstSection->name);
         }
 
@@ -449,25 +423,24 @@ class FORUM_CTRL_Customize extends OW_ActionController
         $description = new Textarea('description');
         $description->setRequired(true);
         $sValidator = new StringValidator(1, 50000);
-        $sValidator->setErrorMessage($language->text('forum', 'chars_limit_exceeded', array('limit' => 50000)));
+        $sValidator->setErrorMessage($language->text('forum', 'chars_limit_exceeded', ['limit' => 50000]));
         $description->addValidator($sValidator);
         $form->addElement($description);
 
         $isPrivate = new CheckboxField('is-private');
         $form->addElement($isPrivate);
-        
+
         $roles = new CheckboxGroup('roles');
         $authService = BOL_AuthorizationService::getInstance();
         $roleList = $authService->getRoleList();
-        $options = array();
-        foreach ( $roleList as $role )
-        {
+        $options = [];
+        foreach ($roleList as $role) {
             $options[$role->id] = $authService->getRoleLabel($role->name);
         }
         $roles->addOptions($options);
         $roles->setColumnCount(2);
         $form->addElement($roles);
-        
+
         $submit = new Submit('add');
         $submit->setValue($language->text('forum', 'add_new_forum_submit'));
         $form->addElement($submit);
@@ -483,17 +456,17 @@ class FORUM_CTRL_Customize extends OW_ActionController
      * @param string $action
      * @return Form
      */
-    private function generateEditSectionForm( $action )
+    private function generateEditSectionForm($action)
     {
         $form = new Form('edit-section-form');
         $form->setAction($action);
-        
+
         $lang = OW::getLanguage();
 
         $sectionName = new TextField('section-name');
         $sectionName->setRequired(true);
         $sValidator = new StringValidator(1, 255);
-        $sValidator->setErrorMessage($lang->text('forum', 'chars_limit_exceeded', array('limit' => 255)));
+        $sValidator->setErrorMessage($lang->text('forum', 'chars_limit_exceeded', ['limit' => 255]));
         $sectionName->addValidator($sValidator);
         $form->addElement($sectionName);
 
@@ -516,40 +489,39 @@ class FORUM_CTRL_Customize extends OW_ActionController
      * @param string $action
      * @return Form
      */
-    private function generateEditGroupForm( $action )
+    private function generateEditGroupForm($action)
     {
         $form = new Form('edit-group-form');
         $form->setAction($action);
-        
+
         $lang = OW::getLanguage();
 
         $groupName = new TextField('group-name');
         $groupName->setRequired(true);
         $sValidator = new StringValidator(1, 255);
-        $sValidator->setErrorMessage($lang->text('forum', 'chars_limit_exceeded', array('limit' => 255)));
+        $sValidator->setErrorMessage($lang->text('forum', 'chars_limit_exceeded', ['limit' => 255]));
         $groupName->addValidator($sValidator);
         $form->addElement($groupName);
 
         $description = new Textarea('description');
         $description->setRequired(true);
         $sValidator = new StringValidator(1, 50000);
-        $sValidator->setErrorMessage($lang->text('forum', 'chars_limit_exceeded', array('limit' => 50000)));
+        $sValidator->setErrorMessage($lang->text('forum', 'chars_limit_exceeded', ['limit' => 50000]));
         $description->addValidator($sValidator);
         $form->addElement($description);
 
         $groupId = new HiddenField('group-id');
         $groupId->setRequired(true);
         $form->addElement($groupId);
-        
+
         $isPrivate = new CheckboxField('is-private');
         $form->addElement($isPrivate);
-        
+
         $roles = new CheckboxGroup('roles');
         $authService = BOL_AuthorizationService::getInstance();
         $roleList = $authService->getRoleList();
-        $options = array();
-        foreach ( $roleList as $role )
-        {
+        $options = [];
+        foreach ($roleList as $role) {
             $options[$role->id] = $authService->getRoleLabel($role->name);
         }
         $roles->addOptions($options);

@@ -39,15 +39,14 @@ class BASE_CTRL_Attachment extends OW_ActionController
         $this->service = BOL_AttachmentService::getInstance();
     }
 
-    public function delete( $params )
+    public function delete($params)
     {
         exit;
     }
 
     public function addLink()
     {
-        if ( !OW::getRequest()->isAjax() )
-        {
+        if (!OW::getRequest()->isAjax()) {
             throw new Redirect404Exception();
         }
 
@@ -64,19 +63,19 @@ class BASE_CTRL_Attachment extends OW_ActionController
 
         unset($oembed['allImages']);
 
-        $response = array(
+        $response = [
             'content' => $this->getMarkup($oembedCmp->render()),
             'type' => 'link',
             'result' => $oembed,
             'attachment' => $attacmentUniqId
-        );
+        ];
 
         echo json_encode($response);
 
         exit;
     }
 
-    private function getMarkup( $html )
+    private function getMarkup($html)
     {
         /* @var $document OW_AjaxDocument */
         $document = OW::getDocument();
@@ -94,37 +93,32 @@ class BASE_CTRL_Attachment extends OW_ActionController
     }
     /* 1.6.1 divider */
 
-    public function addPhoto( $params )
+    public function addPhoto($params)
     {
-        $resultArr = array('result' => false, 'message' => 'General error');
-        $bundle = $_GET['flUid'];
+        $resultArr = ['result' => false, 'message' => 'General error'];
+        $bundle = htmlspecialchars($_GET['flUid']);
 
-        if ( OW::getUser()->isAuthenticated() && !empty($_POST['flUid']) && !empty($_POST['pluginKey']) && !empty($_FILES['attachment']) )
-        {
+        if (OW::getUser()->isAuthenticated() && !empty($_POST['flUid']) && !empty($_POST['pluginKey']) && !empty($_FILES['attachment'])) {
             $pluginKey = $_POST['pluginKey'];
             $item = $_FILES['attachment'];
 
-            try
-            {
-                $dtoArr = $this->service->processUploadedFile($pluginKey, $item, $bundle, array('jpg', 'jpeg', 'png', 'gif'), 2000);
+            try {
+                $dtoArr = $this->service->processUploadedFile($pluginKey, $item, $bundle, ['jpg', 'jpeg', 'png', 'gif'], 2000);
                 $resultArr['result'] = true;
                 $resultArr['url'] = $dtoArr['url'];
-            }
-            catch ( Exception $e )
-            {
+            } catch (Exception $e) {
                 $resultArr['message'] = $e->getMessage();
             }
         }
 
-        exit("<script>if(parent.window.owPhotoAttachment['" . $bundle . "']){parent.window.owPhotoAttachment['" . $bundle . "'].updateItem(" . json_encode($resultArr) . ");}</script>");
+        exit("<script>if(parent.window.owPhotoAttachment['" . $bundle . "']){parent.window.owPhotoAttachment['" . $bundle . "'].updateItem(" . json_encode($resultArr) . ');}</script>');
     }
 
     public function addFile()
     {
         $respondArr = [];
-        $bundle = $_GET['flUid'];
-        if ( OW::getUser()->isAuthenticated() && !empty($_POST['flData']) && !empty($_POST['pluginKey']) && !empty($_FILES['ow_file_attachment']) )
-        {
+        $bundle = htmlspecialchars($_GET['flUid'];
+        if (OW::getUser()->isAuthenticated() && !empty($_POST['flData']) && !empty($_POST['pluginKey']) && !empty($_FILES['ow_file_attachment'])) {
             $respondArr['noData'] = false;
             $respondArr['items'] = [];
             $nameArray = json_decode(urldecode($_POST['flData']), true);
@@ -132,12 +126,9 @@ class BASE_CTRL_Attachment extends OW_ActionController
 
             $finalFileArr = [];
 
-            foreach ( $_FILES['ow_file_attachment'] as $key => $items )
-            {
-                foreach ( $items as $index => $item )
-                {
-                    if ( !isset($finalFileArr[$index]) )
-                    {
+            foreach ($_FILES['ow_file_attachment'] as $key => $items) {
+                foreach ($items as $index => $item) {
+                    if (!isset($finalFileArr[$index])) {
                         $finalFileArr[$index] = [];
                     }
 
@@ -145,40 +136,32 @@ class BASE_CTRL_Attachment extends OW_ActionController
                 }
             }
 
-            foreach ( $finalFileArr as $item )
-            {
-                try
-                {
+            foreach ($finalFileArr as $item) {
+                try {
                     $dtoArr = $this->service->processUploadedFile($pluginKey, $item, $bundle);
                     $respondArr['result'] = true;
-                }
-                catch ( Exception $e )
-                {
-                    $respondArr['items'][$nameArray[$item['name']]] = array('result' => false, 'message' => $e->getMessage());
+                } catch (Exception $e) {
+                    $respondArr['items'][$nameArray[$item['name']]] = ['result' => false, 'message' => $e->getMessage()];
                 }
 
-                if ( !array_key_exists($nameArray[$item['name']], $respondArr['items']) )
-                {
-                    $respondArr['items'][$nameArray[$item['name']]] = array('result' => true, 'dbId' => $dtoArr['dto']->getId());
+                if (!array_key_exists($nameArray[$item['name']], $respondArr['items'])) {
+                    $respondArr['items'][$nameArray[$item['name']]] = ['result' => true, 'dbId' => $dtoArr['dto']->getId()];
                 }
             }
 
             $items = $this->service->getFilesByBundleName($pluginKey, $bundle);
 
-            OW::getEventManager()->trigger(new OW_Event('base.attachment_uploaded', array('pluginKey' => $pluginKey, 'uid' => $bundle, 'files' => $items)));
-        }
-        else
-        {
-            $respondArr = array('result' => false, 'message' => 'General error', 'noData' => true);
+            OW::getEventManager()->trigger(new OW_Event('base.attachment_uploaded', ['pluginKey' => $pluginKey, 'uid' => $bundle, 'files' => $items]));
+        } else {
+            $respondArr = ['result' => false, 'message' => 'General error', 'noData' => true];
         }
 
-        exit("<script>if(parent.window.owFileAttachments['" . $bundle . "']){parent.window.owFileAttachments['" . $bundle . "'].updateItems(" . json_encode($respondArr) . ");}</script>");
+        exit("<script>if(parent.window.owFileAttachments['" . $bundle . "']){parent.window.owFileAttachments['" . $bundle . "'].updateItems(" . json_encode($respondArr) . ');}</script>');
     }
 
     public function deleteFile()
     {
-        if ( !OW::getUser()->isAuthenticated() )
-        {
+        if (!OW::getUser()->isAuthenticated()) {
             exit;
         }
 
