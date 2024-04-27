@@ -227,6 +227,8 @@ class OW_Application
         $viewRenderer->assignVar('isAuthenticated', OW::getUser()->isAuthenticated());
         $viewRenderer->assignVar('bottomPoweredByLink',
             '<a href="https://developers.oxwall.com/" target="_blank" title="Powered by Oxwall Community Software"><img src="' . $currentThemeImagesDir . 'powered-by-oxwall.png" alt="Oxwall Community Software" /></a>');
+        $viewRenderer->registerModifier('count', 'count');
+        $viewRenderer->registerModifier('str_contains', 'str_contains');
 
         $spotParams = [
             'platform-version' => OW::getConfig()->getValue('base', 'soft_version'),

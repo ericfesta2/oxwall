@@ -572,7 +572,6 @@ body.ow_menu_active {
     backdrop-filter: blur(8px) brightness(170%);
     display: none;
 }
-.ow_menu_active .ow_site_panel .ow_logo,
 .ow_menu_active .ow_site_panel #ow_menu_wrap {
     display: none;
 }
@@ -5735,8 +5734,7 @@ h1.page_title{
     }
 }
 @media (max-width: 767px) {
-    #ow_menu_wrap,
-    .ow_site_panel .ow_logo {
+    #ow_menu_wrap {
         display: none;
     }
     #ow_nav_btn {
@@ -5760,6 +5758,16 @@ h1.page_title{
     .ow_ipc_header {
         margin-bottom: 4px;
     }
+    .ow_console_right {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        float: none;
+        width: 100%;
+        background-color: var(--main-sect-color);
+        padding: 0;
+        box-shadow: 0 3px 16px rgba(0,0,0,.2);
+    }
     .ow_lp_label br {
         margin: 6px 0;
     }
@@ -5782,7 +5790,15 @@ h1.page_title{
         padding: 0;
     }
     .console_tooltip.ow_tooltip_top_right.ow_tooltip {
-        right: 2px;
+        position: fixed;
+        bottom: 40px;
+        left: 0;
+        right: 0;
+        top: auto !important;
+    }
+    .ow_console .ow_tooltip .ow_tooltip_body, .ow_console_list_wrapper {
+        max-width: 100%;
+        width: 100%;
     }
     .console_tooltip.ow_tooltip_top_right .ow_tooltip_tail span {
         display: none;
@@ -5793,6 +5809,8 @@ h1.page_title{
 
     .ow_console_body {
         position: relative;
+        margin: 0;
+        padding: 0;
     }
     .ow_newsfeed_item_content {
         width: 100%;
@@ -6028,8 +6046,12 @@ h1.page_title{
     .ow_console_lang_item {
         font-size: 1.1rem;
     }
+    .ow_console_item {
+        margin-right: calc(25% - 48px);
+        padding: 8px 4px;
+    }
     ul.ow_console_dropdown .ow_console_dropdown_cont {
-        text-align: right;
+        text-align: center;
     }
     .ow_console_dropdown_cont a {
         line-height: 24px;
