@@ -33,13 +33,12 @@
 class OW_Session
 {
     use OW_Singleton;
-    
-    private static $protectedKeys = array('session.home_url', 'session.user_agent');
+
+    private static $protectedKeys = ['session.home_url', 'session.user_agent'];
 
     private function __construct()
     {
-        if ( session_id() === '' )
-        {
+        if (session_id() === '') {
             //disable transparent sid support
             ini_set('session.use_trans_sid', '0');
             ini_set('session.use_cookies', '1');
@@ -64,26 +63,19 @@ class OW_Session
 
         session_start();
 
-        if ( !isset($_SESSION['session.home_url']) )
-        {
+        if (!isset($_SESSION['session.home_url'])) {
             $_SESSION['session.home_url'] = OW_URL_HOME;
-        }
-        else if ( strcmp($_SESSION['session.home_url'], OW_URL_HOME) )
-        {
+        } elseif (strcmp($_SESSION['session.home_url'], OW_URL_HOME)) {
             $this->regenerate();
         }
 
         $userAgent = OW::getRequest()->getUserAgentName();
 
-        if ( isset($_SESSION['session.user_agent']) )
-        {
-            if ( $_SESSION['session.user_agent'] !== $userAgent )
-            {
+        if (isset($_SESSION['session.user_agent'])) {
+            if ($_SESSION['session.user_agent'] !== $userAgent) {
                 $this->regenerate();
             }
-        }
-        else
-        {
+        } else {
             $_SESSION['session.user_agent'] = $userAgent;
         }
     }
@@ -94,8 +86,7 @@ class OW_Session
 
         $_SESSION = [];
 
-        if ( isset($_COOKIE[$this->getName()]) )
-        {
+        if (isset($_COOKIE[$this->getName()])) {
             $_COOKIE[$this->getName()] = $this->getId();
         }
     }
@@ -105,32 +96,30 @@ class OW_Session
         return session_id();
     }
 
-    public function set( $key, $value )
+    public function set($key, $value)
     {
-        if ( in_array($key, self::$protectedKeys) )
-        {
+        if (in_array($key, self::$protectedKeys)) {
             throw new Exception('Attempt to set protected key');
         }
 
         $_SESSION[$key] = $value;
     }
 
-    public function get( $key )
+    public function get($key)
     {
-        if ( !isset($_SESSION[$key]) )
-        {
-            return null;
+        if (!isset($_SESSION[$key])) {
+            return;
         }
 
         return $_SESSION[$key];
     }
 
-    public function isKeySet( $key )
+    public function isKeySet($key)
     {
         return isset($_SESSION[$key]);
     }
 
-    public function delete( $key )
+    public function delete($key)
     {
         unset($_SESSION[$key]);
     }

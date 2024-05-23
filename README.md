@@ -2,6 +2,7 @@ CONTENTS OF THIS FILE
 ====================
 
  * About Oxwall
+ * About This Fork
  * Copyright
  * Installation and Configuration
  * Appearance
@@ -11,7 +12,14 @@ ABOUT OXWALL
 ============
 
 Oxwall is an open source social network platform, which supports a variety of community driven websites, from narrow fan clubs and local communities to extended social networking portals. It was designed and developed with a creative approach pursuing one purpose - to allow people running communities as easy as possible.
-Oxwall was launched in 2010 and is supported by a nonprofit organization Oxwall Foundation ( see http://www.oxwall.org/foundation/ ). For more information, visit Oxwall website at http://www.oxwall.org/.
+Oxwall was launched in 2010 and is supported by a nonprofit organization Oxwall Foundation (see https://www.oxwall.org/foundation/). For more information, visit Oxwall website at https://www.oxwall.org/.
+
+ABOUT THIS FORK
+===============
+
+This fork of Oxwall is maintained by a longtime enthusiast unaffiliated with the Oxwall Foundation to keep the project
+up-to-date with modern technologies and standards. While the goal of this project is to maintain Oxwall's compatibility
+with a variety of web hosts, it raises the minimum supported version of PHP to 8.3 and MySQL to 8.0.
 
 COPYRIGHT
 =========
@@ -62,7 +70,7 @@ More about themes:
 OXWALL STORE
 ============
 
-Oxwall has it's own public Store with numerous themes and plugins available for download. Themes and plugins in the Store are created by the Oxwall Foundation team or third-party contributors. Users can share their plugins and themes with the community by submitting them to the Store.
+Oxwall has its own public Store with numerous themes and plugins available for download. Themes and plugins in the Store are created by the Oxwall Foundation team or third-party contributors. Users can share their plugins and themes with the community by submitting them to the Store.
 
 More info about Oxwall Store:
  * Oxwall Store:
