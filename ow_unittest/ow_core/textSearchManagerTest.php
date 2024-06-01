@@ -1,11 +1,11 @@
 <?php
 
-class TextSearchManagerTest extends PHPUnit_Framework_TestCase
+class TextSearchManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Tear down
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         OW::getTextSearchManager()->deleteAllEntities();
     }

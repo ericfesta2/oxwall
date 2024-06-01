@@ -1,0 +1,17 @@
+name: Create Oxwall Release
+run-name: Build and publish a new Oxwall release
+on:
+  push:
+    tags:
+      '[0-9]+.[0-9]+.[0-9]+'
+jobs:
+  Create-New-Release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Dependencies
+        uses: php-actions/composer@v6
+        with:
+          php_version: 8.3
+      # - run: ow_libraries/vendor/bin/phpunit ow_unittest
+      - run: mv ow_install_default ow_install
+      - run: mv ow_includes/config.php.default ow_includes/config.php

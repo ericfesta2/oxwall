@@ -2,6 +2,7 @@
 
 final class INSTALL_CTRL_Install extends INSTALL_ActionController
 {
+    #[\Override]
     public function init(array $dispatchAttrs = [], bool $dbReady = false)
     {
         if ($dbReady && $dispatchAttrs['action'] !== 'finish') {

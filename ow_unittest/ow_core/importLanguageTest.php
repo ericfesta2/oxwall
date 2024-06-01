@@ -6,11 +6,11 @@
  * and open the template in the editor.
  */
 
-class ImportLanguageTest extends PHPUnit_Framework_TestCase
+class ImportLanguageTest extends \PHPUnit\Framework\TestCase
 {
     protected $fixturesDir;
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         //$this->deleteLangs();
     }

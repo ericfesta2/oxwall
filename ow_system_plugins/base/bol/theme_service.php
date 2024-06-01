@@ -31,21 +31,21 @@
  */
 final class BOL_ThemeService
 {
-    const DEFAULT_THEME = "simplicity";
-    const CSS_FILE_NAME = "base.css";
-    const MOBILE_CSS_FILE_NAME = "mobile.css";
-    const THEME_XML = "theme.xml";
-    const PREVIEW_FILE = "theme_preview.jpg";
-    const ICON_FILE = "theme.jpg";
-    const CONTROL_IMAGE_MAX_FILE_SIZE_IN_MB = 2;
-    const DIR_NAME_DECORATORS = "decorators";
-    const DIR_NAME_IMAGES = "images";
-    const DIR_NAME_MASTER_PAGES = "master_pages";
-    const DIR_NAME_FONTS = "fonts";
-    const DIR_NAME_MOBILE = "mobile";
-    const THEME_STATUS_UP_TO_DATE = BOL_PluginDao::UPDATE_VAL_UP_TO_DATE;
-    const THEME_STATUS_UPDATE = BOL_PluginDao::UPDATE_VAL_UPDATE;
-    const THEME_STATUS_MANUAL_UPDATE = BOL_PluginDao::UPDATE_VAL_MANUAL_UPDATE;
+    public const DEFAULT_THEME = 'pneuma';
+    public const CSS_FILE_NAME = 'base.css';
+    public const MOBILE_CSS_FILE_NAME = 'mobile.css';
+    public const THEME_XML = 'theme.xml';
+    public const PREVIEW_FILE = 'theme_preview.jpg';
+    public const ICON_FILE = 'theme.jpg';
+    public const CONTROL_IMAGE_MAX_FILE_SIZE_IN_MB = 2;
+    public const DIR_NAME_DECORATORS = 'decorators';
+    public const DIR_NAME_IMAGES = 'images';
+    public const DIR_NAME_MASTER_PAGES = 'master_pages';
+    public const DIR_NAME_FONTS = 'fonts';
+    public const DIR_NAME_MOBILE = 'mobile';
+    public const THEME_STATUS_UP_TO_DATE = BOL_PluginDao::UPDATE_VAL_UP_TO_DATE;
+    public const THEME_STATUS_UPDATE = BOL_PluginDao::UPDATE_VAL_UPDATE;
+    public const THEME_STATUS_MANUAL_UPDATE = BOL_PluginDao::UPDATE_VAL_MANUAL_UPDATE;
 
     /**
      * @var BOL_ThemeDao
@@ -91,8 +91,7 @@ final class BOL_ThemeService
      */
     public static function getInstance()
     {
-        if ( self::$classInstance === null )
-        {
+        if (self::$classInstance === null) {
             self::$classInstance = new self();
         }
 
@@ -119,15 +118,15 @@ final class BOL_ThemeService
      */
     public function getSelectedThemeName()
     {
-        return OW::getConfig()->getValue("base", "selectedTheme");
+        return OW::getConfig()->getValue('base', 'selectedTheme');
     }
 
     /**
      * Sets the name of selected theme
      */
-    public function setSelectedThemeName( string $name )
+    public function setSelectedThemeName(string $name)
     {
-        OW::getConfig()->saveConfig("base", "selectedTheme", trim($name));
+        OW::getConfig()->saveConfig('base', 'selectedTheme', trim($name));
     }
 
     /**
@@ -135,7 +134,7 @@ final class BOL_ThemeService
      */
     public function getUserfileImagesDir()
     {
-        return OW_DIR_USERFILES . "themes" . DS;
+        return OW_DIR_USERFILES . 'themes' . DS;
     }
 
     /**
@@ -143,7 +142,7 @@ final class BOL_ThemeService
      */
     public function getUserfileImagesUrl()
     {
-        return OW_URL_USERFILES . "themes/";
+        return OW_URL_USERFILES . 'themes/';
     }
 
     /**
@@ -155,75 +154,64 @@ final class BOL_ThemeService
         $dbThemesArray = [];
 
         /* @var $value BOL_Theme */
-        foreach ( $dbThemes as $value )
-        {
+        foreach ($dbThemes as $value) {
             $dbThemesArray[$value->getId()] = $value->getKey();
         }
 
         $themes = [];
         $defaultThemeExists = false;
-        $xmlFiles = UTIL_File::findFiles(OW_DIR_THEME, array("xml"), 1);
+        $xmlFiles = UTIL_File::findFiles(OW_DIR_THEME, ['xml'], 1);
 
-        foreach ( $xmlFiles as $themeXml )
-        {
-            if ( basename($themeXml) != self::THEME_XML )
-            {
+        foreach ($xmlFiles as $themeXml) {
+            if (basename($themeXml) !== self::THEME_XML) {
                 continue;
             }
 
             $xmlInfo = $this->getThemeXmlInfo($themeXml);
 
-            if ( !$xmlInfo )
-            {
+            if (!$xmlInfo) {
                 continue;
             }
 
-            unset($xmlInfo["masterPages"]);
-            $themeKey = trim($xmlInfo["key"]);
+            unset($xmlInfo['masterPages']);
+            $themeKey = trim($xmlInfo['key']);
 
-            if ( $themeKey == self::DEFAULT_THEME )
-            {
+            if ($themeKey === self::DEFAULT_THEME) {
                 $defaultThemeExists = true;
             }
 
-            if ( in_array($themeKey, $dbThemesArray) )
-            {
+            if (in_array($themeKey, $dbThemesArray)) {
                 unset($dbThemesArray[array_search($themeKey, $dbThemesArray)]);
                 continue;
             }
 
-            $result = OW::getEventManager()->call("admin.themes_list_theme_avail", array("name" => $themeKey));
+            $result = OW::getEventManager()->call('admin.themes_list_theme_avail', ['name' => $themeKey]);
 
-            if ( $result === false )
-            {
+            if ($result === false) {
                 continue;
             }
 
             $newTheme = new BOL_Theme();
             $newTheme->setKey($themeKey);
-            $newTheme->setTitle(trim($xmlInfo["name"]));
+            $newTheme->setTitle(trim($xmlInfo['name']));
             $newTheme->setDescription(json_encode($xmlInfo));
-            $newTheme->setSidebarPosition($xmlInfo["sidebarPosition"]);
+            $newTheme->setSidebarPosition($xmlInfo['sidebarPosition']);
 
             $this->themeDao->save($newTheme);
             $this->processTheme($newTheme);
         }
 
-        if ( !empty($dbThemesArray) )
-        {
-            foreach ( $dbThemesArray as $id => $themeName )
-            {
+        if (!empty($dbThemesArray)) {
+            foreach ($dbThemesArray as $id => $themeName) {
                 $this->deleteTheme($id);
-                if ( trim($themeName) === $this->getSelectedThemeName() )
-                {
+                if (trim($themeName) === $this->getSelectedThemeName()) {
                     $this->setSelectedThemeName(self::DEFAULT_THEME);
                 }
             }
         }
 
-        if ( !$defaultThemeExists )
-        {
-            throw new LogicException("Cant find default theme `" . self::DEFAULT_THEME . "`!");
+        if (!$defaultThemeExists) {
+            throw new LogicException('Cant find default theme `' . self::DEFAULT_THEME . '`!');
         }
     }
 
@@ -232,7 +220,7 @@ final class BOL_ThemeService
      *
      * @param integer $themeId
      */
-    public function deleteThemeContent( $themeId )
+    public function deleteThemeContent($themeId)
     {
         // delete master pages, css, decorators
         $this->themeContentDao->deleteByThemeId($themeId);
@@ -250,25 +238,23 @@ final class BOL_ThemeService
      *
      * @param integer $themeId
      */
-    public function deleteTheme( $themeId, $deleteControlValues = false )
+    public function deleteTheme($themeId, $deleteControlValues = false)
     {
         $theme = $this->getThemeById($themeId);
 
-        if ( empty($theme) )
-        {
-            throw new InvalidArgumentException("Can't delete theme with id `" . $themeId . "`, not found!");
+        if (empty($theme)) {
+            throw new InvalidArgumentException("Can't delete theme with id `" . $themeId . '`, not found!');
         }
 
         // delete theme static files
         $this->unlinkTheme($theme->getId());
 
-        if ( $deleteControlValues )
-        {
+        if ($deleteControlValues) {
             $this->themeControlValueDao->deleteThemeControlValues($themeId);
             //TODO remove dirty hack
-            $curentValue = json_decode(OW::getConfig()->getValue("base", "master_page_theme_info"), true);
+            $curentValue = json_decode(OW::getConfig()->getValue('base', 'master_page_theme_info'), true);
             unset($curentValue[$themeId]);
-            OW::getConfig()->getValue("base", "master_page_theme_info", json_encode($curentValue));
+            OW::getConfig()->getValue('base', 'master_page_theme_info', json_encode($curentValue));
         }
 
         // delete theme DB entry
@@ -281,17 +267,15 @@ final class BOL_ThemeService
      * @param integer $themeId
      * @throws InvalidArgumentException
      */
-    public function unlinkTheme( $themeId )
+    public function unlinkTheme($themeId)
     {
         $theme = $this->getThemeById($themeId);
 
-        if ( empty($theme) )
-        {
-            throw new InvalidArgumentException("Can't unlink theme with id `" . $themeId . "`, not found!");
+        if (empty($theme)) {
+            throw new InvalidArgumentException("Can't unlink theme with id `" . $themeId . '`, not found!');
         }
 
-        if ( file_exists($this->getStaticDir($theme->getKey())) )
-        {
+        if (file_exists($this->getStaticDir($theme->getKey()))) {
             UTIL_File::removeDir($this->getStaticDir($theme->getKey()));
         }
 
@@ -306,8 +290,7 @@ final class BOL_ThemeService
         $themes = $this->themeDao->findAll();
 
         /* @var $value BOL_Theme */
-        foreach ( $themes as $value )
-        {
+        foreach ($themes as $value) {
             $this->processTheme($value);
             $this->updateCustomCssFile($value->getId());
         }
@@ -316,14 +299,13 @@ final class BOL_ThemeService
     /**
      * Updates/adds whole theme content, generating static files and inserting theme content in DB.
      */
-    public function processTheme( BOL_Theme $theme )
+    public function processTheme(BOL_Theme $theme)
     {
         $themeName = $theme->getKey();
         $themeId = $theme->getId();
 
-        if ( !file_exists($this->getRootDir($themeName)) )
-        {
-            throw new LogicException("Can't find theme dir for `" . $themeName . "`!");
+        if (!file_exists($this->getRootDir($themeName))) {
+            throw new LogicException("Can't find theme dir for `" . $themeName . '`!');
         }
 
         $themeStaticDir = $this->getStaticDir($themeName);
@@ -337,14 +319,12 @@ final class BOL_ThemeService
         }
 
         // copy all static files
-        UTIL_File::copyDir($themeRootDir, $themeStaticDir, function( string $itemPath ) {
-            if ( substr($itemPath, 0, 1) === '.' )
-            {
+        UTIL_File::copyDir($themeRootDir, $themeStaticDir, function (string $itemPath) {
+            if (substr($itemPath, 0, 1) === '.') {
                 return false;
             }
 
-            if ( is_dir($itemPath) )
-            {
+            if (is_dir($itemPath)) {
                 return true;
             }
 
@@ -356,16 +336,13 @@ final class BOL_ThemeService
         $themeControls = [];
 
         // copy main css file
-        if ( file_exists($themeRootDir . self::CSS_FILE_NAME) )
-        {
+        if (file_exists($themeRootDir . self::CSS_FILE_NAME)) {
             $controlsContent = file_get_contents($themeRootDir . self::CSS_FILE_NAME);
             $themeControls = $this->getThemeControls($controlsContent);
 
             // adding theme controls in DB
-            if ( !empty($themeControls) )
-            {
-                foreach ( $themeControls as $value )
-                {
+            if (!empty($themeControls)) {
+                foreach ($themeControls as $value) {
                     $themeControl = new BOL_ThemeControl();
                     $themeControl->setAttribute($value['attrName']);
                     $themeControl->setKey($value['key']);
@@ -375,8 +352,7 @@ final class BOL_ThemeService
                     $themeControl->setDefaultValue($value['defaultValue']);
                     $themeControl->setType($value['type']);
                     $themeControl->setLabel($value['label']);
-                    if ( isset($value['description']) )
-                    {
+                    if (isset($value['description'])) {
                         $themeControl->setDescription(trim($value['description']));
                     }
 
@@ -387,12 +363,10 @@ final class BOL_ThemeService
         }
 
         // decorators
-        if ( file_exists($this->getDecoratorsDir($themeName)) )
-        {
+        if (file_exists($this->getDecoratorsDir($themeName))) {
             $files = UTIL_File::findFiles($this->getDecoratorsDir($themeName), ['html'], 0);
 
-            foreach ( $files as $value )
-            {
+            foreach ($files as $value) {
                 $decoratorEntry = new BOL_ThemeContent();
                 $decoratorEntry->setThemeId($themeId);
                 $decoratorEntry->setType(BOL_ThemeContentDao::VALUE_TYPE_ENUM_DECORATOR);
@@ -402,12 +376,10 @@ final class BOL_ThemeService
         }
 
         // master pages
-        if ( file_exists($this->getMasterPagesDir($themeName)) )
-        {
+        if (file_exists($this->getMasterPagesDir($themeName))) {
             $files = UTIL_File::findFiles($this->getMasterPagesDir($themeName), ['html'], 0);
 
-            foreach ( $files as $value )
-            {
+            foreach ($files as $value) {
                 $masterPageEntry = new BOL_ThemeContent();
                 $masterPageEntry->setThemeId($theme->getId());
                 $masterPageEntry->setType(BOL_ThemeContentDao::VALUE_TYPE_ENUM_MASTER_PAGE);
@@ -416,12 +388,10 @@ final class BOL_ThemeService
             }
         }
 
-        if ( file_exists($this->getMasterPagesDir($themeName, true)) )
-        {
+        if (file_exists($this->getMasterPagesDir($themeName, true))) {
             $files = UTIL_File::findFiles($this->getMasterPagesDir($themeName, true), ['html'], 0);
 
-            foreach ( $files as $value )
-            {
+            foreach ($files as $value) {
                 $masterPageEntry = new BOL_ThemeContent();
                 $masterPageEntry->setThemeId($theme->getId());
                 $masterPageEntry->setType(BOL_ThemeContentDao::VALUE_TYPE_ENUM_MOBILE_MASTER_PAGE);
@@ -434,8 +404,7 @@ final class BOL_ThemeService
         $xml = simplexml_load_file($this->getRootDir($themeName) . self::THEME_XML);
         $masterPages = (array) $xml->masterPages;
 
-        foreach ( $masterPages as $key => $value )
-        {
+        foreach ($masterPages as $key => $value) {
             $masterPageLinkEntry = new BOL_ThemeMasterPage();
             $masterPageLinkEntry->setThemeId($theme->getId());
             $masterPageLinkEntry->setDocumentKey(trim($key));
@@ -450,12 +419,11 @@ final class BOL_ThemeService
      * @param string $key
      * @return OW_Theme
      */
-    public function getThemeObjectByKey( $key, $mobile = false )
+    public function getThemeObjectByKey($key, $mobile = false)
     {
         $theme = $this->themeDao->findByKey($key);
 
-        if ( $theme === null )
-        {
+        if ($theme === null) {
             throw new InvalidArgumentException('Cant find theme `' . $key . '` in DB!');
         }
 
@@ -468,7 +436,7 @@ final class BOL_ThemeService
      * @param BOL_Theme $theme
      * @return OW_Theme
      */
-    private function getThemeObject( BOL_Theme $theme, $mobile = false )
+    private function getThemeObject(BOL_Theme $theme, $mobile = false)
     {
         $themeContentArray = $this->themeContentDao->findByThemeId($theme->getId());
         $documentMasterPagesArray = $this->themeMasterPageDao->findByThemeId($theme->getId());
@@ -479,35 +447,24 @@ final class BOL_ThemeService
         $documentMasterPages = [];
 
         /* @var $value BOL_ThemeContent */
-        foreach ( $themeContentArray as $value )
-        {
-            if ( $value->getType() === BOL_ThemeContentDao::VALUE_TYPE_ENUM_DECORATOR )
-            {
-                $decorators[$value->getValue()] = $this->getDecoratorsDir($theme->getKey()) . $value->getValue() . ".html";
-            }
-            else if ( $value->getType() === BOL_ThemeContentDao::VALUE_TYPE_ENUM_MASTER_PAGE )
-            {
-                if ( !$mobile )
-                {
-                    $masterPages[$value->getValue()] = $this->getMasterPagesDir($theme->getKey()) . $value->getValue() . ".html";
+        foreach ($themeContentArray as $value) {
+            if ($value->getType() === BOL_ThemeContentDao::VALUE_TYPE_ENUM_DECORATOR) {
+                $decorators[$value->getValue()] = $this->getDecoratorsDir($theme->getKey()) . $value->getValue() . '.html';
+            } elseif ($value->getType() === BOL_ThemeContentDao::VALUE_TYPE_ENUM_MASTER_PAGE) {
+                if (!$mobile) {
+                    $masterPages[$value->getValue()] = $this->getMasterPagesDir($theme->getKey()) . $value->getValue() . '.html';
                 }
-            }
-            else if ( $value->getType() === BOL_ThemeContentDao::VALUE_TYPE_ENUM_MOBILE_MASTER_PAGE )
-            {
-                if ( $mobile )
-                {
-                    $masterPages[$value->getValue()] = $this->getMasterPagesDir($theme->getKey(), true) . $value->getValue() . ".html";
+            } elseif ($value->getType() === BOL_ThemeContentDao::VALUE_TYPE_ENUM_MOBILE_MASTER_PAGE) {
+                if ($mobile) {
+                    $masterPages[$value->getValue()] = $this->getMasterPagesDir($theme->getKey(), true) . $value->getValue() . '.html';
                 }
-            }
-            else
-            {
-                throw new LogicException("Invalid theme content type `" . $value->getType() . "`");
+            } else {
+                throw new LogicException('Invalid theme content type `' . $value->getType() . '`');
             }
         }
 
         /* @var $value BOL_ThemeMasterPage */
-        foreach ( $documentMasterPagesArray as $value )
-        {
+        foreach ($documentMasterPagesArray as $value) {
             $documentMasterPages[$value->getDocumentKey()] = $value->getMasterPage();
         }
 
@@ -525,7 +482,7 @@ final class BOL_ThemeService
      * @param string $fileContents
      * @return array
      */
-    private function getThemeControls( $fileContents )
+    private function getThemeControls($fileContents)
     {
         $pattern = "/\/\*\*[ ]*OW_Control(.*?)[ ]*\*\*\//";
 
@@ -533,13 +490,11 @@ final class BOL_ThemeService
 
         $resultArray = [];
 
-        if ( !preg_match_all($pattern, $fileContents, $pockets) )
-        {
+        if (!preg_match_all($pattern, $fileContents, $pockets)) {
             return [];
         }
 
-        foreach ( $pockets[0] as $key => $value )
-        {
+        foreach ($pockets[0] as $key => $value) {
             $controlPosition = strpos($fileContents, $value);
             $fileContents = substr_replace($fileContents, '', strpos($fileContents, $value), strlen($value));
 
@@ -547,79 +502,69 @@ final class BOL_ThemeService
             $firstSemicolonPosition = false;
             $firstColon = true;
 
-            for ( $i = $controlPosition; $i >= 0; $i-- )
-            {
+            for ($i = $controlPosition; $i >= 0; --$i) {
                 $char = substr($fileContents, $i, 1);
 
                 // first semicolon is attr devider
-                if ( $firstSemicolon && $char === ":" )
-                {
-                    $attrValue = trim(str_replace(";", "",
-                            substr($fileContents, ($i + 1), ($controlPosition - ($i + 1)))));
+                if ($firstSemicolon && $char === ':') {
+                    $attrValue = trim(str_replace(';', '',
+                        substr($fileContents, ($i + 1), ($controlPosition - ($i + 1)))));
                     $firstSemicolon = false;
                     $firstSemicolonPosition = $i;
                     continue;
                 }
 
-                if ( $firstSemicolonPosition && $firstColon && ( $char === ";" || $char === "{" ) )
-                {
+                if ($firstSemicolonPosition && $firstColon && ($char === ';' || $char === '{')) {
                     $attrName = trim(substr($fileContents, ($i + 1), ($firstSemicolonPosition - ($i + 1))));
                     $firstColon = false;
                 }
 
                 // selector start position
-                if ( $char === "{" )
-                {
+                if ($char === '{') {
                     $selectorEndPos = $i;
                 }
 
                 // selector end position
-                if ( $char === "}" )
-                {
+                if ($char === '}') {
                     $selector = trim(substr($fileContents, ($i + 1), ($selectorEndPos - ($i + 1))));
                     break;
                 }
             }
 
-            $tempStr = substr(trim($pockets[1][$key]), ( strpos(trim($pockets[1][$key]), "key") + 4));
+            $tempStr = substr(trim($pockets[1][$key]), (strpos(trim($pockets[1][$key]), 'key') + 4));
 
-            $controlKey = trim(strstr($tempStr, ",") ? substr($tempStr, 0, strpos($tempStr, ",")) : trim($tempStr));
+            $controlKey = trim(strstr($tempStr, ',') ? substr($tempStr, 0, strpos($tempStr, ',')) : trim($tempStr));
 
-            if ( empty($controlKey) )
-            {
+            if (empty($controlKey)) {
                 continue;
             }
 
-            $itemArray = array(
-                "attrName" => $this->removeCssComments($attrName),
-                "defaultValue" => $this->removeCssComments($attrValue),
-                "selector" => $this->removeCssComments($selector)
-            );
+            $itemArray = [
+                'attrName' => $this->removeCssComments($attrName),
+                'defaultValue' => $this->removeCssComments($attrValue),
+                'selector' => $this->removeCssComments($selector)
+            ];
 
-            $params = explode(",", $pockets[1][$key]);
+            $params = explode(',', $pockets[1][$key]);
 
-            foreach ( $params as $param )
-            {
-                $tempArray = explode(":", $param);
+            foreach ($params as $param) {
+                $tempArray = explode(':', $param);
                 $itemArray[trim($tempArray[0])] = trim($tempArray[1]);
             }
 
-            if ( array_key_exists($controlKey, $resultArray) )
-            {
-                $resultArray[$controlKey]["selector"] .= ", " . $itemArray["selector"];
+            if (array_key_exists($controlKey, $resultArray)) {
+                $resultArray[$controlKey]['selector'] .= ', ' . $itemArray['selector'];
 
                 continue;
             }
 
-            if ( empty($itemArray["type"]) )
-            {
+            if (empty($itemArray['type'])) {
                 continue;
             }
 
             // temp fix to get rid of quotes
-            if ( $itemArray["type"] == "image" )
-            {
-                $itemArray["defaultValue"] = str_replace("'", "", $itemArray["defaultValue"]);
+            if ($itemArray['type'] === 'image') {
+                $itemArray['defaultValue'] = str_replace("'", '', $itemArray['defaultValue']);
             }
 
             $resultArray[$controlKey] = $itemArray;
@@ -632,7 +577,7 @@ final class BOL_ThemeService
      * @param integer $themeId
      * @return array
      */
-    public function findThemeControls( $themeId )
+    public function findThemeControls($themeId)
     {
         return $this->themeControlDao->findThemeControls($themeId);
     }
@@ -642,27 +587,23 @@ final class BOL_ThemeService
      * @param integer $themeId
      * @param array $values
      */
-    public function importThemeControls( $themeId, $values )
+    public function importThemeControls($themeId, $values)
     {
         $controls = $this->findThemeControls($themeId);
         $namedControls = [];
 
-        foreach ( $controls as $value )
-        {
+        foreach ($controls as $value) {
             $namedControls[$value['key']] = $value;
         }
 
-        foreach ( $values as $key => $value )
-        {
-            if ( !array_key_exists($key, $namedControls) )
-            {
+        foreach ($values as $key => $value) {
+            if (!array_key_exists($key, $namedControls)) {
                 continue;
             }
 
             $obj = $this->themeControlValueDao->findByTcNameAndThemeId($namedControls[$key]['key'], $themeId);
 
-            if ( $obj === null )
-            {
+            if ($obj === null) {
                 $obj = new BOL_ThemeControlValue();
                 $obj->setThemeControlKey($namedControls[$key]['key']);
             }
@@ -677,56 +618,49 @@ final class BOL_ThemeService
      * @param integer $themeId
      * @param array $values
      */
-    public function saveThemeControls( $themeId, $values )
+    public function saveThemeControls($themeId, $values)
     {
         $controls = $this->findThemeControls($themeId);
         $namedControls = [];
 
-        foreach ( $controls as $value )
-        {
-            $namedControls[$value["key"]] = $value;
+        foreach ($controls as $value) {
+            $namedControls[$value['key']] = $value;
         }
 
-        foreach ( $values as $key => $value )
-        {
-            if ( !array_key_exists($key, $namedControls) || ( is_array($value) && empty($value) ) )
-            {
+        foreach ($values as $key => $value) {
+            if (!array_key_exists($key, $namedControls) || (is_array($value) && empty($value))) {
                 continue;
             }
 
-            if ( is_string($value) && in_array(trim($value),
-                    array("default", trim($namedControls[$key]["defaultValue"]))) )
-            {
-                $this->themeControlValueDao->deleteByTcNameAndThemeId($namedControls[$key]["key"], $themeId);
+            if (is_string($value) && in_array(trim($value),
+                ['default', trim($namedControls[$key]['defaultValue'])])) {
+                $this->themeControlValueDao->deleteByTcNameAndThemeId($namedControls[$key]['key'], $themeId);
                 continue;
             }
 
-            $obj = $this->themeControlValueDao->findByTcNameAndThemeId($namedControls[$key]["key"], $themeId);
+            $obj = $this->themeControlValueDao->findByTcNameAndThemeId($namedControls[$key]['key'], $themeId);
 
-            if ( $namedControls[$key]["type"] == "image" )
-            {
-                list($width, $height) = !empty($value['tmp_name']) ? getimagesize($value["tmp_name"]) : ['width', 'height'];
+            if ($namedControls[$key]['type'] === 'image') {
+                [$width, $height] = !empty($value['tmp_name']) ? getimagesize($value['tmp_name']) : ['width', 'height'];
 
                 $image = $this->addImage($value);
 
-                if ( $image === null )
-                {
+                if ($image === null) {
                     continue;
                 }
 
-                $value = "url(" . OW::getStorage()->getFileUrl($this->getUserfileImagesDir() . $image->getFilename()) . ")";
+                $value = 'url(' . OW::getStorage()->getFileUrl($this->getUserfileImagesDir() . $image->getFilename()) . ')';
 
                 //TODO remove hotfix temp solution for assigning theme img data in master pages
-                $curentValue = json_decode(OW::getConfig()->getValue("base", "master_page_theme_info"), true);
-                $curentValue[$themeId][$namedControls[$key]["key"]] = array("src" => OW::getStorage()->getFileUrl($this->getUserfileImagesDir() . $image->getFilename()),
-                    "width" => $width, "height" => $height);
-                OW::getConfig()->saveConfig("base", "master_page_theme_info", json_encode($curentValue));
+                $curentValue = json_decode(OW::getConfig()->getValue('base', 'master_page_theme_info'), true);
+                $curentValue[$themeId][$namedControls[$key]['key']] = ['src' => OW::getStorage()->getFileUrl($this->getUserfileImagesDir() . $image->getFilename()),
+                    'width' => $width, 'height' => $height];
+                OW::getConfig()->saveConfig('base', 'master_page_theme_info', json_encode($curentValue));
             }
 
-            if ( $obj === null )
-            {
+            if ($obj === null) {
                 $obj = new BOL_ThemeControlValue();
-                $obj->setThemeControlKey($namedControls[$key]["key"]);
+                $obj->setThemeControlKey($namedControls[$key]['key']);
             }
 
             $obj->setValue(trim($value));
@@ -740,34 +674,31 @@ final class BOL_ThemeService
      * @param array $fileArr
      * @return BOL_ThemeImage
      */
-    public function addImage( $fileArr )
+    public function addImage($fileArr)
     {
         $result = UTIL_File::checkUploadedFile($fileArr, self::CONTROL_IMAGE_MAX_FILE_SIZE_IN_MB * 1024 * 1024);
 
-        if ( !$result["result"] )
-        {
-            return null;
+        if (!$result['result']) {
+            return;
         }
 
-        if ( !UTIL_File::validateImage($fileArr["name"]) )
-        {
-            return null;
+        if (!UTIL_File::validateImage($fileArr['name'])) {
+            return;
         }
 
         $image = new BOL_ThemeImage();
         $image->addDatetime = time();
         $this->themeImageDao->save($image);
 
-        $ext = UTIL_File::getExtension($fileArr["name"]);
-        $imageName = "theme_image_" . $image->getId() . "." . $ext;
+        $ext = UTIL_File::getExtension($fileArr['name']);
+        $imageName = 'theme_image_' . $image->getId() . '.' . $ext;
 
         //cloudfiles header fix for amazon : need right extension to upload file with right header
-        $newTempName = $fileArr["tmp_name"] . "." . $ext;
+        $newTempName = $fileArr['tmp_name'] . '.' . $ext;
         rename($fileArr['tmp_name'], $newTempName);
         OW::getStorage()->copyFile($newTempName, $this->getUserfileImagesDir() . $imageName);
 
-        if ( file_exists($newTempName) )
-        {
+        if (file_exists($newTempName)) {
             unlink($newTempName);
         }
 
@@ -777,25 +708,22 @@ final class BOL_ThemeService
         return $image;
     }
 
-    public function moveTemporaryFile( $tmpId, $title = '', $rotate = 0 )
+    public function moveTemporaryFile($tmpId, $title = '', $rotate = 0)
     {
         $rotate = intval($rotate);
 
         $tmp = BOL_FileTemporaryDao::getInstance()->findById($tmpId);
         $tmpPath = BOL_FileTemporaryService::getInstance()->getTemporaryFilePath($tmpId);
 
-        if ( !$tmp )
-        {
+        if (!$tmp) {
             throw new LogicException();
         }
 
-        if ( !UTIL_File::validateImage($tmp->filename) )
-        {
+        if (!UTIL_File::validateImage($tmp->filename)) {
             throw new LogicException();
         }
 
-        if ( $rotate !== 0 )
-        {
+        if ($rotate !== 0) {
             $main = new UTIL_Image($tmpPath);
             $main->rotate($rotate)
                 ->saveImage($tmpPath);
@@ -815,8 +743,7 @@ final class BOL_ThemeService
         $newTempName = $tmp->filename . '.' . $ext;
         rename($tmp->filename, $newTempName);
         OW::getStorage()->copyFile($tmpPath, $this->getUserfileImagesDir() . $imageName);
-        if ( file_exists($newTempName) )
-        {
+        if (file_exists($newTempName)) {
             unlink($newTempName);
         }
 
@@ -840,12 +767,11 @@ final class BOL_ThemeService
      * @param array $params
      * @return array
      */
-    public function filterCssImages( $params )
+    public function filterCssImages($params)
     {
         $storage = OW::getStorage();
         $images = $this->themeImageDao->filterGraphics($params);
-        foreach ( $images as $key => $photo )
-        {
+        foreach ($images as $key => $photo) {
             $images[$key]->url = $storage->getFileUrl($this->getUserfileImagesDir() . $photo->filename);
         }
         return $images;
@@ -856,7 +782,7 @@ final class BOL_ThemeService
      * @param integer $id
      * @return BOL_ThemeImage
      */
-    public function findImageById( $id )
+    public function findImageById($id)
     {
         return $this->themeImageDao->findById($id);
     }
@@ -866,11 +792,10 @@ final class BOL_ThemeService
      * @param $params
      * @return array
      */
-    public function getPrevImageIdList( $id, $params )
+    public function getPrevImageIdList($id, $params)
     {
         $images = $this->themeImageDao->getPrevImageList($id, $params);
-        return array_map(function($i)
-        {
+        return array_map(function ($i) {
             return $i->id;
         }, $images);
     }
@@ -880,11 +805,10 @@ final class BOL_ThemeService
      * @param $params
      * @return array
      */
-    public function getNextImageIdList( $id, $params )
+    public function getNextImageIdList($id, $params)
     {
         $images = $this->themeImageDao->getNextImageList($id, $params);
-        return array_map(function($i)
-        {
+        return array_map(function ($i) {
             return $i->id;
         }, $images);
     }
@@ -893,14 +817,12 @@ final class BOL_ThemeService
      *
      * @param integer $id
      */
-    public function deleteImage( $id )
+    public function deleteImage($id)
     {
         $image = $this->themeImageDao->findById($id);
 
-        if ( $image !== null )
-        {
-            if ( OW::getStorage()->fileExists($this->getUserfileImagesDir() . $image->getFilename()) )
-            {
+        if ($image !== null) {
+            if (OW::getStorage()->fileExists($this->getUserfileImagesDir() . $image->getFilename())) {
                 OW::getStorage()->removeFile($this->getUserfileImagesDir() . $image->getFilename());
             }
 
@@ -911,7 +833,7 @@ final class BOL_ThemeService
     /**
      * @param BOL_Theme $themeDto
      */
-    public function saveTheme( BOL_Theme $themeDto )
+    public function saveTheme(BOL_Theme $themeDto)
     {
         $this->themeDao->save($themeDto);
     }
@@ -921,7 +843,7 @@ final class BOL_ThemeService
      *
      * @param BOL_ThemeContent $dto
      */
-    public function saveThemeContent( BOL_ThemeContent $dto )
+    public function saveThemeContent(BOL_ThemeContent $dto)
     {
         $this->themeContentDao->save($dto);
     }
@@ -939,89 +861,77 @@ final class BOL_ThemeService
      *
      * @param integer $themeId
      */
-    public function updateCustomCssFile( $themeId )
+    public function updateCustomCssFile($themeId)
     {
         $theme = $this->themeDao->findById($themeId);
 
-        if ( $theme->getCustomCssFileName() !== null )
-        {
+        if ($theme->getCustomCssFileName() !== null) {
             $oldCssFilePath = $this->getUserfileImagesDir() . $theme->getCustomCssFileName();
-            $oldMobileCssFilePath = $this->getUserfileImagesDir() . "mobile_" . $theme->getCustomCssFileName();
+            $oldMobileCssFilePath = $this->getUserfileImagesDir() . 'mobile_' . $theme->getCustomCssFileName();
 
-            if ( OW::getStorage()->fileExists($oldCssFilePath) )
-            {
+            if (OW::getStorage()->fileExists($oldCssFilePath)) {
                 OW::getStorage()->removeFile($oldCssFilePath);
             }
 
-            if ( OW::getStorage()->fileExists($oldMobileCssFilePath) )
-            {
+            if (OW::getStorage()->fileExists($oldMobileCssFilePath)) {
                 OW::getStorage()->removeFile($oldMobileCssFilePath);
             }
         }
 
-        if ( $theme === null )
-        {
-            throw new InvalidArgumentException("Can't find theme `" . $themeId . "` !");
+        if ($theme === null) {
+            throw new InvalidArgumentException("Can't find theme `" . $themeId . '` !');
         }
 
         $controls = $this->themeControlDao->findThemeControls($theme->getId());
 
-        if ( !$this->themeControlValueDao->findByThemeId($themeId) && !$theme->getCustomCss() )
-        {
+        if (!$this->themeControlValueDao->findByThemeId($themeId) && !$theme->getCustomCss()) {
             $theme->setCustomCssFileName(null);
             $this->themeDao->save($theme);
             return;
         }
 
-        $cssString = "";
-        $mobileCssString = "";
+        $cssString = '';
+        $mobileCssString = '';
 
-        foreach ( $controls as $control )
-        {
-            if ( $control["value"] !== null && trim($control["value"]) !== "default" )
-            {
-                $controlString = $control["selector"] . "{" . $control["attribute"] . ":" . $control["value"] . "}" . PHP_EOL;
+        foreach ($controls as $control) {
+            if ($control['value'] !== null && trim($control['value']) !== 'default') {
+                $controlString = $control['selector'] . '{' . $control['attribute'] . ':' . $control['value'] . '}' . PHP_EOL;
 
-                if ( (bool) $control["mobile"] )
-                {
+                if ((bool) $control['mobile']) {
                     $mobileCssString .= $controlString;
-                }
-                else
-                {
+                } else {
                     $cssString .= $controlString;
                 }
             }
         }
 
-        if ( $theme->getCustomCss() !== null && strlen(trim($theme->getCustomCss())) > 0 )
-        {
+        if ($theme->getCustomCss() !== null && strlen(trim($theme->getCustomCss())) > 0) {
             $cssString .= trim($theme->getCustomCss());
         }
 
-        if ( $theme->getMobileCustomCss() !== null && strlen(trim($theme->getCustomCss())) > 0 )
-        {
+        if ($theme->getMobileCustomCss() !== null && strlen(trim($theme->getCustomCss())) > 0) {
             $mobileCssString .= trim($theme->getMobileCustomCss());
         }
 
-        $newCssFileName = uniqid($theme->getName()) . ".css";
+        $newCssFileName = uniqid($theme->getName()) . '.css';
 
         $theme->setCustomCssFileName($newCssFileName);
         $this->themeDao->save($theme);
 
         $newCssFilePath = $this->getUserfileImagesDir() . $newCssFileName;
-        $tempCssFilePath = $this->getUserfileImagesDir() . "temp.css";
+        $tempCssFilePath = $this->getUserfileImagesDir() . 'temp.css';
         file_put_contents($tempCssFilePath, $cssString);
         OW::getStorage()->copyFile($tempCssFilePath, $newCssFilePath);
         unlink($tempCssFilePath);
 
-        $tempCssFilePath = $this->getUserfileImagesDir() . "tempmobile.css";
+        $tempCssFilePath = $this->getUserfileImagesDir() . 'tempmobile.css';
         $newCssFileName = 'mobile_' . $newCssFileName;
         $newCssFilePath = $this->getUserfileImagesDir() . $newCssFileName;
         file_put_contents($tempCssFilePath, $mobileCssString);
         OW::getStorage()->copyFile($tempCssFilePath, $newCssFilePath);
         unlink($tempCssFilePath);
 
-        OW::getEventManager()->trigger(new OW_Event("base.update_custom_css_file", array("name" => $theme->getName())));
+        OW::getEventManager()->trigger(new OW_Event('base.update_custom_css_file', ['name' => $theme->getName()]));
     }
 
     /**
@@ -1029,16 +939,15 @@ final class BOL_ThemeService
      * @param string $themeName
      * @return string
      */
-    public function getCustomCssFileUrl( $themeName, $mobile = false )
+    public function getCustomCssFileUrl($themeName, $mobile = false)
     {
         $theme = $this->themeDao->findByKey(trim($themeName));
 
-        if ( $theme === null )
-        {
-            return null;
+        if ($theme === null) {
+            return;
         }
 
-        return OW::getStorage()->getFileUrl($this->getUserfileImagesDir() . ( $mobile ? "mobile_" : '' ) . $theme->getCustomCssFileName());
+        return OW::getStorage()->getFileUrl($this->getUserfileImagesDir() . ($mobile ? 'mobile_' : '') . $theme->getCustomCssFileName());
     }
 
     /**
@@ -1046,7 +955,7 @@ final class BOL_ThemeService
      * @param string $key
      * @return BOL_Theme
      */
-    public function findThemeByKey( $key )
+    public function findThemeByKey($key)
     {
         return $this->themeDao->findByKey(trim($key));
     }
@@ -1057,11 +966,11 @@ final class BOL_ThemeService
      * @param string $key
      * @return boolean
      */
-    public function themeExists( $key )
+    public function themeExists($key)
     {
         $dto = $this->findThemeByKey(trim($key));
 
-        return ($dto !== null);
+        return $dto !== null;
     }
 
     /**
@@ -1070,32 +979,30 @@ final class BOL_ThemeService
      * @param string $string
      * @return string
      */
-    private function removeCssComments( $string )
+    private function removeCssComments($string)
     {
-        return trim(preg_replace("/[\s\S]*?\*\//", "", preg_replace("/\/\*[\s\S]*?\*\//", '', $string)));
+        return trim(preg_replace("/[\s\S]*?\*\//", '', preg_replace("/\/\*[\s\S]*?\*\//", '', $string)));
     }
 
     /**
      *
      * @param integer $themeId
      */
-    public function resetTheme( $themeId )
+    public function resetTheme($themeId)
     {
         $this->themeControlValueDao->deleteThemeControlValues($themeId);
         $controls = $this->themeControlValueDao->findByThemeId($themeId);
 
         /* @var $control BOL_ThemeControlValue */
-        foreach ( $controls as $control )
-        {
-            if ( strstr($control->getValue(), "url") )
-            {
+        foreach ($controls as $control) {
+            if (strstr($control->getValue(), 'url')) {
                 $this->unlinkControlValueImage($control->getValue());
             }
         }
         //TODO remake temp fix
-        $curentValue = json_decode(OW::getConfig()->getValue("base", "master_page_theme_info"), true);
+        $curentValue = json_decode(OW::getConfig()->getValue('base', 'master_page_theme_info'), true);
         unset($curentValue[$themeId]);
-        OW::getConfig()->saveConfig("base", "master_page_theme_info", json_encode($curentValue));
+        OW::getConfig()->saveConfig('base', 'master_page_theme_info', json_encode($curentValue));
         $this->updateCustomCssFile($themeId);
     }
 
@@ -1105,7 +1012,7 @@ final class BOL_ThemeService
      * @param string $themeName
      * @return string
      */
-    public function getStaticDir( $themeName, $mobile = false )
+    public function getStaticDir($themeName, $mobile = false)
     {
         return OW_DIR_STATIC_THEME . $themeName . ($mobile ? DS . self::DIR_NAME_MOBILE : '') . DS;
     }
@@ -1116,7 +1023,7 @@ final class BOL_ThemeService
      * @param string $themeName
      * @return string
      */
-    public function getStaticUrl( $themeName, $mobile = false )
+    public function getStaticUrl($themeName, $mobile = false)
     {
         return OW_URL_STATIC_THEMES . $themeName . ($mobile ? '/' . self::DIR_NAME_MOBILE : '') . '/';
     }
@@ -1127,7 +1034,7 @@ final class BOL_ThemeService
      * @param $themeName
      * @return string
      */
-    public function getStaticImagesDir( $themeName, $mobile = false )
+    public function getStaticImagesDir($themeName, $mobile = false)
     {
         return $this->getStaticDir($themeName, $mobile) . self::DIR_NAME_IMAGES . DS;
     }
@@ -1138,7 +1045,7 @@ final class BOL_ThemeService
      * @param string $themeName
      * @return string
      */
-    public function getStaticImagesUrl( $themeName, $mobile = false )
+    public function getStaticImagesUrl($themeName, $mobile = false)
     {
         return $this->getStaticUrl($themeName, $mobile) . self::DIR_NAME_IMAGES . '/';
     }
@@ -1149,7 +1056,7 @@ final class BOL_ThemeService
      * @param string $themeName
      * @return string
      */
-    public function getRootDir( $themeName, $mobile = false )
+    public function getRootDir($themeName, $mobile = false)
     {
         return OW_DIR_THEME . $themeName . ($mobile ? DS . self::DIR_NAME_MOBILE : '') . DS;
     }
@@ -1160,9 +1067,9 @@ final class BOL_ThemeService
      * @param string $themeName
      * @return string
      */
-    public function getDecoratorsDir( $themeName )
+    public function getDecoratorsDir($themeName)
     {
-        return $this->getRootDir($themeName) . "decorators" . DS;
+        return $this->getRootDir($themeName) . 'decorators' . DS;
     }
 
     /**
@@ -1171,9 +1078,9 @@ final class BOL_ThemeService
      * @param string $themeName
      * @return string
      */
-    public function getMasterPagesDir( $themeName, $mobile = false )
+    public function getMasterPagesDir($themeName, $mobile = false)
     {
-        return $this->getRootDir($themeName, $mobile) . "master_pages" . DS;
+        return $this->getRootDir($themeName, $mobile) . 'master_pages' . DS;
     }
 
     /**
@@ -1182,9 +1089,9 @@ final class BOL_ThemeService
      * @param string $themeName
      * @return string
      */
-    public function getImagesDir( $themeName, $mobile = false )
+    public function getImagesDir($themeName, $mobile = false)
     {
-        return $this->getRootDir($themeName, $mobile) . "images" . DS;
+        return $this->getRootDir($themeName, $mobile) . 'images' . DS;
     }
 
     /**
@@ -1193,20 +1100,19 @@ final class BOL_ThemeService
      * @param integer $themeId
      * @param string $controlName
      */
-    public function resetImageControl( $themeId, $controlName )
+    public function resetImageControl($themeId, $controlName)
     {
         $controlValue = $this->themeControlValueDao->findByTcNameAndThemeId($controlName, $themeId);
 
-        if ( $controlValue !== null )
-        {
+        if ($controlValue !== null) {
             $this->unlinkControlValueImage($controlValue->getValue());
             $this->themeControlValueDao->delete($controlValue);
         }
 
         //TODO remove dirty hack
-        $curentValue = json_decode(OW::getConfig()->getValue("base", "master_page_theme_info"), true);
+        $curentValue = json_decode(OW::getConfig()->getValue('base', 'master_page_theme_info'), true);
         unset($curentValue[$themeId][$controlName]);
-        OW::getConfig()->saveConfig("base", "master_page_theme_info", json_encode($curentValue));
+        OW::getConfig()->saveConfig('base', 'master_page_theme_info', json_encode($curentValue));
 
         $this->updateCustomCssFile($themeId);
     }
@@ -1217,13 +1123,12 @@ final class BOL_ThemeService
      * @param type $themeId
      * @return BOL_Theme
      */
-    private function getThemeById( $id )
+    private function getThemeById($id)
     {
         $theme = $this->themeDao->findById($id);
 
-        if ( $theme === null )
-        {
-            throw new InvalidArgumentException("Can't find theme `" . $id . "` in DB!");
+        if ($theme === null) {
+            throw new InvalidArgumentException("Can't find theme `" . $id . '` in DB!');
         }
 
         return $theme;
@@ -1234,39 +1139,35 @@ final class BOL_ThemeService
      * @param $name
      * @param bool $processTheme
      */
-    public function updateThemeInfo( $name, $processTheme = false )
+    public function updateThemeInfo($name, $processTheme = false)
     {
         $xmlInfo = $this->getThemeXmlInfoForKey($name);
 
-        if ( empty($xmlInfo) )
-        {
+        if (empty($xmlInfo)) {
             return;
         }
 
         $themeDto = $this->findThemeByKey($name);
 
-        if ( empty($themeDto) )
-        {
+        if (empty($themeDto)) {
             return;
         }
 
-        $themeDto->setKey($xmlInfo["key"]);
-        $themeDto->setTitle($xmlInfo["name"]);
+        $themeDto->setKey($xmlInfo['key']);
+        $themeDto->setTitle($xmlInfo['name']);
         $themeDto->setDescription(json_encode($xmlInfo));
-        $themeDto->setSidebarPosition($xmlInfo["sidebarPosition"]);
-        $themeDto->setDeveloperKey($xmlInfo["developerKey"]);
+        $themeDto->setSidebarPosition($xmlInfo['sidebarPosition']);
+        $themeDto->setDeveloperKey($xmlInfo['developerKey']);
 
-        if ( $themeDto->getBuild() < $xmlInfo["build"] )
-        {
-            $themeDto->setBuild($xmlInfo["build"]);
+        if ($themeDto->getBuild() < $xmlInfo['build']) {
+            $themeDto->setBuild($xmlInfo['build']);
             $themeDto->setUpdate(self::THEME_STATUS_UP_TO_DATE);
             $processTheme = true;
         }
 
         $this->themeDao->save($themeDto);
 
-        if ( $processTheme )
-        {
+        if ($processTheme) {
             $this->processTheme($themeDto);
         }
     }
@@ -1279,8 +1180,7 @@ final class BOL_ThemeService
         $dbThemes = $this->themeDao->findAll();
 
         /* @var $theme BOL_Theme */
-        foreach ( $dbThemes as $theme )
-        {
+        foreach ($dbThemes as $theme) {
             $this->updateThemeInfo($theme->getKey());
         }
     }
@@ -1293,17 +1193,14 @@ final class BOL_ThemeService
         $themes = $this->themeDao->findAll();
 
         /* @var $theme BOL_Theme */
-        foreach ( $themes as $theme )
-        {
+        foreach ($themes as $theme) {
             $themeInfo = $this->getThemeXmlInfoForKey($theme->getKey());
 
-            if ( empty($themeInfo) )
-            {
+            if (empty($themeInfo)) {
                 continue;
             }
 
-            if ( $themeInfo["build"] > $theme->getBuild() )
-            {
+            if ($themeInfo['build'] > $theme->getBuild()) {
                 $this->updateThemeInfo($theme->getKey());
             }
         }
@@ -1335,69 +1232,61 @@ final class BOL_ThemeService
      * @param string $key
      * @return array
      */
-    public function getThemeXmlInfoForKey( $key )
+    public function getThemeXmlInfoForKey($key)
     {
         return $this->getThemeXmlInfo($this->getRootDir(trim($key)) . self::THEME_XML);
     }
     /* -------------------------------------------------------------------------------------------------------------- */
 
-    private function getThemeXmlInfo( $themeXmlPath )
+    private function getThemeXmlInfo($themeXmlPath)
     {
-        if ( !file_exists($themeXmlPath) )
-        {
-            OW::getLogger()->addEntry(__CLASS__ . "::" . __FUNCTION__ . " - `" . $themeXmlPath . "` not found");
-            return null;
+        if (!file_exists($themeXmlPath)) {
+            OW::getLogger()->addEntry(__CLASS__ . '::' . __FUNCTION__ . ' - `' . $themeXmlPath . '` not found');
+            return;
         }
 
         //$propList = array("key", "developerKey", "name", "description", "license", "author", "build", "copyright", "licenseUrl");
-        $propList = array("key", "name", "description");
+        $propList = ['key', 'name', 'description'];
         $xmlInfo = UTIL_String::xmlToArray(file_get_contents($themeXmlPath));
 
         //TODO refactor
-        if ( empty($xmlInfo["developerKey"]) )
-        {
-            $xmlInfo["developerKey"] = null;
+        if (empty($xmlInfo['developerKey'])) {
+            $xmlInfo['developerKey'] = null;
         }
 
-        if ( empty($xmlInfo["build"]) )
-        {
-            $xmlInfo["build"] = 0;
+        if (empty($xmlInfo['build'])) {
+            $xmlInfo['build'] = 0;
         }
 
-        if ( !$xmlInfo )
-        {
-            OW::getLogger()->addEntry(__CLASS__ . "::" . __FUNCTION__ . " - invalid `" . $themeXmlPath . "`");
-            return null;
+        if (!$xmlInfo) {
+            OW::getLogger()->addEntry(__CLASS__ . '::' . __FUNCTION__ . ' - invalid `' . $themeXmlPath . '`');
+            return;
         }
 
-        foreach ( $propList as $prop )
-        {
-            if ( empty($xmlInfo[$prop]) )
-            {
-                OW::getLogger()->addEntry(__CLASS__ . "::" . __FUNCTION__ . " - in `" . $themeXmlPath . "` property `" . $prop . "` not found");
-                return null;
+        foreach ($propList as $prop) {
+            if (empty($xmlInfo[$prop])) {
+                OW::getLogger()->addEntry(__CLASS__ . '::' . __FUNCTION__ . ' - in `' . $themeXmlPath . '` property `' . $prop . '` not found');
+                return;
             }
         }
 
-        $sidebarPositions = array(BOL_ThemeDao::VALUE_SIDEBAR_POSITION_LEFT, BOL_ThemeDao::VALUE_SIDEBAR_POSITION_RIGHT,
-            BOL_ThemeDao::VALUE_SIDEBAR_POSITION_NONE);
+        $sidebarPositions = [BOL_ThemeDao::VALUE_SIDEBAR_POSITION_LEFT, BOL_ThemeDao::VALUE_SIDEBAR_POSITION_RIGHT,
+            BOL_ThemeDao::VALUE_SIDEBAR_POSITION_NONE];
 
-        if ( empty($xmlInfo["sidebarPosition"]) || !in_array($xmlInfo["sidebarPosition"], $sidebarPositions) )
-        {
-            $xmlInfo["sidebarPosition"] = BOL_ThemeDao::VALUE_SIDEBAR_POSITION_NONE;
+        if (empty($xmlInfo['sidebarPosition']) || !in_array($xmlInfo['sidebarPosition'], $sidebarPositions)) {
+            $xmlInfo['sidebarPosition'] = BOL_ThemeDao::VALUE_SIDEBAR_POSITION_NONE;
         }
 
-        $xmlInfo["build"] = (int) $xmlInfo["build"];
+        $xmlInfo['build'] = (int) $xmlInfo['build'];
 
         return $xmlInfo;
     }
 
-    private function unlinkControlValueImage( $controlValue )
+    private function unlinkControlValueImage($controlValue)
     {
-        $fileName = basename(str_replace(")", "", $controlValue));
+        $fileName = basename(str_replace(')', '', $controlValue));
 
-        if ( OW::getStorage()->fileExists($this->getUserfileImagesDir() . $fileName) )
-        {
+        if (OW::getStorage()->fileExists($this->getUserfileImagesDir() . $fileName)) {
             OW::getStorage()->removeFile($this->getUserfileImagesDir() . $fileName);
         }
     }

@@ -1025,7 +1025,7 @@ html body .ow_admin_permissions.ow_superwide {
 }
 
 .ow_admin_choose_theme .theme_title{
-    font-family: "core_sans_e55_medium","Trebuchet MS","Helvetica CY",sans-serif;
+    font-weight: bold;
 }
 
 .ow_admin_choose_theme .theme_desc{

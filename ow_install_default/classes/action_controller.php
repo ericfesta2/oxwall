@@ -9,6 +9,8 @@ class INSTALL_ActionController extends INSTALL_Renderable
     {
     }
 
+    public function init(array $dispatchAttrs = [], bool $dbReady = false) {}
+
     protected function setPageTitle(string $title)
     {
         $this->title = $title;

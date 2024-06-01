@@ -258,10 +258,6 @@ table.plugin_table
     text-align: center;
 }
 
-.clearfix{
-    zoom: 1;
-}
-
 .clearfix:after {
     content: ".";
     display: block;
