@@ -8,10 +8,13 @@ jobs:
   Create-New-Release:
     runs-on: ubuntu-latest
     steps:
+      - name: Check Out Repository
+        uses: actions/checkout@v4
       - name: Install Dependencies
         uses: php-actions/composer@v6
         with:
           php_version: 8.3
       # - run: ow_libraries/vendor/bin/phpunit ow_unittest
+      - run: cd $GITHUB_WORKSPACE
       - run: mv ow_install_default ow_install
       - run: mv ow_includes/config.php.default ow_includes/config.php
