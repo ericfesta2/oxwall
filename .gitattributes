@@ -1,0 +1,13 @@
+.dockerignore export-ignore
+.gitattributes export-ignore
+.github export-ignore
+.gitignore export-ignore
+.php-cs-fixer.php export-ignore
+*.md export-ignore
+composer.json export-ignore
+composer.lock export-ignore
+*Dockerfile export-ignore
+docker-compose.yml export-ignore
+LICENSE export-ignore
+ow_install_default export-ignore
+phpunitgen.php export-ignore

@@ -18,3 +18,10 @@ jobs:
       - run: cd $GITHUB_WORKSPACE
       - run: mv ow_install_default ow_install
       - run: mv ow_includes/config.php.default ow_includes/config.php
+      - run: git archive HEAD --output oxwall-"${GITHUB_REF##*/}".zip
+      - name: Package Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            oxwall-*.zip
+          token: ${{ secrets.CREATE_RELEASE_TOKEN }}
