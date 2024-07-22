@@ -132,10 +132,6 @@ iframe {
         --page-max-width: 2000px;
         --mobile-menu-background-color: #404040F0;
     }
-
-    .htmlarea_styles {
-        color: #FFF;
-    }
 }
 
 * {
@@ -2032,10 +2028,9 @@ input[type=submit].ow_mild_red,
 input[type=button].ow_mild_red  {
     background-color: transparent;
 }
-/* wysiwyg styles */
+/* wysiwyg styles; var() doesn't work here */
 .htmlarea_styles{
     margin: 0;
-    color: #292929;
     font-size: 16px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 18px;

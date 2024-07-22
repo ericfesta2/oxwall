@@ -64,31 +64,23 @@
                             }
                         });
 
-                        if( self.isMsie() ){
-                            if( !baseCss || !baseCss.rules ){
-                                return;
-                            }
-
-                            var crules = baseCss.rules;
-                        }
-                        else{
-                            if( !baseCss || !baseCss.cssRules ){
-                                return;
-                            }
-
-                            var crules = baseCss.cssRules;
+                        if (!baseCss || !baseCss.cssRules){
+                            return;
                         }
 
-                        window.htmlAreaData.tempStyles = '';
-                        $.each( crules,
+                        var crules = baseCss.cssRules;
+
+                        const textColor = getComputedStyle(document.body).getPropertyValue('--main-text-color');
+                        window.htmlAreaData.tempStyles = '.htmlarea_styles { color: ' + textColor + ' }';
+
+                        $.each(crules,
                             function(key, data){
-                                if( data.selectorText && data.selectorText.match(/.htmlarea_styles/i) ){
-                                    window.htmlAreaData.tempStyles += ( self.isMsie() ? data.selectorText + '{' + data.style.cssText + '}' : data.cssText );
+                                if (data.selectorText && data.selectorText.match(/.htmlarea_styles/i)){
+                                    window.htmlAreaData.tempStyles += data.cssText;
                                 }
                             }
-                            );
+                        );
                     }
-
 
                     var icontents = iframe.get(0).contentDocument;
 

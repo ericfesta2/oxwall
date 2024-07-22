@@ -14,7 +14,8 @@ ARG BASE_DIR
 
 COPY php.ini /usr/local/etc/php/conf.d/
 
-RUN apt-get update && apt-get install -y \
+RUN --mount=type=cache,target=/var/cache/apt \
+    apt-get update && apt-get install -y \
         cron \
         libjpeg-dev \
         libfreetype6-dev \
