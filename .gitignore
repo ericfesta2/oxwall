@@ -1,7 +1,5 @@
 ow_libraries/htmlpurifier
 ow_libraries/html5lib-php-0.1/
-ow_static/themes
-ow_smarty/template_c
 nbproject
 .settings
 .project
@@ -30,6 +28,10 @@ ow_static/themes/*
 
 ow_pluginfiles/*
 !ow_pluginfiles/.htaccess
+!ow_pluginfiles/admin/languages/.blank
+!ow_pluginfiles/base/avatars/.blank
+!ow_pluginfiles/ow/.blank
+!ow_pluginfiles/plugin/.blank
 
 ow_userfiles/*
 !ow_userfiles/.htaccess
@@ -49,3 +51,4 @@ ow_log/*
 # DO NOT move, edit, or delete the line starting with "# FOR RELEASES:"
 ow_includes/config.php
 ow_libraries/vendor
+ow_smarty/template_c

@@ -1358,13 +1358,16 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
     border-radius: 4px;
     z-index: 3;
     height: 18px;
-    padding: 0 0 0 5px;
+    padding: 4px 6px;
     vertical-align: top;
     cursor: pointer;
     transition: background-color .3s;
 }
+.ow_context_action_block .ow_context_action {
+    padding: 4px 6px;
+}
 .ow_context_action_value {
-    font-size: 13px;
+    font-size: 14px;
     display: inline-block;
     padding: 0 5px 0 0;
     text-decoration: none;
@@ -1397,7 +1400,9 @@ ul.ow_console_dropdown li:last-child .ow_console_dropdown_cont {
 .ow_context_action.active .ow_context_action_value {
     text-decoration: none;
 }
-
+.ow_bl .ow_context_action a {
+    background-color: transparent !important;
+}
 .ow_context_action_list {
     min-width: 100px;
     text-align: left;

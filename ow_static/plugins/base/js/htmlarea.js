@@ -200,40 +200,18 @@
             this.iframe[0].contentWindow.focus();
             var r = this.getRange();
             var s = this.getSelection();
-            if ( $.browser.msie ) {
-                r.pasteHTML(html);
-                r.select();
-            } else if ( $.browser.mozilla && parseInt($.browser.version) < 12  ){
-
-            }else if ($.browser.mozilla) {
-                r.deleteContents();
-                var node = $((html.indexOf("<") != 0) ? $("<span/>").append(html) : html)[0];
-                r.insertNode(node);
-                r.setStartAfter(node);
-                r.setEndAfter(node);
-                r.collapse(false);
-                s.removeAllRanges();
-                s.addRange(r);
-                  //this.ec("insertHTML", false, html);
-            } else {
-                r.deleteContents();
-                var node = $(this.iframe[0].contentWindow.document.createElement("span")).append($((html.indexOf("<") != 0) ? "<span>" + html + "</span>" : html))[0];
-                r.insertNode(node);
-                r.setStartAfter(node);
-                r.setEndAfter(node);
-                r.collapse(false);
-                s.removeAllRanges();
-                s.addRange(r);
-            }
+            // if ($.browser.mozilla) {
+            r.deleteContents();
+            var node = $((html.indexOf("<") != 0) ? $("<span/>").append(html) : html)[0];
+            r.insertNode(node);
+            r.setStartAfter(node);
+            r.setEndAfter(node);
+            r.collapse(false);
+            s.removeAllRanges();
+            s.addRange(r);
             this.updateTextArea();
-
         },
         pasteHTML: function(html) {
-            if( !this.isMsie() ){
-                this.pasteHTMLSpec(html);
-                return;
-            }
-            
             var window = this.iframe[0].contentWindow, document = window.document;
             var sel, range;
             if (window.getSelection) {

@@ -38,13 +38,13 @@
  */
 final class MAILBOX_BOL_ConversationService
 {
-    const EVENT_MARK_CONVERSATION = 'mailbox.mark_conversation';
-    const EVENT_DELETE_CONVERSATION = 'mailbox.delete_conversation';
+    public const EVENT_MARK_CONVERSATION = 'mailbox.mark_conversation';
+    public const EVENT_DELETE_CONVERSATION = 'mailbox.delete_conversation';
 
-    const MARK_TYPE_READ = 'read';
-    const MARK_TYPE_UNREAD = 'unread';
+    public const MARK_TYPE_READ = 'read';
+    public const MARK_TYPE_UNREAD = 'unread';
 
-    const CHAT_CONVERSATION_SUBJECT = 'mailbox_chat_conversation';
+    public const CHAT_CONVERSATION_SUBJECT = 'mailbox_chat_conversation';
 
     /**
      * @var MAILBOX_BOL_ConversationDao
@@ -70,12 +70,12 @@ final class MAILBOX_BOL_ConversationService
      * @var array
      */
     private static $allowedExtensions =
-        array(
+        [
             'txt', 'doc', 'docx', 'sql', 'csv', 'xls', 'ppt',
             'jpg', 'jpeg', 'png', 'gif', 'bmp', 'psd', 'ai', 'pdf',
             'avi', 'wmv', 'mp3', '3gp', 'flv', 'mkv', 'mpeg', 'mpg',
             'zip', 'gz', '.tgz', 'gzip', '7z', 'bzip2', 'rar'
-        );
+        ];
     /**
      * Class instance
      *
@@ -102,19 +102,17 @@ final class MAILBOX_BOL_ConversationService
      */
     public static function getInstance()
     {
-        if ( self::$classInstance === null )
-        {
+        if (self::$classInstance === null) {
             self::$classInstance = new self();
         }
 
         return self::$classInstance;
     }
 
-    public function getUnreadMessageListForConsole( $userId, $first, $count, $lastPingTime, $ignoreList = array() )
+    public function getUnreadMessageListForConsole($userId, $first, $count, $lastPingTime, $ignoreList = [])
     {
-        if ( empty($userId) || !isset($first) || !isset($count) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($userId) || !isset($first) || !isset($count)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
         return $this->conversationDao->getUnreadMessageListForConsole($userId, $first, $count, $lastPingTime, $ignoreList);
@@ -130,16 +128,14 @@ final class MAILBOX_BOL_ConversationService
      *
      * retunn int
      */
-    public function markConversation( array $conversationsId, $userId, $markType = self::MARK_TYPE_READ )
+    public function markConversation(array $conversationsId, $userId, $markType = self::MARK_TYPE_READ)
     {
-        if ( empty($userId) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($userId)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
-        if ( empty($conversationsId) || !is_array($conversationsId) )
-        {
-            throw new InvalidArgumentException("Wrong parameter conversationsId!");
+        if (empty($conversationsId) || !is_array($conversationsId)) {
+            throw new InvalidArgumentException('Wrong parameter conversationsId!');
         }
 
         $userId = (int) $userId;
@@ -147,22 +143,18 @@ final class MAILBOX_BOL_ConversationService
 
         $count = 0;
 
-        foreach ( $conversations as $key => $value )
-        {
+        foreach ($conversations as $key => $value) {
             $conversation = &$conversations[$key];
 
             $lastMessages = $this->lastMessageDao->findByConversationId($conversation->id);
-            if (!empty($lastMessages))
-            {
+            if (!empty($lastMessages)) {
                 $readBy = MAILBOX_BOL_ConversationDao::READ_NONE;
                 $isOpponentLastMessage = false;
 
-                switch ( $userId )
-                {
-                    case $conversation->initiatorId :
+                switch ($userId) {
+                    case $conversation->initiatorId:
 
-                        if ( $lastMessages->initiatorMessageId < $lastMessages->interlocutorMessageId )
-                        {
+                        if ($lastMessages->initiatorMessageId < $lastMessages->interlocutorMessageId) {
                             $isOpponentLastMessage = true;
                             $conversation->notificationSent = 1;
                         }
@@ -171,10 +163,9 @@ final class MAILBOX_BOL_ConversationService
 
                         break;
 
-                    case $conversation->interlocutorId :
+                    case $conversation->interlocutorId:
 
-                        if ( $lastMessages->initiatorMessageId > $lastMessages->interlocutorMessageId )
-                        {
+                        if ($lastMessages->initiatorMessageId > $lastMessages->interlocutorMessageId) {
                             $isOpponentLastMessage = true;
                             $conversation->notificationSent = 1;
                         }
@@ -189,30 +180,28 @@ final class MAILBOX_BOL_ConversationService
 //                    continue;
 //                }
 
-                switch ( $markType )
-                {
-                    case self::MARK_TYPE_READ :
+                switch ($markType) {
+                    case self::MARK_TYPE_READ:
                         $conversation->read = (int) $conversation->read | $readBy;
                         break;
 
-                    case self::MARK_TYPE_UNREAD :
+                    case self::MARK_TYPE_UNREAD:
                         $conversation->read = (int) $conversation->read & (~$readBy);
                         break;
                 }
 
                 $this->conversationDao->save($conversation);
 
-                if ( $this->conversationDao->getAffectedRows() > 0 )
-                {
-                    $count++;
+                if ($this->conversationDao->getAffectedRows() > 0) {
+                    ++$count;
                 }
             }
         }
 
-        $paramList = array(
+        $paramList = [
             'conversationIdList' => $conversationsId,
             'userId' => $userId,
-            'markType' => $markType);
+            'markType' => $markType];
 
         $event = new OW_Event(self::EVENT_MARK_CONVERSATION, $paramList);
         OW::getEventManager()->trigger($event);
@@ -230,7 +219,7 @@ final class MAILBOX_BOL_ConversationService
      *
      * retunn int
      */
-    public function markRead( array $conversationsId, $userId )
+    public function markRead(array $conversationsId, $userId)
     {
         return $this->markConversation($conversationsId, $userId, self::MARK_TYPE_READ);
     }
@@ -241,12 +230,11 @@ final class MAILBOX_BOL_ConversationService
      * @param $messageId
      * @return bool
      */
-    public function markMessageRead( $messageId )
+    public function markMessageRead($messageId)
     {
         $message = $this->messageDao->findById($messageId);
 
-        if ( !$message )
-        {
+        if (!$message) {
             return false;
         }
 
@@ -256,15 +244,14 @@ final class MAILBOX_BOL_ConversationService
         return true;
     }
 
-    public function markMessageAuthorizedToRead( $messageId )
+    public function markMessageAuthorizedToRead($messageId)
     {
         /**
          * @var MAILBOX_BOL_Message $message
          */
         $message = $this->messageDao->findById($messageId);
 
-        if ( !$message )
-        {
+        if (!$message) {
             return false;
         }
 
@@ -274,15 +261,14 @@ final class MAILBOX_BOL_ConversationService
         return $message;
     }
 
-    public function markMessageAsSystem( $messageId )
+    public function markMessageAsSystem($messageId)
     {
         /**
          * @var MAILBOX_BOL_Message $message
          */
         $message = $this->messageDao->findById($messageId);
 
-        if ( !$message )
-        {
+        if (!$message) {
             return false;
         }
 
@@ -300,7 +286,7 @@ final class MAILBOX_BOL_ConversationService
      *
      * retunn int
      */
-    public function markUnread( array $conversationsId, $userId )
+    public function markUnread(array $conversationsId, $userId)
     {
         return $this->markConversation($conversationsId, $userId, self::MARK_TYPE_UNREAD);
     }
@@ -314,16 +300,14 @@ final class MAILBOX_BOL_ConversationService
      *
      * return int
      */
-    public function deleteConversation( array $conversationsId, $userId )
+    public function deleteConversation(array $conversationsId, $userId)
     {
-        if ( empty($userId) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($userId)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
-        if ( empty($conversationsId) || !is_array($conversationsId) )
-        {
-            throw new InvalidArgumentException("Wrong parameter conversationsId!");
+        if (empty($conversationsId) || !is_array($conversationsId)) {
+            throw new InvalidArgumentException('Wrong parameter conversationsId!');
         }
 
         $userId = (int) $userId;
@@ -331,8 +315,7 @@ final class MAILBOX_BOL_ConversationService
 
         $count = 0;
 
-        foreach ( $conversations as $key => $value )
-        {
+        foreach ($conversations as $key => $value) {
             /**
              * @var MAILBOX_BOL_Conversation $conversation
              */
@@ -340,14 +323,13 @@ final class MAILBOX_BOL_ConversationService
 
             $deletedBy = MAILBOX_BOL_ConversationDao::DELETED_NONE;
 
-            switch ( $userId )
-            {
-                case $conversation->initiatorId :
+            switch ($userId) {
+                case $conversation->initiatorId:
                     $deletedBy = MAILBOX_BOL_ConversationDao::DELETED_INITIATOR;
                     $conversation->initiatorDeletedTimestamp = time();
                     break;
 
-                case $conversation->interlocutorId :
+                case $conversation->interlocutorId:
                     $deletedBy = MAILBOX_BOL_ConversationDao::DELETED_INTERLOCUTOR;
                     $conversation->interlocutorDeletedTimestamp = time();
                     break;
@@ -355,38 +337,33 @@ final class MAILBOX_BOL_ConversationService
 
             $conversation->deleted = (int) $conversation->deleted | $deletedBy;
 
-            if ( $conversation->deleted == MAILBOX_BOL_ConversationDao::DELETED_ALL )
-            {
+            if ($conversation->deleted === MAILBOX_BOL_ConversationDao::DELETED_ALL) {
                 $this->messageDao->deleteByConversationId($conversation->id);
                 $this->lastMessageDao->deleteByConversationId($conversation->id);
                 $this->conversationDao->deleteById($conversation->id);
-                $this->deleteAttachmentsByConversationList(array($conversation->id));
+                $this->deleteAttachmentsByConversationList([$conversation->id]);
 
-                $event = new OW_Event(self::EVENT_DELETE_CONVERSATION, array('conversationDto' => $conversation));
+                $event = new OW_Event(self::EVENT_DELETE_CONVERSATION, ['conversationDto' => $conversation]);
                 OW::getEventManager()->trigger($event);
-            }
-            else
-            {
+            } else {
                 $this->conversationDao->save($conversation);
 
                 // clear query cache
-                switch ( $userId )
-                {
-                    case $conversation->initiatorId :
-                        OW::getCacheManager()->clean(array(MAILBOX_BOL_ConversationDao::CACHE_TAG_USER_CONVERSATION_COUNT . $conversation->initiatorId));
+                switch ($userId) {
+                    case $conversation->initiatorId:
+                        OW::getCacheManager()->clean([MAILBOX_BOL_ConversationDao::CACHE_TAG_USER_CONVERSATION_COUNT . $conversation->initiatorId]);
                         break;
 
-                    case $conversation->interlocutorId :
-                        OW::getCacheManager()->clean(array(MAILBOX_BOL_ConversationDao::CACHE_TAG_USER_CONVERSATION_COUNT . $conversation->interlocutorId));
+                    case $conversation->interlocutorId:
+                        OW::getCacheManager()->clean([MAILBOX_BOL_ConversationDao::CACHE_TAG_USER_CONVERSATION_COUNT . $conversation->interlocutorId]);
                         break;
                 }
             }
 
-            if ( $this->conversationDao->getAffectedRows() > 0 )
-            {
-                $count++;
+            if ($this->conversationDao->getAffectedRows() > 0) {
+                ++$count;
 
-                OW::getCacheManager()->clean(array(MAILBOX_BOL_ConversationDao::CACHE_TAG_USER_CONVERSATION_COUNT . $userId));
+                OW::getCacheManager()->clean([MAILBOX_BOL_ConversationDao::CACHE_TAG_USER_CONVERSATION_COUNT . $userId]);
             }
         }
 
@@ -406,20 +383,18 @@ final class MAILBOX_BOL_ConversationService
      *
      * return MAILBOX_BOL_Conversation
      */
-    public function createConversation( $initiatorId, $interlocutorId, $subject, $text = '' )
+    public function createConversation($initiatorId, $interlocutorId, $subject, $text = '')
     {
-        if ( empty($initiatorId) || empty($interlocutorId) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($initiatorId) || empty($interlocutorId)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
         $initiatorId = (int) $initiatorId;
         $interlocutorId = (int) $interlocutorId;
         $subject = trim(strip_tags($subject));
 
-        if ( empty($subject) )
-        {
-            throw new InvalidArgumentException("Empty string params were provided!");
+        if (empty($subject)) {
+            throw new InvalidArgumentException('Empty string params were provided!');
         }
 
         // create conversation
@@ -433,19 +408,17 @@ final class MAILBOX_BOL_ConversationService
         $this->conversationDao->save($conversation);
 
         $text = trim($text);
-        if (!empty($text))
-        {
+        if (!empty($text)) {
             $this->createMessage($conversation, $initiatorId, $text);
         }
 
         return $conversation;
     }
 
-    public function createChatConversation( $initiatorId, $interlocutorId )
+    public function createChatConversation($initiatorId, $interlocutorId)
     {
-        if ( empty($initiatorId) || empty($interlocutorId) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($initiatorId) || empty($interlocutorId)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
         $initiatorId = (int) $initiatorId;
@@ -471,27 +444,24 @@ final class MAILBOX_BOL_ConversationService
      * @throws InvalidArgumentException
      * @return MAILBOX_BOL_Conversation
      */
-    public function getConversationMessagesList( $conversationId, $first, $count )
+    public function getConversationMessagesList($conversationId, $first, $count)
     {
-        if ( empty($conversationId) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($conversationId)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
         $deletedTimestamp = $this->getConversationDeletedTimestamp($conversationId);
 
         $dtoList = $this->messageDao->findListByConversationId($conversationId, $count, $deletedTimestamp);
-        $messageIdList = array();
-        foreach($dtoList as $message)
-        {
+        $messageIdList = [];
+        foreach ($dtoList as $message) {
             $messageIdList[] = $message->id;
         }
 
         $attachmentsByMessageList = $this->findAttachmentsByMessageIdList($messageIdList);
 
-        $list = array();
-        foreach($dtoList as $message)
-        {
+        $list = [];
+        foreach ($dtoList as $message) {
             $list[] = $this->getMessageData($message, $attachmentsByMessageList);
         }
 
@@ -502,9 +472,9 @@ final class MAILBOX_BOL_ConversationService
      * @param MAILBOX_BOL_Message $message
      * @return array
      */
-    public function getMessageData( $message, $attachmentsByMessageList = null )
+    public function getMessageData($message, $attachmentsByMessageList = null)
     {
-        $item = array();
+        $item = [];
 
         $item['convId'] = (int)$message->conversationId;
         $item['mode'] = $this->getConversationMode((int)$message->conversationId);
@@ -514,36 +484,32 @@ final class MAILBOX_BOL_ConversationService
         $item['timeStamp'] = (int)$message->timeStamp;
 
         $militaryTime = (bool) OW::getConfig()->getValue('base', 'military_time');
-        $item['timeLabel'] = $militaryTime ? strftime("%H:%M", (int)$message->timeStamp) : strftime("%I:%M%p", (int)$message->timeStamp);
+        $item['timeLabel'] = $militaryTime ? strftime('%H:%M', (int)$message->timeStamp) : strftime('%I:%M%p', (int)$message->timeStamp);
         $item['recipientId'] = (int)$message->recipientId;
         $item['senderId'] = (int)$message->senderId;
-        $item['isAuthor'] = (bool)((int)$message->senderId == OW::getUser()->getId());
+        $item['isAuthor'] = (bool)((int)$message->senderId === OW::getUser()->getId());
         $item['recipientRead'] = (int)$message->recipientRead;
         $item['isSystem'] = (int)$message->isSystem;
         $item['byCreditsMessage'] = false;
         $item['promotedMessage'] = false;
         $item['authErrorMessages'] = false;
-        $item['attachments'] = array();
+        $item['attachments'] = [];
 
         $conversation = $this->getConversation($message->conversationId);
-        if ( (int)$conversation->initiatorId == OW::getUser()->getId() )
-        {
+        if ((int)$conversation->initiatorId === OW::getUser()->getId()) {
             $item['conversationViewed'] = (bool)((int)$conversation->viewed & MAILBOX_BOL_ConversationDao::VIEW_INITIATOR);
         }
 
-        if ( (int)$conversation->interlocutorId == OW::getUser()->getId() )
-        {
+        if ((int)$conversation->interlocutorId === OW::getUser()->getId()) {
             $item['conversationViewed'] = (bool)((int)$conversation->viewed & MAILBOX_BOL_ConversationDao::VIEW_INTERLOCUTOR);
         }
 
         $actionName = '';
-        if ($item['mode'] == 'mail')
-        {
+        if ($item['mode'] === 'mail') {
             $actionName = 'read_message';
         }
 
-        if ($item['mode'] == 'chat')
-        {
+        if ($item['mode'] === 'chat') {
             $actionName = 'read_chat_message';
         }
 
@@ -551,59 +517,44 @@ final class MAILBOX_BOL_ConversationService
 
         $readMessageAuthorized = true;
 
-        if ( (int)$message->senderId != OW::getUser()->getId() && !$message->wasAuthorized )
-        {
-            if ($status['status'] == BOL_AuthorizationService::STATUS_AVAILABLE)
-            {
-                if ($status['authorizedBy'] == 'usercredits')
-                {
+        if ((int)$message->senderId !== OW::getUser()->getId() && !$message->wasAuthorized) {
+            if ($status['status'] === BOL_AuthorizationService::STATUS_AVAILABLE) {
+                if ($status['authorizedBy'] === 'usercredits') {
                     $action = USERCREDITS_BOL_CreditsService::getInstance()->findAction('mailbox', $actionName);
                     $actionPrice = USERCREDITS_BOL_CreditsService::getInstance()->findActionPriceForUser($action->id, OW::getUser()->getId());
 
-                    if ($actionPrice->amount == 0 || $actionPrice->disabled)
-                    {
+                    if ($actionPrice->amount === 0 || $actionPrice->disabled) {
                         $readMessageAuthorized = true;
                         $this->markMessageAuthorizedToRead($message->id);
-                    }
-                    else
-                    {
+                    } else {
                         $readMessageAuthorized = false;
                         $item['isSystem'] = 1;
                         $item['byCreditsMessage'] = true;
                         $item['previewText'] = OW::getLanguage()->text('mailbox', 'click_to_read_messages');
-                        
+
                         $text = '<p><span class="ow_small"><a href="javascript://" id="notAuthorizedMessage_'.$message->id.'" class="callReadMessage">'.OW::getLanguage()->text('mailbox', 'read_the_message').'</a></span></p>';
                     }
-                }
-                else
-                {
+                } else {
                     $readMessageAuthorized = true;
                     $this->markMessageAuthorizedToRead($message->id);
                 }
-
-            }
-            else if ($status['status'] == BOL_AuthorizationService::STATUS_PROMOTED)
-            {
+            } elseif ($status['status'] === BOL_AuthorizationService::STATUS_PROMOTED) {
                 $readMessageAuthorized = false;
-                $text = "<p>".$status['msg']."</p>";
+                $text = '<p>'.$status['msg'].'</p>';
                 $item['previewText'] = $status['msg'];
                 $item['isSystem'] = 1;
                 $item['promotedMessage'] = true;
-            }
-            else
-            {
+            } else {
                 $readMessageAuthorized = false;
                 $text = OW::getLanguage()->text('mailbox', $actionName.'_permission_denied');
                 $item['authErrorMessages'] = true;
             }
         }
-        
+
         $item['readMessageAuthorized'] = $readMessageAuthorized;
-        
-        if ($readMessageAuthorized)
-        {
-            if ($message->isSystem)
-            {
+
+        if ($readMessageAuthorized) {
+            if ($message->isSystem) {
                 $eventParams = json_decode($message->text, true);
                 $eventParams['params']['messageId'] = (int)$message->id;
 
@@ -612,37 +563,27 @@ final class MAILBOX_BOL_ConversationService
 
                 $data = $event->getData();
 
-                if (!empty($data))
-                {
+                if (!empty($data)) {
                     $text = $data;
+                } else {
+                    $text = '<div class="ow_dialog_item odd">'.OW::getLanguage()->text('mailbox', 'can_not_display_entitytype_message', ['entityType' => $eventParams['entityType']]).'</div>';
                 }
-                else
-                {
-                    $text = '<div class="ow_dialog_item odd">'.OW::getLanguage()->text('mailbox', 'can_not_display_entitytype_message', array('entityType'=>$eventParams['entityType'])).'</div>';
-                }
-            }
-            else
-            {
+            } else {
                 $text = $this->splitLongMessages($message->text);
             }
 
-            if ($attachmentsByMessageList === null)
-            {
+            if ($attachmentsByMessageList === null) {
                 $attachments = $this->attachmentDao->findAttachmentsByMessageId($message->id);
-            }
-            else
-            {
-                $attachments = array_key_exists($message->id, $attachmentsByMessageList) ? $attachmentsByMessageList[$message->id] : array();
+            } else {
+                $attachments = array_key_exists($message->id, $attachmentsByMessageList) ? $attachmentsByMessageList[$message->id] : [];
             }
 
-            if (!empty($attachments))
-            {
-                foreach($attachments as $attachment)
-                {
+            if (!empty($attachments)) {
+                foreach ($attachments as $attachment) {
                     $ext = UTIL_File::getExtension($attachment->fileName);
                     $attachmentPath = $this->getAttachmentFilePath($attachment->id, $attachment->hash, $ext, $attachment->fileName);
 
-                    $attItem = array();
+                    $attItem = [];
                     $attItem['id'] = $attachment->id;
                     $attItem['messageId'] = $attachment->messageId;
                     $attItem['downloadUrl'] = OW::getStorage()->getFileUrl($attachmentPath);
@@ -664,57 +605,52 @@ final class MAILBOX_BOL_ConversationService
      * @param MAILBOX_BOL_Message $message
      * @return array
      */
-    public function getMessageDataForList( $messageList, $attachmentsByMessageList = null )
+    public function getMessageDataForList($messageList, $attachmentsByMessageList = null)
     {
-        $list = array();
+        $list = [];
         $militaryTime = (bool) OW::getConfig()->getValue('base', 'military_time');
 
-        $actionStatuses = array();
+        $actionStatuses = [];
 
         $actionStatuses['read_message'] = BOL_AuthorizationService::getInstance()->getActionStatus('mailbox', 'read_message');
         $actionStatuses['read_chat_message'] = BOL_AuthorizationService::getInstance()->getActionStatus('mailbox', 'read_chat_message');
 
-        foreach ($messageList as $message)
-        {
+        foreach ($messageList as $message) {
             $conversation = $this->getConversation($message->conversationId);
 
-            $item = array();
+            $item = [];
 
             $item['convId'] = (int)$message->conversationId;
 
-            $item['mode'] = ($conversation->subject == self::CHAT_CONVERSATION_SUBJECT) ? 'chat' : 'mail';
+            $item['mode'] = ($conversation->subject === self::CHAT_CONVERSATION_SUBJECT) ? 'chat' : 'mail';
 
             $item['id'] = (int)$message->id;
             $item['date'] = date('Y-m-d', (int)$message->timeStamp);
             $item['dateLabel'] = UTIL_DateTime::formatDate((int)$message->timeStamp, true);
             $item['timeStamp'] = (int)$message->timeStamp;
 
-            $item['timeLabel'] = $militaryTime ? strftime("%H:%M", (int)$message->timeStamp) : strftime("%I:%M%p", (int)$message->timeStamp);
+            $item['timeLabel'] = $militaryTime ? strftime('%H:%M', (int)$message->timeStamp) : strftime('%I:%M%p', (int)$message->timeStamp);
             $item['recipientId'] = (int)$message->recipientId;
             $item['senderId'] = (int)$message->senderId;
-            $item['isAuthor'] = (bool)((int)$message->senderId == OW::getUser()->getId());
+            $item['isAuthor'] = (bool)((int)$message->senderId === OW::getUser()->getId());
             $item['recipientRead'] = (int)$message->recipientRead;
             $item['isSystem'] = (int)$message->isSystem;
-            $item['attachments'] = array();
+            $item['attachments'] = [];
 
-            if ( (int)$conversation->initiatorId == OW::getUser()->getId() )
-            {
+            if ((int)$conversation->initiatorId === OW::getUser()->getId()) {
                 $item['conversationViewed'] = (bool)((int)$conversation->viewed & MAILBOX_BOL_ConversationDao::VIEW_INITIATOR);
             }
 
-            if ( (int)$conversation->interlocutorId == OW::getUser()->getId() )
-            {
+            if ((int)$conversation->interlocutorId === OW::getUser()->getId()) {
                 $item['conversationViewed'] = (bool)((int)$conversation->viewed & MAILBOX_BOL_ConversationDao::VIEW_INTERLOCUTOR);
             }
 
             $actionName = '';
-            if ($item['mode'] == 'mail')
-            {
+            if ($item['mode'] === 'mail') {
                 $actionName = 'read_message';
             }
 
-            if ($item['mode'] == 'chat')
-            {
+            if ($item['mode'] === 'chat') {
                 $actionName = 'read_chat_message';
             }
 
@@ -722,44 +658,31 @@ final class MAILBOX_BOL_ConversationService
 
             $readMessageAuthorized = true;
 
-            if ( (int)$message->senderId != OW::getUser()->getId() && !$message->wasAuthorized )
-            {
-                if ($status['status'] == BOL_AuthorizationService::STATUS_AVAILABLE)
-                {
-                    if ($status['authorizedBy'] == 'usercredits')
-                    {
+            if ((int)$message->senderId !== OW::getUser()->getId() && !$message->wasAuthorized) {
+                if ($status['status'] === BOL_AuthorizationService::STATUS_AVAILABLE) {
+                    if ($status['authorizedBy'] === 'usercredits') {
                         $action = USERCREDITS_BOL_CreditsService::getInstance()->findAction('mailbox', $actionName);
                         $actionPrice = USERCREDITS_BOL_CreditsService::getInstance()->findActionPriceForUser($action->id, OW::getUser()->getId());
 
-                        if ($actionPrice->amount == 0 || $actionPrice->disabled)
-                        {
+                        if ($actionPrice->amount === 0 || $actionPrice->disabled) {
                             $readMessageAuthorized = true;
                             $this->markMessageAuthorizedToRead($message->id);
-                        }
-                        else
-                        {
+                        } else {
                             $readMessageAuthorized = false;
                             $item['isSystem'] = 1;
                             $item['previewText'] = OW::getLanguage()->text('mailbox', 'click_to_read_messages');
                             $text = '<p><span class="ow_small"><a href="javascript://" id="notAuthorizedMessage_'.$message->id.'" class="callReadMessage">'.OW::getLanguage()->text('mailbox', 'read_the_message').'</a></span></p>';
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $readMessageAuthorized = true;
                         $this->markMessageAuthorizedToRead($message->id);
                     }
-
-                }
-                else if ($status['status'] == BOL_AuthorizationService::STATUS_PROMOTED)
-                {
+                } elseif ($status['status'] === BOL_AuthorizationService::STATUS_PROMOTED) {
                     $readMessageAuthorized = false;
-                    $text = "<p>".$status['msg']."</p>";
+                    $text = '<p>'.$status['msg'].'</p>';
                     $item['previewText'] = $status['msg'];
                     $item['isSystem'] = 1;
-                }
-                else
-                {
+                } else {
                     $readMessageAuthorized = false;
                     $text = OW::getLanguage()->text('mailbox', $actionName.'_permission_denied');
                 }
@@ -767,10 +690,8 @@ final class MAILBOX_BOL_ConversationService
 
             $item['readMessageAuthorized'] = $readMessageAuthorized;
 
-            if ($readMessageAuthorized)
-            {
-                if ($message->isSystem)
-                {
+            if ($readMessageAuthorized) {
+                if ($message->isSystem) {
                     $eventParams = json_decode($message->text, true);
                     $eventParams['params']['messageId'] = (int)$message->id;
 
@@ -779,38 +700,27 @@ final class MAILBOX_BOL_ConversationService
 
                     $data = $event->getData();
 
-                    if (!empty($data))
-                    {
+                    if (!empty($data)) {
                         $text = $data;
+                    } else {
+                        $text = '<div class="ow_dialog_item odd">'.OW::getLanguage()->text('mailbox', 'can_not_display_entitytype_message', ['entityType' => $eventParams['entityType']]).'</div>';
                     }
-                    else
-                    {
-                        $text = '<div class="ow_dialog_item odd">'.OW::getLanguage()->text('mailbox', 'can_not_display_entitytype_message', array('entityType'=>$eventParams['entityType'])).'</div>';
-                    }
-
-                }
-                else
-                {
+                } else {
                     $text = $this->splitLongMessages($message->text);
                 }
 
-                if ($attachmentsByMessageList === null)
-                {
+                if ($attachmentsByMessageList === null) {
                     $attachments = $this->attachmentDao->findAttachmentsByMessageId($message->id);
-                }
-                else
-                {
-                    $attachments = array_key_exists($message->id, $attachmentsByMessageList) ? $attachmentsByMessageList[$message->id] : array();
+                } else {
+                    $attachments = array_key_exists($message->id, $attachmentsByMessageList) ? $attachmentsByMessageList[$message->id] : [];
                 }
 
-                if (!empty($attachments))
-                {
-                    foreach($attachments as $attachment)
-                    {
+                if (!empty($attachments)) {
+                    foreach ($attachments as $attachment) {
                         $ext = UTIL_File::getExtension($attachment->fileName);
                         $attachmentPath = $this->getAttachmentFilePath($attachment->id, $attachment->hash, $ext, $attachment->fileName);
 
-                        $attItem = array();
+                        $attItem = [];
                         $attItem['id'] = $attachment->id;
                         $attItem['messageId'] = $attachment->messageId;
                         $attItem['downloadUrl'] = OW::getStorage()->getFileUrl($attachmentPath);
@@ -838,11 +748,10 @@ final class MAILBOX_BOL_ConversationService
      * @throws InvalidArgumentException
      * @return MAILBOX_BOL_Conversation
      */
-    public function getConversation( $conversationId )
+    public function getConversation($conversationId)
     {
-        if ( empty($conversationId) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($conversationId)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
         return $this->conversationDao->findById($conversationId);
@@ -858,40 +767,36 @@ final class MAILBOX_BOL_ConversationService
      *
      * @throws InvalidArgumentException
      */
-    public function createMessage( MAILBOX_BOL_Conversation $conversation, $senderId, $text, $isSystem = false )
+    public function createMessage(MAILBOX_BOL_Conversation $conversation, $senderId, $text, $isSystem = false)
     {
-        if ( empty($senderId) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($senderId)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
-        if ( $conversation === null )
-        {
+        if ($conversation === null) {
             throw new InvalidArgumentException("Conversation doesn't exist!");
         }
 
-        if ( empty($conversation->id) )
-        {
-            throw new InvalidArgumentException("Conversation with id = " . ($conversation->id) . " is not exist");
+        if (empty($conversation->id)) {
+            throw new InvalidArgumentException('Conversation with id = ' . ($conversation->id) . ' is not exist');
         }
 
-        if ( !in_array($senderId, array($conversation->initiatorId, $conversation->interlocutorId)) )
-        {
-            throw new InvalidArgumentException("Wrong senderId!");
+        if (!in_array($senderId, [$conversation->initiatorId, $conversation->interlocutorId])) {
+            throw new InvalidArgumentException('Wrong senderId!');
         }
 
         $senderId = (int) $senderId;
-        $recipientId = ($senderId == $conversation->initiatorId) ? $conversation->interlocutorId : $conversation->initiatorId;
+        $recipientId = ($senderId === $conversation->initiatorId) ? $conversation->interlocutorId : $conversation->initiatorId;
 
         $message = $this->addMessage($conversation, $senderId, $text, $isSystem);
 
-        $event = new OW_Event('mailbox.send_message', array(
+        $event = new OW_Event('mailbox.send_message', [
             'senderId' => $senderId,
             'recipientId' => $recipientId,
             'conversationId' => $conversation->id,
             'isSystem' => $isSystem,
             'message' => $text
-        ), $message);
+        ], $message);
         OW::getEventManager()->trigger($event);
 
         $this->resetUserLastData($senderId);
@@ -904,44 +809,39 @@ final class MAILBOX_BOL_ConversationService
      * @param $conversationId
      * @return MAILBOX_BOL_Message
      */
-    public function getLastMessage( $conversationId )
+    public function getLastMessage($conversationId)
     {
         return $this->messageDao->findLastMessage($conversationId);
     }
 
-    public function getFirstMessage( $conversationId )
+    public function getFirstMessage($conversationId)
     {
         return $this->messageDao->findFirstMessage($conversationId);
     }
 
-    public function deleteConverstionByUserId( $userId )
+    public function deleteConverstionByUserId($userId)
     {
         $count = 1000;
         $first = 0;
 
-        if ( !empty($userId) )
-        {
-            $conversationList = array();
+        if (!empty($userId)) {
+            $conversationList = [];
 
-            do
-            {
+            do {
                 $conversationList = $this->conversationDao->getConversationListByUserId($userId, $first, $count);
 
-                $conversationIdList = array();
+                $conversationIdList = [];
 
-                foreach ( $conversationList as $conversation )
-                {
+                foreach ($conversationList as $conversation) {
                     $conversationIdList[$conversation['id']] = $conversation['id'];
                 }
 
-                if ( !empty($conversationIdList) )
-                {
+                if (!empty($conversationIdList)) {
                     $this->conversationDao->deleteByIdList($conversationIdList);
                     $this->deleteAttachmentsByConversationList($conversationIdList);
                 }
 
-                foreach ( $conversationList as $conversation )
-                {
+                foreach ($conversationList as $conversation) {
                     $conversationIdList[$conversation['id']] = $conversation['id'];
 
                     $dto = new MAILBOX_BOL_Conversation();
@@ -953,39 +853,36 @@ final class MAILBOX_BOL_ConversationService
                     $dto->deleted = $conversation['deleted'];
                     $dto->createStamp = $conversation['createStamp'];
 
-                    $paramList = array(
+                    $paramList = [
                         'conversationDto' => $dto
-                    );
+                    ];
 
                     $event = new OW_Event(self::EVENT_DELETE_CONVERSATION, $paramList);
                     OW::getEventManager()->trigger($event);
                 }
 
                 $first += $count;
-            }
-            while ( !empty($conversationList) );
+            } while (!empty($conversationList));
         }
     }
 
-    public function deleteUserContent( OW_Event $event )
+    public function deleteUserContent(OW_Event $event)
     {
         $params = $event->getParams();
 
         $userId = (int) $params['userId'];
 
-        if ( $userId > 0 )
-        {
+        if ($userId > 0) {
             $this->deleteConverstionByUserId($userId);
         }
     }
 
-    public function getConversationUrl( $conversationId, $redirectTo = null )
+    public function getConversationUrl($conversationId, $redirectTo = null)
     {
-        $params = array();
+        $params = [];
         $params['convId'] = $conversationId;
 
-        if ( $redirectTo !== null )
-        {
+        if ($redirectTo !== null) {
             $params['redirectTo'] = $redirectTo;
         }
 
@@ -998,11 +895,10 @@ final class MAILBOX_BOL_ConversationService
      * @throws InvalidArgumentException
      * @return array<MAILBOX_BOL_Conversation>
      */
-    public function findConversationList( $initiatorId, $interlocutorId )
+    public function findConversationList($initiatorId, $interlocutorId)
     {
-        if ( empty($initiatorId) || !isset($interlocutorId) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($initiatorId) || !isset($interlocutorId)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
         return $this->conversationDao->findConversationList($initiatorId, $interlocutorId);
@@ -1011,7 +907,7 @@ final class MAILBOX_BOL_ConversationService
     /**
      * @param MAILBOX_BOL_Conversation $conversationd
      */
-    public function saveConversation( MAILBOX_BOL_Conversation $conversation )
+    public function saveConversation(MAILBOX_BOL_Conversation $conversation)
     {
         $this->conversationDao->save($conversation);
     }
@@ -1026,36 +922,31 @@ final class MAILBOX_BOL_ConversationService
      *
      * @throws InvalidArgumentException
      */
-    public function addMessage( MAILBOX_BOL_Conversation $conversation, $senderId, $text, $isSystem = false )
+    public function addMessage(MAILBOX_BOL_Conversation $conversation, $senderId, $text, $isSystem = false)
     {
-        if ( empty($senderId) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($senderId)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
-        if ( $conversation === null )
-        {
+        if ($conversation === null) {
             throw new InvalidArgumentException("Conversation doesn't exist!");
         }
 
-        if ( empty($conversation->id) )
-        {
-            throw new InvalidArgumentException("Conversation with id = " . ($conversation->id) . " is not exist");
+        if (empty($conversation->id)) {
+            throw new InvalidArgumentException('Conversation with id = ' . ($conversation->id) . ' is not exist');
         }
 
-        if ( !in_array($senderId, array($conversation->initiatorId, $conversation->interlocutorId)) )
-        {
-            throw new InvalidArgumentException("Wrong senderId!");
+        if (!in_array($senderId, [$conversation->initiatorId, $conversation->interlocutorId])) {
+            throw new InvalidArgumentException('Wrong senderId!');
         }
 
         $senderId = (int) $senderId;
-        $recipientId = ($senderId == $conversation->initiatorId) ? $conversation->interlocutorId : $conversation->initiatorId;
+        $recipientId = ($senderId === $conversation->initiatorId) ? $conversation->interlocutorId : $conversation->initiatorId;
 
         $text = trim($text);
 
-        if ( empty($text) )
-        {
-            throw new InvalidArgumentException("Empty string params were provided!");
+        if (empty($text)) {
+            throw new InvalidArgumentException('Empty string params were provided!');
         }
 
         // create message
@@ -1072,15 +963,13 @@ final class MAILBOX_BOL_ConversationService
         // insert record into LastMessage table
         $lastMessage = $this->lastMessageDao->findByConversationId($conversation->id);
 
-        if ( $lastMessage === null )
-        {
+        if ($lastMessage === null) {
             $lastMessage = new MAILBOX_BOL_LastMessage();
             $lastMessage->conversationId = $conversation->id;
         }
 
-        switch ( $senderId )
-        {
-            case $conversation->initiatorId :
+        switch ($senderId) {
+            case $conversation->initiatorId:
 
                 $unReadBy = MAILBOX_BOL_ConversationDao::READ_INTERLOCUTOR;
                 $readBy = MAILBOX_BOL_ConversationDao::READ_INITIATOR;
@@ -1090,7 +979,7 @@ final class MAILBOX_BOL_ConversationService
 
                 break;
 
-            case $conversation->interlocutorId :
+            case $conversation->interlocutorId:
 
                 $unReadBy = MAILBOX_BOL_ConversationDao::READ_INITIATOR;
                 $readBy = MAILBOX_BOL_ConversationDao::READ_INTERLOCUTOR;
@@ -1102,7 +991,7 @@ final class MAILBOX_BOL_ConversationService
         }
 
         $conversation->deleted = (int) $conversation->deleted & ($unDeletedBy);
-        $conversation->read = ( (int) $conversation->read & (~$unReadBy) ) | $readBy;
+        $conversation->read = ((int) $conversation->read & (~$unReadBy)) | $readBy;
         $conversation->viewed = $consoleViewed;
         $conversation->notificationSent = 0;
 
@@ -1129,25 +1018,23 @@ final class MAILBOX_BOL_ConversationService
      * @param int $messageId
      * @param array $filesList
      */
-    public function addMessageAttachments( $messageId, $fileList )
+    public function addMessageAttachments($messageId, $fileList)
     {
         $language = OW::getLanguage();
         $filesCount = count($fileList);
 
         $configs = OW::getConfig()->getValues('mailbox');
 
-        if ( empty($configs['enable_attachments']) )
-        {
+        if (empty($configs['enable_attachments'])) {
             return;
         }
 
-        foreach($fileList as $file)
-        {
+        foreach ($fileList as $file) {
             $dto = $file['dto'];
 
             $attachmentDto = new MAILBOX_BOL_Attachment();
             $attachmentDto->messageId = $messageId;
-            $attachmentDto->fileName = htmlspecialchars( $dto->origFileName );
+            $attachmentDto->fileName = htmlspecialchars($dto->origFileName);
             $attachmentDto->fileSize = $dto->size;
             $attachmentDto->hash = uniqid();
 
@@ -1162,7 +1049,7 @@ final class MAILBOX_BOL_ConversationService
      * @param string $filePath
      * @param boolean
      */
-    public function addAttachment( $attachmentDto, $filePath )
+    public function addAttachment($attachmentDto, $filePath)
     {
         $this->attachmentDao->save($attachmentDto);
 
@@ -1173,34 +1060,31 @@ final class MAILBOX_BOL_ConversationService
         $pluginFilesPath = OW::getPluginManager()->getPlugin('mailbox')->getPluginFilesDir() . uniqid('attach');
 
         $storage = OW::getStorage();
-        if ( $storage->fileExists($filePath) )
-        {
+        if ($storage->fileExists($filePath)) {
             $storage->renameFile($filePath, $attachmentPath);
             @unlink($pluginFilesPath);
             @unlink($filePath);
 
             return true;
         }
-        else
-        {
-            $this->attachmentDao->deleteById($attId);
-            return false;
-        }
+
+
+        $this->attachmentDao->deleteById($attId);
+        return false;
     }
 
     public function getAttachmentType(MAILBOX_BOL_Attachment $attachment)
     {
         $type = 'doc';
 
-        if (UTIL_File::validateImage($attachment->fileName))
-        {
+        if (UTIL_File::validateImage($attachment->fileName)) {
             $type = 'image';
         }
 
         return $type;
     }
 
-    public function getAttachmentFilePath( $attId, $hash, $ext, $name = null )
+    public function getAttachmentFilePath($attId, $hash, $ext, $name = null)
     {
         return $this->getAttachmentDir() . $this->getAttachmentFileName($attId, $hash, $ext, $name);
     }
@@ -1215,26 +1099,23 @@ final class MAILBOX_BOL_ConversationService
         return OW::getPluginManager()->getPlugin('mailbox')->getUserFilesUrl() . 'attachments/';
     }
 
-    public function getAttachmentFileName( $attId, $hash, $ext, $name )
+    public function getAttachmentFileName($attId, $hash, $ext, $name)
     {
         $lastAttId = 0;
-        if (OW::getConfig()->configExists('mailbox', 'last_attachment_id'))
-        {
+        if (OW::getConfig()->configExists('mailbox', 'last_attachment_id')) {
             $lastAttId = (int)OW::getConfig()->getValue('mailbox', 'last_attachment_id');
         }
 
-        if ($attId <= $lastAttId)
-        {
+        if ($attId <= $lastAttId) {
             return 'attachment_' . $attId . '_' . $hash . (strlen($ext) ? '.' . $ext : '');
         }
 
         return 'attachment_' . $attId . '_' . $hash . (mb_strlen($name) ? '_' . $name : (strlen($ext) ? '.' . $ext : ''));
     }
 
-    public function fileExtensionIsAllowed( $ext )
+    public function fileExtensionIsAllowed($ext)
     {
-        if ( !strlen($ext) )
-        {
+        if (!strlen($ext)) {
             return false;
         }
 
@@ -1246,12 +1127,11 @@ final class MAILBOX_BOL_ConversationService
      * @param array $messageIdList
      * @return array<MAILBOX_BOL_Attachment>
      */
-    public function findAttachmentsByMessageIdList( array $messageIdList )
+    public function findAttachmentsByMessageIdList(array $messageIdList)
     {
-        $result = array();
+        $result = [];
         $list = $this->attachmentDao->findAttachmentsByMessageIdList($messageIdList);
-        foreach ($list as $attachment)
-        {
+        foreach ($list as $attachment) {
             $result[$attachment->messageId][] = $attachment;
         }
 
@@ -1263,7 +1143,7 @@ final class MAILBOX_BOL_ConversationService
      * @param array $conversationIdList
      * @return array<MAILBOX_BOL_Attachment>
      */
-    public function getAttachmentsCountByConversationList( array $conversationIdList )
+    public function getAttachmentsCountByConversationList(array $conversationIdList)
     {
         return $this->attachmentDao->getAttachmentsCountByConversationList($conversationIdList);
     }
@@ -1273,17 +1153,15 @@ final class MAILBOX_BOL_ConversationService
      * @param array $conversationIdList
      * @return array<MAILBOX_BOL_Attachment>
      */
-    public function deleteAttachmentsByConversationList( array $conversationIdList )
+    public function deleteAttachmentsByConversationList(array $conversationIdList)
     {
         $attachmentList = $this->attachmentDao->findAttachmentstByConversationList($conversationIdList);
 
-        foreach ( $attachmentList as $attachment )
-        {
+        foreach ($attachmentList as $attachment) {
             $ext = UTIL_File::getExtension($attachment['fileName']);
             $path = $this->getAttachmentFilePath($attachment['id'], $attachment['hash'], $ext, $attachment['fileName']);
 
-            if ( OW::getStorage()->removeFile($path) )
-            {
+            if (OW::getStorage()->removeFile($path)) {
                 $this->attachmentDao->deleteById($attachment['id']);
             }
         }
@@ -1297,16 +1175,14 @@ final class MAILBOX_BOL_ConversationService
      */
     public function convertHtmlTags()
     {
-        if ( !OW::getConfig()->configExists('mailbox', 'update_to_revision_7200') )
-        {
+        if (!OW::getConfig()->configExists('mailbox', 'update_to_revision_7200')) {
             return;
         }
 
         $lastId = OW::getConfig()->getValue('mailbox', 'last_updated_id');
         $messageList = $this->messageDao->findNotUpdatedMessages($lastId, 2000);
 
-        if ( empty($messageList) )
-        {
+        if (empty($messageList)) {
             OW::getConfig()->deleteConfig('mailbox', 'update_to_revision_7200');
             OW::getConfig()->deleteConfig('mailbox', 'last_updated_id');
             return;
@@ -1314,17 +1190,15 @@ final class MAILBOX_BOL_ConversationService
 
         $count = 0;
 
-        foreach ( $messageList as $message )
-        {
-            $message->text = preg_replace("/\n/", "", $message->text);
+        foreach ($messageList as $message) {
+            $message->text = preg_replace("/\n/", '', $message->text);
             $message->text = preg_replace("/<br \/>/", "\n", $message->text);
             $message->text = strip_tags($message->text);
 
             $this->messageDao->save($message);
-            $count++;
+            ++$count;
 
-            if ( $count > 100 )
-            {
+            if ($count > 100) {
                 OW::getConfig()->saveConfig('mailbox', 'last_updated_id', $message->id);
             }
         }
@@ -1337,24 +1211,21 @@ final class MAILBOX_BOL_ConversationService
      * @param array $conversationIdList
      * @return array<MAILBOX_BOL_Conversation>
      */
-    public function getConversationListByIdList( $idList )
+    public function getConversationListByIdList($idList)
     {
         return $this->conversationDao->findByIdList($idList);
     }
 
-    public function setConversationViewedInConsole( $idList, $userId )
+    public function setConversationViewedInConsole($idList, $userId)
     {
         $conversationList = $this->getConversationListByIdList($idList);
         /* @var $conversation MAILBOX_BOL_Conversation  */
-        foreach ( $conversationList as $conversation )
-        {
-            if ( $conversation->initiatorId == $userId )
-            {
+        foreach ($conversationList as $conversation) {
+            if ($conversation->initiatorId === $userId) {
                 $conversation->viewed = $conversation->viewed | MAILBOX_BOL_ConversationDao::VIEW_INITIATOR;
             }
 
-            if ( $conversation->interlocutorId == $userId )
-            {
+            if ($conversation->interlocutorId === $userId) {
                 $conversation->viewed = $conversation->viewed | MAILBOX_BOL_ConversationDao::VIEW_INTERLOCUTOR;
             }
 
@@ -1364,7 +1235,7 @@ final class MAILBOX_BOL_ConversationService
         $this->resetUserLastData($userId);
     }
 
-    public function getConversationListForConsoleNotificationMailer( $userIdList )
+    public function getConversationListForConsoleNotificationMailer($userIdList)
     {
         return $this->conversationDao->getNewConversationListForConsoleNotificationMailer($userIdList);
     }
@@ -1373,11 +1244,10 @@ final class MAILBOX_BOL_ConversationService
     {
         $convPreview = '';
 
-        switch($conversation['mode'])
-        {
+        switch($conversation['mode']) {
             case 'mail':
 
-                $convPreview = ($conversation['subject'] == MAILBOX_BOL_ConversationDao::WINK_CONVERSATION_SUBJECT) ? OW::getLanguage()->text('mailbox', 'wink_conversation_subject') : $conversation['subject'];
+                $convPreview = ($conversation['subject'] === MAILBOX_BOL_ConversationDao::WINK_CONVERSATION_SUBJECT) ? OW::getLanguage()->text('mailbox', 'wink_conversation_subject') : $conversation['subject'];
 
                 break;
 
@@ -1387,37 +1257,26 @@ final class MAILBOX_BOL_ConversationService
 
                 $readMessageAuthorized = true;
 
-                if ( (int)$conversation['lastMessageSenderId'] != OW::getUser()->getId() && !$conversation['lastMessageWasAuthorized'])
-                {
-                    if ($status['status'] == BOL_AuthorizationService::STATUS_AVAILABLE)
-                    {
-                        if ($status['authorizedBy'] == 'usercredits')
-                        {
+                if ((int)$conversation['lastMessageSenderId'] !== OW::getUser()->getId() && !$conversation['lastMessageWasAuthorized']) {
+                    if ($status['status'] === BOL_AuthorizationService::STATUS_AVAILABLE) {
+                        if ($status['authorizedBy'] === 'usercredits') {
                             $readMessageAuthorized = false;
                             $convPreview = OW::getLanguage()->text('mailbox', 'click_to_read_messages');
-                        }
-                        else
-                        {
+                        } else {
                             $readMessageAuthorized = true;
                             $this->markMessageAuthorizedToRead($conversation['lastMessageId']);
                         }
-                    }
-                    else if ($status['status'] == BOL_AuthorizationService::STATUS_PROMOTED)
-                    {
+                    } elseif ($status['status'] === BOL_AuthorizationService::STATUS_PROMOTED) {
                         $readMessageAuthorized = false;
                         $convPreview = $status['msg'];
-                    }
-                    else
-                    {
+                    } else {
                         $readMessageAuthorized = false;
                         $convPreview = OW::getLanguage()->text('mailbox', 'read_permission_denied');
                     }
                 }
 
-                if ($readMessageAuthorized)
-                {
-                    if ($conversation['isSystem'])
-                    {
+                if ($readMessageAuthorized) {
+                    if ($conversation['isSystem']) {
                         $eventParams = json_decode($conversation['text'], true);
                         $eventParams['params']['messageId'] = (int)$conversation['lastMessageId'];
                         $eventParams['params']['getPreview'] = true;
@@ -1427,26 +1286,21 @@ final class MAILBOX_BOL_ConversationService
 
                         $data = $event->getData();
 
-                        if (!empty($data))
-                        {
+                        if (!empty($data)) {
                             $convPreview = $data;
+                        } else {
+                            $convPreview = OW::getLanguage()->text('mailbox', 'can_not_display_entitytype_message', ['entityType' => $eventParams['entityType']]);
                         }
-                        else
-                        {
-                            $convPreview = OW::getLanguage()->text('mailbox', 'can_not_display_entitytype_message', array('entityType'=>$eventParams['entityType']));
-                        }
-                    }
-                    else
-                    {
+                    } else {
                         $short = mb_strlen($conversation['text']) > 50 ? mb_substr($conversation['text'], 0, 50) . '...' : $conversation['text'];
 //                        $short = UTIL_HtmlTag::autoLink($short);
 
-                        $event = new OW_Event('mailbox.message_render', array(
+                        $event = new OW_Event('mailbox.message_render', [
                             'conversationId' => $conversation['id'],
                             'messageId' => $conversation['lastMessageId'],
                             'senderId' => $conversation['lastMessageSenderId'],
                             'recipientId' => $conversation['lastMessageRecipientId'],
-                        ), array( 'short' => $short, 'full' => $conversation['text'] ));
+                        ], [ 'short' => $short, 'full' => $conversation['text'] ]);
 
                         OW::getEventManager()->trigger($event);
 
@@ -1481,37 +1335,26 @@ final class MAILBOX_BOL_ConversationService
 
         $readMessageAuthorized = true;
 
-        if ( (int)$conversation['lastMessageSenderId'] != OW::getUser()->getId() && !$conversation['lastMessageWasAuthorized'])
-        {
-            if ($status['status'] == BOL_AuthorizationService::STATUS_AVAILABLE)
-            {
-                if ($status['authorizedBy'] == 'usercredits')
-                {
+        if ((int)$conversation['lastMessageSenderId'] !== OW::getUser()->getId() && !$conversation['lastMessageWasAuthorized']) {
+            if ($status['status'] === BOL_AuthorizationService::STATUS_AVAILABLE) {
+                if ($status['authorizedBy'] === 'usercredits') {
                     $readMessageAuthorized = false;
                     $convPreview = OW::getLanguage()->text('mailbox', 'click_to_read_messages');
-                }
-                else
-                {
+                } else {
                     $readMessageAuthorized = true;
                     $this->markMessageAuthorizedToRead($conversation['lastMessageId']);
                 }
-            }
-            else if ($status['status'] == BOL_AuthorizationService::STATUS_PROMOTED)
-            {
+            } elseif ($status['status'] === BOL_AuthorizationService::STATUS_PROMOTED) {
                 $readMessageAuthorized = false;
                 $convPreview = UTIL_HtmlTag::stripTags($status['msg']);
-            }
-            else
-            {
+            } else {
                 $readMessageAuthorized = false;
                 $convPreview = OW::getLanguage()->text('mailbox', 'read_permission_denied');
             }
         }
 
-        if ($readMessageAuthorized)
-        {
-            if ($conversation['isSystem'])
-            {
+        if ($readMessageAuthorized) {
+            if ($conversation['isSystem']) {
                 $eventParams = json_decode($conversation['text'], true);
                 $eventParams['params']['messageId'] = (int)$conversation['lastMessageId'];
                 $eventParams['params']['getPreview'] = true;
@@ -1521,26 +1364,21 @@ final class MAILBOX_BOL_ConversationService
 
                 $data = $event->getData();
 
-                if (!empty($data))
-                {
+                if (!empty($data)) {
                     $convPreview = $data;
+                } else {
+                    $convPreview = OW::getLanguage()->text('mailbox', 'can_not_display_entitytype_message', ['entityType' => $eventParams['entityType']]);
                 }
-                else
-                {
-                    $convPreview = OW::getLanguage()->text('mailbox', 'can_not_display_entitytype_message', array('entityType'=>$eventParams['entityType']));
-                }
-            }
-            else
-            {
+            } else {
                 $short = mb_strlen($conversation['text']) > 50 ? mb_substr($conversation['text'], 0, 50) . '...' : $conversation['text'];
 //                        $short = UTIL_HtmlTag::autoLink($short);
 
-                $event = new OW_Event('mailbox.message_render', array(
+                $event = new OW_Event('mailbox.message_render', [
                     'conversationId' => $conversation['id'],
                     'messageId' => $conversation['lastMessageId'],
                     'senderId' => $conversation['lastMessageSenderId'],
                     'recipientId' => $conversation['lastMessageRecipientId'],
-                ), array( 'short' => $short, 'full' => $conversation['text'] ));
+                ], [ 'short' => $short, 'full' => $conversation['text'] ]);
 
                 OW::getEventManager()->trigger($event);
 
@@ -1562,14 +1400,12 @@ final class MAILBOX_BOL_ConversationService
         $conversationRead = 0;
         $conversationHasReply = false;
 
-        switch ( $userId )
-        {
+        switch ($userId) {
             case $conversation['initiatorId']:
 
                 $conversationOpponentId = $conversation['interlocutorId'];
 
-                if ( (int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INITIATOR )
-                {
+                if ((int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INITIATOR) {
                     $conversationRead = 1;
                 }
 
@@ -1579,16 +1415,14 @@ final class MAILBOX_BOL_ConversationService
 
                 $conversationOpponentId = $conversation['initiatorId'];
 
-                if ( (int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INTERLOCUTOR )
-                {
+                if ((int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INTERLOCUTOR) {
                     $conversationRead = 1;
                 }
 
                 break;
         }
 
-        switch($userId)
-        {
+        switch($userId) {
             case $conversation['lastMessageSenderId']:
                 $conversationHasReply = false;
                 break;
@@ -1611,7 +1445,7 @@ final class MAILBOX_BOL_ConversationService
 
         $convPreview = $this->getConversationPreviewText($conversation);
 
-        $item = array();
+        $item = [];
 
         $item['conversationId'] = (int)$convId;
         $item['opponentId'] = (int)$conversationOpponentId;
@@ -1620,7 +1454,7 @@ final class MAILBOX_BOL_ConversationService
         $item['profileUrl'] = $profileUrl;
         $item['avatarUrl'] = $profileAvatarUrl;
 
-        $avatarData = BOL_AvatarService::getInstance()->getDataForUserAvatars(array($conversationOpponentId));
+        $avatarData = BOL_AvatarService::getInstance()->getDataForUserAvatars([$conversationOpponentId]);
 
         $item['avatarLabel'] = !empty($avatarData[$conversationOpponentId]) ? mb_substr($avatarData[$conversationOpponentId]['label'], 0, 1) : ' ';
 
@@ -1631,24 +1465,20 @@ final class MAILBOX_BOL_ConversationService
         $item['reply'] = $conversationHasReply;
         $item['newMessageCount'] = $this->countUnreadMessagesForConversation($convId, $userId);
 
-        if ( (int)$conversation['initiatorId'] == OW::getUser()->getId() )
-        {
+        if ((int)$conversation['initiatorId'] === OW::getUser()->getId()) {
             $item['conversationViewed'] = (bool)((int)$conversation['viewed'] & MAILBOX_BOL_ConversationDao::VIEW_INITIATOR);
         }
 
-        if ( (int)$conversation['interlocutorId'] == OW::getUser()->getId() )
-        {
+        if ((int)$conversation['interlocutorId'] === OW::getUser()->getId()) {
             $item['conversationViewed'] = (bool)((int)$conversation['viewed'] & MAILBOX_BOL_ConversationDao::VIEW_INTERLOCUTOR);
         }
 
-        if ($mode == 'chat')
-        {
-            $item['url'] = OW::getRouter()->urlForRoute('mailbox_chat_conversation', array('userId'=>$conversationOpponentId));
+        if ($mode === 'chat') {
+            $item['url'] = OW::getRouter()->urlForRoute('mailbox_chat_conversation', ['userId' => $conversationOpponentId]);
         }
 
-        if ($mode == 'mail')
-        {
-            $item['url'] = OW::getRouter()->urlForRoute('mailbox_mail_conversation', array('convId'=>$convId));
+        if ($mode === 'mail') {
+            $item['url'] = OW::getRouter()->urlForRoute('mailbox_mail_conversation', ['convId' => $convId]);
         }
 
 
@@ -1658,25 +1488,20 @@ final class MAILBOX_BOL_ConversationService
     public function getConversationItemByConversationIdList($conversationItemList)
     {
         $userId = OW::getUser()->getId();
-        $convInfoList = array();
+        $convInfoList = [];
 
-        $userIdList = array();
-        $conversationIdList = array();
-        foreach($conversationItemList as $conversation)
-        {
+        $userIdList = [];
+        $conversationIdList = [];
+        foreach ($conversationItemList as $conversation) {
             $conversationIdList[] = (int)$conversation['id'];
 
-            if ($conversation['interlocutorId'] == $userId)
-            {
+            if ($conversation['interlocutorId'] === $userId) {
                 $opponentId = $conversation['initiatorId'];
-            }
-            else
-            {
+            } else {
                 $opponentId = $conversation['interlocutorId'];
             }
 
-            if (!in_array($opponentId, $userIdList))
-            {
+            if (!in_array($opponentId, $userIdList)) {
                 $userIdList[] = $opponentId;
             }
         }
@@ -1686,23 +1511,20 @@ final class MAILBOX_BOL_ConversationService
         $unreadMessagesCountByConversationIdList = $this->countUnreadMessagesForConversationList($conversationIdList, $userId);
         $conversationsWithAttachments = $this->getConversationsWithAttachmentFromConversationList($conversationIdList);
 
-        foreach($conversationItemList as $conversation)
-        {
+        foreach ($conversationItemList as $conversation) {
             $conversationId = (int)$conversation['id'];
-            $mode = $conversation['subject'] == self::CHAT_CONVERSATION_SUBJECT ? 'chat' : 'mail';
+            $mode = $conversation['subject'] === self::CHAT_CONVERSATION_SUBJECT ? 'chat' : 'mail';
 
             $conversationRead = 0;
             $conversationHasReply = false;
 
-            switch ( $userId )
-            {
+            switch ($userId) {
                 case $conversation['initiatorId']:
 
                     $opponentId = $conversation['interlocutorId'];
 //                    $conversationHasReply = $conversation['interlocutorMessageId'] != 0 ? true : false;
 
-                    if ( (int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INITIATOR )
-                    {
+                    if ((int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INITIATOR) {
                         $conversationRead = 1;
                     }
 
@@ -1713,8 +1535,7 @@ final class MAILBOX_BOL_ConversationService
                     $opponentId = $conversation['initiatorId'];
 //                    $conversationHasReply = $conversation['initiatorMessageId'] != 0 ? true : false;
 
-                    if ( (int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INTERLOCUTOR )
-                    {
+                    if ((int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INTERLOCUTOR) {
                         $conversationRead = 1;
                     }
 
@@ -1723,8 +1544,7 @@ final class MAILBOX_BOL_ConversationService
 
 //            pv($conversation);
 
-            switch($userId)
-            {
+            switch($userId) {
                 case $conversation['lastMessageSenderId']:
                     $conversationHasReply = false;
                     break;
@@ -1744,7 +1564,7 @@ final class MAILBOX_BOL_ConversationService
             $convDate = empty($conversation['timeStamp']) ? '' : UTIL_DateTime::formatDate((int)$conversation['timeStamp'], true);
             $convPreview = $this->getConversationPreviewText($conversation);
 
-            $item = array();
+            $item = [];
 
             $item['conversationId'] = $conversationId;
             $item['opponentId'] = (int)$opponentId;
@@ -1762,27 +1582,23 @@ final class MAILBOX_BOL_ConversationService
             $item['newMessageCount'] = array_key_exists($conversationId, $unreadMessagesCountByConversationIdList) ? $unreadMessagesCountByConversationIdList[$conversationId] : 0;
             $item['hasAttachment'] = $conversationsWithAttachments[$conversationId];
 
-            $shortUserData = $this->getFields(array($opponentId));
+            $shortUserData = $this->getFields([$opponentId]);
             $item['shortUserData'] = $shortUserData[$opponentId];
 
-            if ( (int)$conversation['initiatorId'] == OW::getUser()->getId() )
-            {
+            if ((int)$conversation['initiatorId'] === OW::getUser()->getId()) {
                 $item['conversationViewed'] = (bool)((int)$conversation['viewed'] & MAILBOX_BOL_ConversationDao::VIEW_INITIATOR);
             }
 
-            if ( (int)$conversation['interlocutorId'] == OW::getUser()->getId() )
-            {
+            if ((int)$conversation['interlocutorId'] === OW::getUser()->getId()) {
                 $item['conversationViewed'] = (bool)((int)$conversation['viewed'] & MAILBOX_BOL_ConversationDao::VIEW_INTERLOCUTOR);
             }
 
-            if ($mode == 'chat')
-            {
-                $item['url'] = OW::getRouter()->urlForRoute('mailbox_chat_conversation', array('userId'=>$opponentId));
+            if ($mode === 'chat') {
+                $item['url'] = OW::getRouter()->urlForRoute('mailbox_chat_conversation', ['userId' => $opponentId]);
             }
 
-            if ($mode == 'mail')
-            {
-                $item['url'] = OW::getRouter()->urlForRoute('mailbox_mail_conversation', array('convId'=>$conversationId));
+            if ($mode === 'mail') {
+                $item['url'] = OW::getRouter()->urlForRoute('mailbox_mail_conversation', ['convId' => $conversationId]);
             }
 
             $convInfoList[] = $item;
@@ -1795,25 +1611,20 @@ final class MAILBOX_BOL_ConversationService
     public function getConversationItemByConversationIdListForApi($conversationItemList)
     {
         $userId = OW::getUser()->getId();
-        $convInfoList = array();
+        $convInfoList = [];
 
-        $userIdList = array();
-        $conversationIdList = array();
-        foreach($conversationItemList as $conversation)
-        {
+        $userIdList = [];
+        $conversationIdList = [];
+        foreach ($conversationItemList as $conversation) {
             $conversationIdList[] = (int)$conversation['id'];
 
-            if ($conversation['interlocutorId'] == $userId)
-            {
+            if ($conversation['interlocutorId'] === $userId) {
                 $opponentId = $conversation['initiatorId'];
-            }
-            else
-            {
+            } else {
                 $opponentId = $conversation['interlocutorId'];
             }
 
-            if (!in_array($opponentId, $userIdList))
-            {
+            if (!in_array($opponentId, $userIdList)) {
                 $userIdList[] = $opponentId;
             }
         }
@@ -1824,23 +1635,20 @@ final class MAILBOX_BOL_ConversationService
         $conversationsWithAttachments = $this->getConversationsWithAttachmentFromConversationList($conversationIdList);
         $onlineMap = BOL_UserService::getInstance()->findOnlineStatusForUserList($userIdList);
 
-        foreach($conversationItemList as $conversation)
-        {
+        foreach ($conversationItemList as $conversation) {
             $conversationId = (int)$conversation['id'];
-            $mode = $conversation['subject'] == self::CHAT_CONVERSATION_SUBJECT ? 'chat' : 'mail';
+            $mode = $conversation['subject'] === self::CHAT_CONVERSATION_SUBJECT ? 'chat' : 'mail';
 
             $conversationRead = 0;
             $conversationHasReply = false;
 
-            switch ( $userId )
-            {
+            switch ($userId) {
                 case $conversation['initiatorId']:
 
                     $opponentId = $conversation['interlocutorId'];
 //                    $conversationHasReply = $conversation['interlocutorMessageId'] != 0 ? true : false;
 
-                    if ( (int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INITIATOR )
-                    {
+                    if ((int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INITIATOR) {
                         $conversationRead = 1;
                     }
 
@@ -1851,8 +1659,7 @@ final class MAILBOX_BOL_ConversationService
                     $opponentId = $conversation['initiatorId'];
 //                    $conversationHasReply = $conversation['initiatorMessageId'] != 0 ? true : false;
 
-                    if ( (int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INTERLOCUTOR )
-                    {
+                    if ((int) $conversation['read'] & MAILBOX_BOL_ConversationDao::READ_INTERLOCUTOR) {
                         $conversationRead = 1;
                     }
 
@@ -1861,8 +1668,7 @@ final class MAILBOX_BOL_ConversationService
 
 //            pv($conversation);
 
-            switch($userId)
-            {
+            switch($userId) {
                 case $conversation['lastMessageSenderId']:
                     $conversationHasReply = false;
                     break;
@@ -1882,7 +1688,7 @@ final class MAILBOX_BOL_ConversationService
             $convDate = empty($conversation['timeStamp']) ? '' : UTIL_DateTime::formatDate((int)$conversation['timeStamp'], true);
             $convPreview = $this->getConversationPreviewTextForApi($conversation);
 
-            $item = array();
+            $item = [];
 
             $item['userId'] = (int)$opponentId; // Backward compatibility
             $item['conversationId'] = $conversationId;
@@ -1901,33 +1707,29 @@ final class MAILBOX_BOL_ConversationService
             $item['newMessageCount'] = array_key_exists($conversationId, $unreadMessagesCountByConversationIdList) ? $unreadMessagesCountByConversationIdList[$conversationId] : 0;
             $item['hasAttachment'] = $conversationsWithAttachments[$conversationId];
 
-            $item['timeLabel'] = $conversation["timeStamp"] > 0 ? UTIL_DateTime::formatDate($conversation["timeStamp"]) : "";
+            $item['timeLabel'] = $conversation['timeStamp'] > 0 ? UTIL_DateTime::formatDate($conversation['timeStamp']) : '';
             $item['onlineStatus'] = $onlineMap[$opponentId];
 
-            $winkReceived = OW::getEventManager()->call('winks.isWinkSent', array('userId'=>$userId, 'partnerId'=>$opponentId));
+            $winkReceived = OW::getEventManager()->call('winks.isWinkSent', ['userId' => $userId, 'partnerId' => $opponentId]);
             $item['winkReceived'] = (int)$winkReceived;
 
-            $shortUserData = $this->getFields(array($opponentId));
+            $shortUserData = $this->getFields([$opponentId]);
             $item['shortUserData'] = $shortUserData[$opponentId];
 
-            if ( (int)$conversation['initiatorId'] == OW::getUser()->getId() )
-            {
+            if ((int)$conversation['initiatorId'] === OW::getUser()->getId()) {
                 $item['conversationViewed'] = (bool)((int)$conversation['viewed'] & MAILBOX_BOL_ConversationDao::VIEW_INITIATOR);
             }
 
-            if ( (int)$conversation['interlocutorId'] == OW::getUser()->getId() )
-            {
+            if ((int)$conversation['interlocutorId'] === OW::getUser()->getId()) {
                 $item['conversationViewed'] = (bool)((int)$conversation['viewed'] & MAILBOX_BOL_ConversationDao::VIEW_INTERLOCUTOR);
             }
 
-            if ($mode == 'chat')
-            {
-                $item['url'] = OW::getRouter()->urlForRoute('mailbox_chat_conversation', array('userId'=>$opponentId));
+            if ($mode === 'chat') {
+                $item['url'] = OW::getRouter()->urlForRoute('mailbox_chat_conversation', ['userId' => $opponentId]);
             }
 
-            if ($mode == 'mail')
-            {
-                $item['url'] = OW::getRouter()->urlForRoute('mailbox_mail_conversation', array('convId'=>$conversationId));
+            if ($mode === 'mail') {
+                $item['url'] = OW::getRouter()->urlForRoute('mailbox_mail_conversation', ['convId' => $conversationId]);
             }
 
             $convInfoList[] = $item;
@@ -1953,12 +1755,11 @@ final class MAILBOX_BOL_ConversationService
 
     public function getChatConversationIdWithUserByIdList($userId, $userIdList)
     {
-        $result = array();
+        $result = [];
 
         $conversationIdList = $this->conversationDao->findChatConversationIdWithUserByIdList($userId, $userIdList);
 
-        foreach($conversationIdList as $conversationInfo)
-        {
+        foreach ($conversationIdList as $conversationInfo) {
             $result[$conversationInfo['opponentId']] = $conversationInfo['id'];
         }
 
@@ -1976,8 +1777,7 @@ final class MAILBOX_BOL_ConversationService
 
         $conversation = $this->getConversation($conversationId);
 
-        if ($conversation->subject == self::CHAT_CONVERSATION_SUBJECT)
-        {
+        if ($conversation->subject === self::CHAT_CONVERSATION_SUBJECT) {
             $mode = 'chat';
         }
 
@@ -1986,7 +1786,7 @@ final class MAILBOX_BOL_ConversationService
 
     public function getUserStatus($userId)
     {
-        $userIdList = array($userId);
+        $userIdList = [$userId];
 
         $onlineInfo = $this->getUserStatusForUserIdList($userIdList);
 
@@ -1995,18 +1795,15 @@ final class MAILBOX_BOL_ConversationService
 
     public function getUserStatusForUserIdList($userIdList)
     {
-        $onlineInfo = array();
+        $onlineInfo = [];
         $list = BOL_UserService::getInstance()->findOnlineStatusForUserList($userIdList);
-        $privacyForUserIdList = $this->getViewPresenceOnSitePrivacySettingsForUserIdList( OW::getUser()->getId(), $userIdList );
+        $privacyForUserIdList = $this->getViewPresenceOnSitePrivacySettingsForUserIdList(OW::getUser()->getId(), $userIdList);
 
-        foreach($list as $userId => $status)
-        {
+        foreach ($list as $userId => $status) {
             $viewPresenceOnSiteAllowed = $privacyForUserIdList[$userId];
 
-            if ($viewPresenceOnSiteAllowed && $status > 0)
-            {
-                switch($status)
-                {
+            if ($viewPresenceOnSiteAllowed && $status > 0) {
+                switch($status) {
                     case BOL_UserOnlineDao::CONTEXT_VAL_DESKTOP:
                         $onlineInfo[$userId] = 'status_online';
                         break;
@@ -2017,9 +1814,7 @@ final class MAILBOX_BOL_ConversationService
                         $onlineInfo[$userId] = 'status_online';
                         break;
                 }
-            }
-            else
-            {
+            } else {
                 $onlineInfo[$userId] = 'offline';
             }
         }
@@ -2032,17 +1827,14 @@ final class MAILBOX_BOL_ConversationService
         $count = 10;
         $deletedTimestamp = $this->getConversationDeletedTimestamp($conversationId);
         $dtoList = $this->messageDao->findHistory($conversationId, $beforeMessageId, $count, $deletedTimestamp);
-        $list = array();
-        foreach($dtoList as $message)
-        {
+        $list = [];
+        foreach ($dtoList as $message) {
             $list[] = $this->getMessageData($message);
         }
 
-        $data = array(
+        return [
             'log' => $list
-        );
-
-        return $data;
+        ];
     }
 
     public function getConversationHistoryForApi($conversationId, $beforeMessageId)
@@ -2050,38 +1842,32 @@ final class MAILBOX_BOL_ConversationService
         $count = 10;
         $deletedTimestamp = $this->getConversationDeletedTimestamp($conversationId);
         $dtoList = $this->messageDao->findHistory($conversationId, $beforeMessageId, $count, $deletedTimestamp);
-        $list = array();
-        foreach($dtoList as $message)
-        {
+        $list = [];
+        foreach ($dtoList as $message) {
             $list[] = $this->getMessageDataForApi($message);
         }
 
-        $data = array(
+        return [
             'log' => $list
-        );
-
-        return $data;
+        ];
     }
 
     public function getConversationDataAndLog($conversationId, $first = 0, $count = 16)
     {
         $userId = OW::getUser()->getId();
         $conversation = $this->getConversation($conversationId);
-        if (empty($conversation))
-        {
-            return array();
+        if (empty($conversation)) {
+            return [];
         }
 
-        if ($conversation->initiatorId != $userId && $conversation->interlocutorId != $userId)
-        {
-            return array('close_dialog'=>true);
+        if ($conversation->initiatorId !== $userId && $conversation->interlocutorId !== $userId) {
+            return ['close_dialog' => true];
         }
 
         $list = $this->getConversationMessagesList($conversationId, $first, $count);
         $language = OW::getLanguage();
 
-        switch ( $userId )
-        {
+        switch ($userId) {
             case $conversation->initiatorId:
 
                 $conversationOpponentId = (int)$conversation->interlocutorId;
@@ -2095,11 +1881,11 @@ final class MAILBOX_BOL_ConversationService
                 break;
         }
 
-        $data = array();
+        $data = [];
         $data['conversationId'] = $conversationId;
         $data['opponentId'] = $conversationOpponentId;
         $data['mode'] = $this->getConversationMode($conversationId);
-        $data['subject'] = ($conversation->subject == MAILBOX_BOL_ConversationDao::WINK_CONVERSATION_SUBJECT) ? OW::getLanguage()->text('mailbox', 'wink_conversation_subject') : $conversation->subject;
+        $data['subject'] = ($conversation->subject === MAILBOX_BOL_ConversationDao::WINK_CONVERSATION_SUBJECT) ? OW::getLanguage()->text('mailbox', 'wink_conversation_subject') : $conversation->subject;
 
         $profileDisplayname = BOL_UserService::getInstance()->getDisplayName($conversationOpponentId);
         $profileDisplayname = empty($profileDisplayname) ? BOL_UserService::getInstance()->getUserName($conversationOpponentId) : $profileDisplayname;
@@ -2109,20 +1895,19 @@ final class MAILBOX_BOL_ConversationService
         $avatarUrl = BOL_AvatarService::getInstance()->getAvatarUrl($conversationOpponentId);
         $data['avatarUrl'] = empty($avatarUrl) ? BOL_AvatarService::getInstance()->getDefaultAvatarUrl() : $avatarUrl;
 
-        $avatarData = BOL_AvatarService::getInstance()->getDataForUserAvatars(array($conversationOpponentId));
+        $avatarData = BOL_AvatarService::getInstance()->getDataForUserAvatars([$conversationOpponentId]);
         $data['avatarLabel'] = !empty($avatarData[$conversationOpponentId]) ? mb_substr($avatarData[$conversationOpponentId]['label'], 0, 1) : null;
 
         $data['status'] = $this->getUserStatus($conversationOpponentId);
         $data['log'] = $list;
         $data['logLength'] = $this->getConversationLength($conversationId);
-        $shortUserData = $this->getFields(array($conversationOpponentId));
+        $shortUserData = $this->getFields([$conversationOpponentId]);
         $data['shortUserData'] = $shortUserData[$conversationOpponentId];
 
         $checkResult = $this->checkUser($userId, $conversationOpponentId);
 
         $data['isSuspended'] = $checkResult['isSuspended'];
-        if ($data['isSuspended'])
-        {
+        if ($data['isSuspended']) {
             $data['suspendReasonMessage'] = $checkResult['suspendReasonMessage'];
         }
 
@@ -2138,15 +1923,13 @@ final class MAILBOX_BOL_ConversationService
         return $this->messageDao->findLastSentMessage($userId);
     }
 
-    public function findUnreadMessages( $userId, $ignoreList, $timeStamp = null )
+    public function findUnreadMessages($userId, $ignoreList, $timeStamp = null)
     {
-        $list = array();
+        $list = [];
 
         $messages = $this->messageDao->findUnreadMessages($userId, $ignoreList, $timeStamp, $this->getActiveModeList());
 
-        $list = $this->getMessageDataForList($messages);
-
-        return $list;
+        return $this->getMessageDataForList($messages);
     }
 
     public function splitLongMessages($string)
@@ -2157,20 +1940,15 @@ final class MAILBOX_BOL_ConversationService
         $delimiter = ' ';
         $string_array = explode(' ', $string);
 
-        foreach ( $string_array as $id => $word )
-        {
-            if ( mb_strlen(trim($word)) > $split_length )
-            {
+        foreach ($string_array as $id => $word) {
+            if (mb_strlen(trim($word)) > $split_length) {
                 $originalWord = $word;
                 $autoLinked = UTIL_HtmlTag::autoLink(trim($word));
-                if ( strlen( $autoLinked ) != strlen( trim($originalWord) ) )
-                {
+                if (strlen($autoLinked) !== strlen(trim($originalWord))) {
 //                    $str = mb_substr($originalWord, $split_length);
 //                    $str = $this->splitLongMessages($str);
-                    $string_array[$id] = $originalWord;// '<a href="'.$originalWord.'" target="_blank">'.mb_substr($originalWord, 7, $split_length) . $delimiter . $str."</a>";
-                }
-                else
-                {
+                    $string_array[$id] = $originalWord; // '<a href="'.$originalWord.'" target="_blank">'.mb_substr($originalWord, 7, $split_length) . $delimiter . $str."</a>";
+                } else {
                     $str = mb_substr($word, $split_length);
                     $str = $this->splitLongMessages($str);
                     $string_array[$id] = mb_substr($word, 0, $split_length) . $delimiter . $str;
@@ -2188,17 +1966,14 @@ final class MAILBOX_BOL_ConversationService
 
     public function markMessageIdListReadByUser($messageIdList, $userId)
     {
-        $conversationIds = array();
-        foreach($messageIdList as $messageId)
-        {
+        $conversationIds = [];
+        foreach ($messageIdList as $messageId) {
             $message = $this->getMessage($messageId);
-            if (!in_array($message->conversationId, $conversationIds))
-            {
+            if (!in_array($message->conversationId, $conversationIds)) {
                 $conversationIds[] = $message->conversationId;
             }
 
             $this->markMessageRead($messageId);
-
         }
 
         $this->markRead($conversationIds, $userId);
@@ -2207,77 +1982,65 @@ final class MAILBOX_BOL_ConversationService
     private function getUserIdListAlt($userId)
     {
         $friendsEnabled = (bool)OW::getEventManager()->call('plugin.friends');
-        if ($friendsEnabled)
-        {
-            $friendIdList = OW::getEventManager()->call('plugin.friends.get_friend_list', array('userId'=>$userId));
-        }
-        else
-        {
-            $friendIdList = array();
+        if ($friendsEnabled) {
+            $friendIdList = OW::getEventManager()->call('plugin.friends.get_friend_list', ['userId' => $userId]);
+        } else {
+            $friendIdList = [];
         }
 
-        $userIdList = array();
+        $userIdList = [];
 
         $userWithCorrespondenceIdList = $this->getUserListWithCorrespondence();
 
-        $queryParts = BOL_UserDao::getInstance()->getUserQueryFilter("u", "id", array(
-            "method" => "BOL_UserDao::findList"
-        ));
+        $queryParts = BOL_UserDao::getInstance()->getUserQueryFilter('u', 'id', [
+            'method' => 'BOL_UserDao::findList'
+        ]);
 
-        $correspondenceCondition = "";
-        $friendsCondition = "";
-        if (!empty($userWithCorrespondenceIdList))
-        {
-            $friendsCondition = "";
-            if (!empty($friendIdList))
-            {
-                $correspondenceCondition = " AND ( `u`.`id` IN ( ".OW::getDbo()->mergeInClause($userWithCorrespondenceIdList)." ) ";
-                $friendsCondition = " OR `u`.`id` IN ( ".OW::getDbo()->mergeInClause($friendIdList)." ) )";
+        $correspondenceCondition = '';
+        $friendsCondition = '';
+        if (!empty($userWithCorrespondenceIdList)) {
+            $friendsCondition = '';
+            if (!empty($friendIdList)) {
+                $correspondenceCondition = ' AND ( `u`.`id` IN ( '.OW::getDbo()->mergeInClause($userWithCorrespondenceIdList).' ) ';
+                $friendsCondition = ' OR `u`.`id` IN ( '.OW::getDbo()->mergeInClause($friendIdList).' ) )';
+            } else {
+                $correspondenceCondition = ' AND `u`.`id` IN ( '.OW::getDbo()->mergeInClause($userWithCorrespondenceIdList).' ) ';
             }
-            else
-            {
-                $correspondenceCondition = " AND `u`.`id` IN ( ".OW::getDbo()->mergeInClause($userWithCorrespondenceIdList)." ) ";
-            }
-        }
-        else
-        {
-            if (!empty($friendIdList))
-            {
-                $friendsCondition = " AND `u`.`id` IN ( ".OW::getDbo()->mergeInClause($friendIdList)." )";
-            }
-            else
-            {
-                return array(
+        } else {
+            if (!empty($friendIdList)) {
+                $friendsCondition = ' AND `u`.`id` IN ( '.OW::getDbo()->mergeInClause($friendIdList).' )';
+            } else {
+                return [
                     'userIdList' => $userIdList,
                     'userWithCorrespondenceIdList' => $userWithCorrespondenceIdList,
                     'friendIdList' => $friendIdList
-                );
+                ];
             }
         }
 
-        $query = "SELECT `u`.`id`
-            FROM `".BOL_UserDao::getInstance()->getTableName()."` as `u`
-            {$queryParts["join"]}
+        $query = 'SELECT `u`.`id`
+            FROM `'.BOL_UserDao::getInstance()->getTableName()."` as `u`
+            {$queryParts['join']}
 
-            WHERE {$queryParts["where"]} ".$correspondenceCondition." ".$friendsCondition;
+            WHERE {$queryParts['where']} ".$correspondenceCondition.' '.$friendsCondition;
 
         $tmpUserIdList = OW::getDbo()->queryForColumnList($query);
 
-        foreach($tmpUserIdList as $id)
-        {
-            if ($id == $userId) continue;
+        foreach ($tmpUserIdList as $id) {
+            if ($id === $userId) {
+                continue;
+            }
 
-            if (!in_array($id, $userIdList))
-            {
+            if (!in_array($id, $userIdList)) {
                 $userIdList[] = $id;
             }
         }
 
-        return array(
+        return [
             'userIdList' => $userIdList,
             'userWithCorrespondenceIdList' => $userWithCorrespondenceIdList,
             'friendIdList' => $friendIdList
-        );
+        ];
     }
 
     private function getUserIdList($userId)
@@ -2285,79 +2048,71 @@ final class MAILBOX_BOL_ConversationService
         return $this->getUserIdListAlt($userId);
 
         $friendsEnabled = (bool)OW::getEventManager()->call('plugin.friends');
-        if ($friendsEnabled)
-        {
-            $friendIdList = OW::getEventManager()->call('plugin.friends.get_friend_list', array('userId'=>$userId));
-        }
-        else
-        {
-            $friendIdList = array();
+        if ($friendsEnabled) {
+            $friendIdList = OW::getEventManager()->call('plugin.friends.get_friend_list', ['userId' => $userId]);
+        } else {
+            $friendIdList = [];
         }
 
-        $userIdList = array();
+        $userIdList = [];
 
         $userWithCorrespondenceIdList = $this->getUserListWithCorrespondence();
-        foreach($userWithCorrespondenceIdList as $id)
-        {
+        foreach ($userWithCorrespondenceIdList as $id) {
             $userIdList[] = $id;
         }
 
-        $queryParts = BOL_UserDao::getInstance()->getUserQueryFilter("u", "id", array(
-            "method" => "BOL_UserDao::findList"
-        ));
+        $queryParts = BOL_UserDao::getInstance()->getUserQueryFilter('u', 'id', [
+            'method' => 'BOL_UserDao::findList'
+        ]);
 
-        $correspondenceCondition = "";
-        if (!empty($userWithCorrespondenceIdList))
-        {
-            $correspondenceCondition = " AND `u`.`id` NOT IN ( ".OW::getDbo()->mergeInClause($userWithCorrespondenceIdList)." ) ";
+        $correspondenceCondition = '';
+        if (!empty($userWithCorrespondenceIdList)) {
+            $correspondenceCondition = ' AND `u`.`id` NOT IN ( '.OW::getDbo()->mergeInClause($userWithCorrespondenceIdList).' ) ';
         }
 
-        $query = "SELECT `u`.`id`
-            FROM `".BOL_UserDao::getInstance()->getTableName()."` as `u`
-            {$queryParts["join"]}
+        $query = 'SELECT `u`.`id`
+            FROM `'.BOL_UserDao::getInstance()->getTableName()."` as `u`
+            {$queryParts['join']}
 
-            WHERE {$queryParts["where"]} ".$correspondenceCondition;
+            WHERE {$queryParts['where']} ".$correspondenceCondition;
 
         $tmpUserIdList = OW::getDbo()->queryForColumnList($query);
 
-        foreach($tmpUserIdList as $id)
-        {
-            if ($id == $userId) continue;
+        foreach ($tmpUserIdList as $id) {
+            if ($id === $userId) {
+                continue;
+            }
 
-            if (!in_array($id, $userIdList))
-            {
+            if (!in_array($id, $userIdList)) {
                 $userIdList[] = $id;
             }
         }
 
-        return array(
+        return [
             'userIdList' => $userIdList,
             'userWithCorrespondenceIdList' => $userWithCorrespondenceIdList,
             'friendIdList' => $friendIdList
-        );
+        ];
     }
 
-    public function getUserList($userId, $data = array())
+    public function getUserList($userId, $data = [])
     {
-        if (empty($data))
-        {
+        if (empty($data)) {
             $data = $this->getUserIdList($userId);
         }
         $list = $this->getUserInfoForUserIdList($data['userIdList'], $data['userWithCorrespondenceIdList'], $data['friendIdList']);
 
         $onlineCount = 0;
-        $result = array();
+        $result = [];
 
-        foreach($list as $userData)
-        {
+        foreach ($list as $userData) {
             $result[] = $userData;
-            if ($userData['status'] != 'offline' && empty($userData['wasBlocked']))
-            {
-                $onlineCount++;
+            if ($userData['status'] !== 'offline' && empty($userData['wasBlocked'])) {
+                ++$onlineCount;
             }
         }
 
-        return array('onlineCount'=>$onlineCount, 'list'=>$result);
+        return ['onlineCount' => $onlineCount, 'list' => $result];
     }
 
     public function getUserOnlineList($userId)
@@ -2367,25 +2122,22 @@ final class MAILBOX_BOL_ConversationService
         $list = $this->getUserOnlineInfoForUserIdList($data['userIdList'], $data['userWithCorrespondenceIdList'], $data['friendIdList']);
 
         $onlineCount = 0;
-        $result = array();
-        foreach($list as $userData)
-        {
+        $result = [];
+        foreach ($list as $userData) {
             $result[] = $userData;
-            if ($userData['status'] != 'offline' && empty($userData['wasBlocked']))
-            {
-                $onlineCount++;
+            if ($userData['status'] !== 'offline' && empty($userData['wasBlocked'])) {
+                ++$onlineCount;
             }
         }
 
-        return array('onlineCount'=>$onlineCount, 'list'=>$result, 'userIdList'=>$data);
+        return ['onlineCount' => $onlineCount, 'list' => $result, 'userIdList' => $data];
     }
 
     public function resetUserLastData($userId)
     {
         $userLastData = $this->userLastDataDao->findUserLastDataFor($userId);
 
-        if ($userLastData)
-        {
+        if ($userLastData) {
             $userLastData->data = '';
 
             $this->userLastDataDao->save($userLastData);
@@ -2402,53 +2154,51 @@ final class MAILBOX_BOL_ConversationService
     public function getLastData($params)
     {
         return $this->getLastDataAlt($params);
-/*
-        $result = array();
-        $userId = OW::getUser()->getId();
-        $userService = BOL_UserService::getInstance();
+        /*
+                $result = array();
+                $userId = OW::getUser()->getId();
+                $userService = BOL_UserService::getInstance();
 
-        $userOnlineListData = $this->getUserOnlineList($userId);
+                $userOnlineListData = $this->getUserOnlineList($userId);
 
-        if ($params['userOnlineCount'] === 0 || $userOnlineListData['onlineCount'] != $params['userOnlineCount'])
-        {
-            $userListData = $this->getUserList($userId, $userOnlineListData['userIdList']);
-            $result['userList'] = $userListData['list'];
-            $result['userOnlineCount'] = $userListData['onlineCount'];
-        }
+                if ($params['userOnlineCount'] === 0 || $userOnlineListData['onlineCount'] != $params['userOnlineCount'])
+                {
+                    $userListData = $this->getUserList($userId, $userOnlineListData['userIdList']);
+                    $result['userList'] = $userListData['list'];
+                    $result['userOnlineCount'] = $userListData['onlineCount'];
+                }
 
-        $messageList = $this->findUnreadMessages($userId, $params['unreadMessageList'], $params['lastMessageTimestamp']);
-        if (!empty($messageList))
-        {
-            $result['messageList'] = $messageList;
-        }
+                $messageList = $this->findUnreadMessages($userId, $params['unreadMessageList'], $params['lastMessageTimestamp']);
+                if (!empty($messageList))
+                {
+                    $result['messageList'] = $messageList;
+                }
 
-        $convListLength = $this->countConversationListByUserId($userId);
+                $convListLength = $this->countConversationListByUserId($userId);
 
-        if ($convListLength != $params['conversationsCount'])
-        {
-            $result['conversationsCount'] = $convListLength;
-            $result['convList'] = $this->getConversationListByUserId(OW::getUser()->getId(), 0, 10);
-        }
+                if ($convListLength != $params['conversationsCount'])
+                {
+                    $result['conversationsCount'] = $convListLength;
+                    $result['convList'] = $this->getConversationListByUserId(OW::getUser()->getId(), 0, 10);
+                }
 
-        return $result;*/
+                return $result;*/
     }
 
     public function getLastDataAlt($params)
     {
-        $result = array();
+        $result = [];
         $userId = OW::getUser()->getId();
 
         $userLastData = $this->userLastDataDao->findUserLastDataFor($userId);
 
-        if (empty($userLastData))
-        {
+        if (empty($userLastData)) {
             $userLastData = new MAILBOX_BOL_UserLastData();
             $userLastData->userId = $userId;
         }
 
-        if ($userLastData->data == '')
-        {
-            $userData = array();
+        if ($userLastData->data === '') {
+            $userData = [];
             $userService = BOL_UserService::getInstance();
 
             $userOnlineListData = $this->getUserOnlineList($userId);
@@ -2498,23 +2248,19 @@ final class MAILBOX_BOL_ConversationService
 
         $messageList = $this->findUnreadMessages($userId, $params['unreadMessageList'], $params['lastMessageTimestamp']);
 
-        if (!empty($messageList))
-        {
-            $conversations = array();
+        if (!empty($messageList)) {
+            $conversations = [];
             $notViewedConversations = 0;
-            foreach($messageList as $message)
-            {
-                if (!in_array($message['convId'], $conversations))
-                {
+            foreach ($messageList as $message) {
+                if (!in_array($message['convId'], $conversations)) {
                     $conversations[] = $message['convId'];
-                    if (!$message['conversationViewed'])
-                    {
-                        $notViewedConversations++;
+                    if (!$message['conversationViewed']) {
+                        ++$notViewedConversations;
                     }
                 }
             }
             $result['messageList'] = $messageList;
-            $result['newMessageCount'] = array('all'=>count($conversations), 'new'=>(int)$notViewedConversations);
+            $result['newMessageCount'] = ['all' => count($conversations), 'new' => (int)$notViewedConversations];
         }
 //        else
 //        {
@@ -2525,25 +2271,20 @@ final class MAILBOX_BOL_ConversationService
         $data = json_decode($userLastData->data, true);
 
 
-        if ($params['userOnlineCount'] === 0 || $data['userOnlineCount'] != $params['userOnlineCount'])
-        {
+        if ($params['userOnlineCount'] === 0 || $data['userOnlineCount'] !== $params['userOnlineCount']) {
             $result['userOnlineCount'] = $data['userOnlineCount'];
             $result['userList'] = $data['userList'];
         }
 
-        if ($data['conversationsCount'] != $params['conversationsCount'])
-        {
+        if ($data['conversationsCount'] !== $params['conversationsCount']) {
             $result['conversationsCount'] = $data['conversationsCount'];
             $result['convList'] = $data['convList'];
         }
 
-        
-        if (!empty($data['messageList']))
-        {
-            foreach($data['messageList'] as $id => $message)
-            {
-                if (in_array($message['id'], $params['unreadMessageList']))
-                {
+
+        if (!empty($data['messageList'])) {
+            foreach ($data['messageList'] as $id => $message) {
+                if (in_array($message['id'], $params['unreadMessageList'])) {
                     unset($data['messageList'][$id]);
                 }
             }
@@ -2553,12 +2294,9 @@ final class MAILBOX_BOL_ConversationService
         //--  remove content from blocked users --//
         $blockedUsers = $this->findBlockedByMeUserIdList();
 
-        if ( !empty($result['userList']) )
-        {
-            foreach ( $result['userList'] as $index => &$user )
-            {
-                if ( in_array($user['opponentId'], $blockedUsers) )
-                {
+        if (!empty($result['userList'])) {
+            foreach ($result['userList'] as $index => &$user) {
+                if (in_array($user['opponentId'], $blockedUsers)) {
                     $user['canInvite'] = false;
                 }
             }
@@ -2576,49 +2314,41 @@ final class MAILBOX_BOL_ConversationService
 
         $activeModes = $event->getData();
 
-        if (empty($activeModes))
-        {
-            $activeModes = json_decode( OW::getConfig()->getValue('mailbox', 'active_modes') );
+        if (empty($activeModes)) {
+            $activeModes = json_decode(OW::getConfig()->getValue('mailbox', 'active_modes'));
         }
 
         return $activeModes;
     }
 
-    public function getLastMessageTimestamp( $conversationId )
+    public function getLastMessageTimestamp($conversationId)
     {
         $message = $this->messageDao->findLastMessage($conversationId);
 
         return (!empty($message)) ? (int)$message->timeStamp : 0;
     }
 
-    public function getLastMessageTimestampByUserIdList( $userIdList )
+    public function getLastMessageTimestampByUserIdList($userIdList)
     {
-        $result = array();
+        $result = [];
         $userId = OW::getUser()->getId();
 
-        $messageList = $this->messageDao->findLastMessageByConversationIdListAndUserIdList( $userId, $userIdList );
+        $messageList = $this->messageDao->findLastMessageByConversationIdListAndUserIdList($userId, $userIdList);
 
-        foreach($messageList as $message)
-        {
-            if ($message['recipientId'] == $userId)
-            {
+        foreach ($messageList as $message) {
+            if ($message['recipientId'] === $userId) {
                 $opponentId = $message['senderId'];
             }
 
-            if ($message['senderId'] == $userId)
-            {
+            if ($message['senderId'] === $userId) {
                 $opponentId = $message['recipientId'];
             }
 
-            if (isset($result[$opponentId]))
-            {
-                if ( $result[$opponentId] < (int)$message['timeStamp'] )
-                {
+            if (isset($result[$opponentId])) {
+                if ($result[$opponentId] < (int)$message['timeStamp']) {
                     $result[$opponentId] = (int)$message['timeStamp'];
                 }
-            }
-            else
-            {
+            } else {
                 $result[$opponentId] = (int)$message['timeStamp'];
             }
         }
@@ -2644,55 +2374,46 @@ final class MAILBOX_BOL_ConversationService
 
     public function checkPermissions()
     {
-        if ( !OW::getUser()->isAuthenticated() )
-        {
-            return "You need to sign in";
+        if (!OW::getUser()->isAuthenticated()) {
+            return 'You need to sign in';
         }
 
-        if ( !OW::getRequest()->isAjax() )
-        {
-            return "Ajax request required";
+        if (!OW::getRequest()->isAjax()) {
+            return 'Ajax request required';
         }
 
         return false;
     }
 
-    public function getUserInfo( $opponentId, $userWithCorrespondenceIdList = null, $friendIdList = null )
+    public function getUserInfo($opponentId, $userWithCorrespondenceIdList = null, $friendIdList = null)
     {
         $userId = OW::getUser()->getId();
 
 
         $profileUrl = BOL_UserService::getInstance()->getUserUrl($opponentId);
         $avatarUrl = BOL_AvatarService::getInstance()->getAvatarUrl($opponentId);
-        if ( empty($avatarUrl) )
-        {
+        if (empty($avatarUrl)) {
             $avatarUrl = BOL_AvatarService::getInstance()->getDefaultAvatarUrl();
         }
 
         $isFriend = false;
-        if ($friendIdList === null)
-        {
-            $friendIdList = array();
-            $friendship = OW::getEventManager()->call('plugin.friends.check_friendship', array('userId' => $userId, 'friendId' => $opponentId));
-            if ( !empty($friendship) && $friendship->getStatus() == 'active' )
-            {
+        if ($friendIdList === null) {
+            $friendIdList = [];
+            $friendship = OW::getEventManager()->call('plugin.friends.check_friendship', ['userId' => $userId, 'friendId' => $opponentId]);
+            if (!empty($friendship) && $friendship->getStatus() === 'active') {
                 $friendIdList[] = $opponentId;
             }
         }
 
-        if (in_array($opponentId, $friendIdList))
-        {
+        if (in_array($opponentId, $friendIdList)) {
             $isFriend = true;
         }
 
         $wasCorrespondence = false;
-        if ($userWithCorrespondenceIdList === null)
-        {
+        if ($userWithCorrespondenceIdList === null) {
             $userWithCorrespondenceIdList = $this->getUserListWithCorrespondence();
             $wasCorrespondence = in_array($opponentId, $userWithCorrespondenceIdList);
-        }
-        else
-        {
+        } else {
             $wasCorrespondence = in_array($opponentId, $userWithCorrespondenceIdList);
         }
 
@@ -2702,14 +2423,16 @@ final class MAILBOX_BOL_ConversationService
 
         $profileDisplayname = BOL_UserService::getInstance()->getDisplayName($opponentId);
         $profileDisplayname = empty($profileDisplayname) ? BOL_UserService::getInstance()->getUserName($opponentId) : $profileDisplayname;
-        $avatarData = BOL_AvatarService::getInstance()->getDataForUserAvatars(array($opponentId));
-        $shortUserDataByUserIdList = $this->getFields(array($opponentId));
+        $avatarData = BOL_AvatarService::getInstance()->getDataForUserAvatars([$opponentId]);
+        $shortUserDataByUserIdList = $this->getFields([$opponentId]);
 
-        $info = array(
+        $info = [
             'opponentId' => (int)$opponentId,
             'displayName' => $profileDisplayname,
             'avatarUrl' => $avatarUrl,
-            'avatarLabel' => !empty($avatarData[$opponentId]) ? mb_substr($avatarData[$opponentId]['label'], 0, 1) : null,
+            'avatarLabel' => !empty($avatarData[$opponentId]) && !empty($avatarData[$opponentId]['label']) ?
+                mb_substr($avatarData[$opponentId]['label'], 0, 1) :
+                null,
             'profileUrl' => $profileUrl,
             'isFriend' => $isFriend,
             'status' => $conversationService->getUserStatus($opponentId),
@@ -2717,28 +2440,23 @@ final class MAILBOX_BOL_ConversationService
             'convId' => $conversationId, //here it is a chat conversation id
             'wasCorrespondence' => $wasCorrespondence,
             'shortUserData' => !empty($shortUserDataByUserIdList[$opponentId]) ? $shortUserDataByUserIdList[$opponentId] : $profileDisplayname
-        );
+        ];
 
         $activeModes = $this->getActiveModeList();
-        if (in_array('chat', $activeModes))
-        {
-            $url = OW::getRouter()->urlForRoute('mailbox_chat_conversation', array('userId'=>$opponentId));
+        if (in_array('chat', $activeModes)) {
+            $url = OW::getRouter()->urlForRoute('mailbox_chat_conversation', ['userId' => $opponentId]);
             $info['url'] = $url;
             $info['canInvite'] = $this->getInviteToChatPrivacySettings($userId, $opponentId);
 
-            if ( !$info['canInvite'] )
-            {
+            if (!$info['canInvite']) {
                 $info['wasBlocked'] = true;
             }
-        }
-        else
-        {
-            $url = OW::getRouter()->urlForRoute('mailbox_compose_mail_conversation', array('opponentId'=>$opponentId));
+        } else {
+            $url = OW::getRouter()->urlForRoute('mailbox_compose_mail_conversation', ['opponentId' => $opponentId]);
             $info['url'] = $url;
         }
 
-        if ( BOL_UserService::getInstance()->isBlocked($opponentId) )
-        {
+        if (BOL_UserService::getInstance()->isBlocked($opponentId)) {
             $info['wasBlocked'] = true;
         }
 
@@ -2748,29 +2466,28 @@ final class MAILBOX_BOL_ConversationService
     private function isBlockedByUserIdList($userId, $userIdList)
     {
         $userIdListString = OW::getDbo()->mergeInClause($userIdList);
-        $sql = "SELECT `userId` FROM `".BOL_UserBlockDao::getInstance()->getTableName()."` WHERE `blockedUserId` = :userId AND `userId` IN ( {$userIdListString} )";
+        $sql = 'SELECT `userId` FROM `'.BOL_UserBlockDao::getInstance()->getTableName()."` WHERE `blockedUserId` = :userId AND `userId` IN ( {$userIdListString} )";
 
-        return OW::getDbo()->queryForList($sql, array('userId'=>$userId));
+        return OW::getDbo()->queryForList($sql, ['userId' => $userId]);
     }
 
 
     private function findBlockedByMeUserIdList()
     {
-        $sql = "SELECT `blockedUserId` FROM `".BOL_UserBlockDao::getInstance()->getTableName()."` WHERE `userId` = :userId";
+        $sql = 'SELECT `blockedUserId` FROM `'.BOL_UserBlockDao::getInstance()->getTableName().'` WHERE `userId` = :userId';
 
-        return OW::getDbo()->queryForColumnList($sql, array('userId'=>OW::getUser()->getId()));
+        return OW::getDbo()->queryForColumnList($sql, ['userId' => OW::getUser()->getId()]);
     }
 
-    public function getFields( $userIdList )
+    public function getFields($userIdList)
     {
-        $fields = array();
+        $fields = [];
 
-        foreach($userIdList as $userId)
-        {
+        foreach ($userIdList as $userId) {
             $fields[$userId] = '';
         }
 
-        $qs = array();
+        $qs = [];
 
         $qs[] = 'username';
 
@@ -2779,86 +2496,74 @@ final class MAILBOX_BOL_ConversationService
 
         $qBdate = BOL_QuestionService::getInstance()->findQuestionByName('birthdate');
 
-        if ( $qBdate->onView )
-        {
+        if ($qBdate->onView) {
             $qs[] = 'birthdate';
         }
 
         $qSex = BOL_QuestionService::getInstance()->findQuestionByName('sex');
 
-        if ( $qSex->onView )
-        {
+        if ($qSex->onView) {
             $qs[] = 'sex';
         }
 
         $qLocation = BOL_QuestionService::getInstance()->findQuestionByName('googlemap_location');
-        if ($qLocation)
-        {
-            if ( $qLocation->onView )
-            {
+        if ($qLocation) {
+            if ($qLocation->onView) {
                 $qs[] = 'googlemap_location';
             }
         }
 
         $questionList = BOL_QuestionService::getInstance()->getQuestionData($userIdList, $qs);
 
-        foreach($questionList as $userId => $question)
-        {
-            $userFields = array();
+        foreach ($questionList as $userId => $question) {
+            $userFields = [];
 
-            $fields[$userId] = isset($question[$questionName]) ? "<b>".$question[$questionName]."</b>" : "<b>".$question['username']."</b>";
+            $fields[$userId] = isset($question[$questionName]) ? '<b>'.$question[$questionName].'</b>' : '<b>'.$question['username'].'</b>';
 
             $sexValue = '';
-            if ( !empty($question['sex']) )
-            {
+            if (!empty($question['sex'])) {
                 $sex = $question['sex'];
 
-                for ( $i = 0; $i < 31; $i++ )
-                {
+                for ($i = 0; $i < 31; ++$i) {
                     $val = pow(2, $i);
-                    if ( (int) $sex & $val )
-                    {
+                    if ((int) $sex & $val) {
                         $sexValue .= BOL_QuestionService::getInstance()->getQuestionValueLang('sex', $val) . ', ';
                     }
                 }
 
-                if ( !empty($sexValue) )
-                {
+                if (!empty($sexValue)) {
                     $userFields['sex'] = substr($sexValue, 0, -2);
-                    $fields[$userId] .= "<br/>".$userFields['sex'];
+                    $fields[$userId] .= '<br/>'.$userFields['sex'];
                 }
             }
 
-            if ( !empty($question['birthdate']) )
-            {
+            if (!empty($question['birthdate'])) {
                 $date = UTIL_DateTime::parseDate($question['birthdate'], UTIL_DateTime::MYSQL_DATETIME_DATE_FORMAT);
 
                 $userFields['age'] = UTIL_DateTime::getAge($date['year'], $date['month'], $date['day']);
-                $fields[$userId] .= "<br/>".$userFields['age'];
+                $fields[$userId] .= '<br/>'.$userFields['age'];
             }
 
 
-            if (!empty($question['googlemap_location']))
-            {
+            if (!empty($question['googlemap_location'])) {
                 $userFields['googlemap_location'] = !empty($question['googlemap_location']['address'])
                     ? $question['googlemap_location']['address']
                     : '';
-                $fields[$userId] .= "<br/>".$userFields['googlemap_location'];
+                $fields[$userId] .= '<br/>'.$userFields['googlemap_location'];
             }
         }
 
         return $fields;
     }
 
-    public function getUserInfoForUserIdList( $userIdList, $userWithCorrespondenceIdList = array(), $friendIdList = array() )
+    public function getUserInfoForUserIdList($userIdList, $userWithCorrespondenceIdList = [], $friendIdList = [])
     {
-        if (empty($userIdList))
-        {
-            return array();
+        if (empty($userIdList)) {
+            return [];
         }
         $activeModes = $this->getActiveModeList();
 
-        $userInfoList = array();
+        $userInfoList = [];
         $userId = OW::getUser()->getId();
 
 
@@ -2867,41 +2572,33 @@ final class MAILBOX_BOL_ConversationService
         $userNameByUserIdList = BOL_UserService::getInstance()->getUserNamesForList($userIdList);
         $avatarData = BOL_AvatarService::getInstance()->getDataForUserAvatars($userIdList);
         $conversationIdByUserIdList = $this->getChatConversationIdWithUserByIdList($userId, $userIdList);
-        $friendIdList = OW::getEventManager()->call('plugin.friends.get_friend_list', array('userId'=>$userId));
+        $friendIdList = OW::getEventManager()->call('plugin.friends.get_friend_list', ['userId' => $userId]);
         $shortUserDataByUserIdList = $this->getFields($userIdList);
 
-        if (empty($friendIdList))
-        {
-            $friendIdList = array();
+        if (empty($friendIdList)) {
+            $friendIdList = [];
         }
 
         $lastMessageTimestampByUserIdList = $this->getLastMessageTimestampByUserIdList($userIdList);
 
-        if (in_array('chat', $activeModes))
-        {
+        if (in_array('chat', $activeModes)) {
             $canInviteByUserIdList = $this->getInviteToChatPrivacySettingsForUserIdList($userId, $userIdList);
-        }
-        else
-        {
-            $canInviteByUserIdList = array();
+        } else {
+            $canInviteByUserIdList = [];
         }
 
-        foreach ($userIdList as $opponentId)
-        {
+        foreach ($userIdList as $opponentId) {
             $wasCorrespondence = false;
-            if ($userWithCorrespondenceIdList === null)
-            {
+            if ($userWithCorrespondenceIdList === null) {
                 $userWithCorrespondenceIdList = $this->getUserListWithCorrespondence();
                 $wasCorrespondence = in_array($opponentId, $userWithCorrespondenceIdList);
-            }
-            else
-            {
+            } else {
                 $wasCorrespondence = in_array($opponentId, $userWithCorrespondenceIdList);
             }
 
             $conversationId = array_key_exists($opponentId, $conversationIdByUserIdList) ? $conversationIdByUserIdList[$opponentId] : 0;
 
-            $info = array(
+            $info = [
                 'opponentId' => (int)$opponentId,
                 'displayName' => empty($avatarData[$opponentId]['title']) ? $userNameByUserIdList[$opponentId] : $avatarData[$opponentId]['title'],
                 'avatarUrl' => $avatarData[$opponentId]['src'],
@@ -2913,22 +2610,18 @@ final class MAILBOX_BOL_ConversationService
                 'convId' => (int)$conversationId, //here it is a chat conversation id
                 'wasCorrespondence' => $wasCorrespondence,
                 'shortUserData' => $shortUserDataByUserIdList[$opponentId]
-            );
+            ];
 
-            if (in_array('chat', $activeModes))
-            {
-                $url = OW::getRouter()->urlForRoute('mailbox_chat_conversation', array('userId'=>$opponentId));
+            if (in_array('chat', $activeModes)) {
+                $url = OW::getRouter()->urlForRoute('mailbox_chat_conversation', ['userId' => $opponentId]);
                 $info['url'] = $url;
                 $info['canInvite'] = $canInviteByUserIdList[$opponentId];
 
-                if ( !$info['canInvite'] )
-                {
+                if (!$info['canInvite']) {
                     $info['wasBlocked'] = true;
                 }
-            }
-            else
-            {
-                $url = OW::getRouter()->urlForRoute('mailbox_compose_mail_conversation', array('opponentId'=>$opponentId));
+            } else {
+                $url = OW::getRouter()->urlForRoute('mailbox_compose_mail_conversation', ['opponentId' => $opponentId]);
                 $info['url'] = $url;
             }
 
@@ -2940,15 +2633,14 @@ final class MAILBOX_BOL_ConversationService
         return $userInfoList;
     }
 
-    public function getUserInfoForUserIdListForApi( $userIdList, $userWithCorrespondenceIdList = array(), $friendIdList = array() )
+    public function getUserInfoForUserIdListForApi($userIdList, $userWithCorrespondenceIdList = [], $friendIdList = [])
     {
-        if (empty($userIdList))
-        {
-            return array();
+        if (empty($userIdList)) {
+            return [];
         }
         $activeModes = $this->getActiveModeList();
 
-        $userInfoList = array();
+        $userInfoList = [];
         $userId = OW::getUser()->getId();
 
         $blockedByUserIdList = $this->isBlockedByUserIdList($userId, $userIdList);
@@ -2956,41 +2648,33 @@ final class MAILBOX_BOL_ConversationService
         $userNameByUserIdList = BOL_UserService::getInstance()->getUserNamesForList($userIdList);
         $avatarData = BOL_AvatarService::getInstance()->getDataForUserAvatars($userIdList, true, false, true, true);
         $conversationIdByUserIdList = $this->getChatConversationIdWithUserByIdList($userId, $userIdList);
-        $friendIdList = OW::getEventManager()->call('plugin.friends.get_friend_list', array('userId'=>$userId));
+        $friendIdList = OW::getEventManager()->call('plugin.friends.get_friend_list', ['userId' => $userId]);
         $shortUserDataByUserIdList = $this->getFields($userIdList);
 
-        if (empty($friendIdList))
-        {
-            $friendIdList = array();
+        if (empty($friendIdList)) {
+            $friendIdList = [];
         }
 
         $lastMessageTimestampByUserIdList = $this->getLastMessageTimestampByUserIdList($userIdList);
 
-        if (in_array('chat', $activeModes))
-        {
+        if (in_array('chat', $activeModes)) {
             $canInviteByUserIdList = $this->getInviteToChatPrivacySettingsForUserIdList($userId, $userIdList);
-        }
-        else
-        {
-            $canInviteByUserIdList = array();
+        } else {
+            $canInviteByUserIdList = [];
         }
 
-        foreach ($userIdList as $opponentId)
-        {
+        foreach ($userIdList as $opponentId) {
             $wasCorrespondence = false;
-            if ($userWithCorrespondenceIdList === null)
-            {
+            if ($userWithCorrespondenceIdList === null) {
                 $userWithCorrespondenceIdList = $this->getUserListWithCorrespondence();
                 $wasCorrespondence = in_array($opponentId, $userWithCorrespondenceIdList);
-            }
-            else
-            {
+            } else {
                 $wasCorrespondence = in_array($opponentId, $userWithCorrespondenceIdList);
             }
 
             $conversationId = array_key_exists($opponentId, $conversationIdByUserIdList) ? $conversationIdByUserIdList[$opponentId] : 0;
 
-            $info = array(
+            $info = [
                 'opponentId' => (int)$opponentId,
                 'displayName' => empty($avatarData[$opponentId]['title']) ? $userNameByUserIdList[$opponentId] : $avatarData[$opponentId]['title'],
                 'avatarUrl' => $avatarData[$opponentId]['src'],
@@ -3002,16 +2686,14 @@ final class MAILBOX_BOL_ConversationService
                 'convId' => (int)$conversationId, //here it is a chat conversation id
                 'wasCorrespondence' => $wasCorrespondence,
                 'shortUserData' => $shortUserDataByUserIdList[$opponentId]
-            );
+            ];
 
-            if (in_array('chat', $activeModes))
-            {
+            if (in_array('chat', $activeModes)) {
 //                $url = OW::getRouter()->urlForRoute('mailbox_chat_conversation', array('userId'=>$opponentId));
 //                $info['url'] = $url;
                 $info['canInvite'] = $canInviteByUserIdList[$opponentId];
 
-                if ( !$info['canInvite'] )
-                {
+                if (!$info['canInvite']) {
                     $info['wasBlocked'] = true;
                 }
             }
@@ -3029,42 +2711,35 @@ final class MAILBOX_BOL_ConversationService
         return $userInfoList;
     }
 
-    public function getUserOnlineInfoForUserIdList( $userIdList, $userWithCorrespondenceIdList = null, $friendIdList = null )
+    public function getUserOnlineInfoForUserIdList($userIdList, $userWithCorrespondenceIdList = null, $friendIdList = null)
     {
-        if (empty($userIdList))
-        {
-            return array();
+        if (empty($userIdList)) {
+            return [];
         }
 
         $activeModes = $this->getActiveModeList();
         $conversationService = MAILBOX_BOL_ConversationService::getInstance();
 
-        $userInfoList = array();
+        $userInfoList = [];
         $userId = OW::getUser()->getId();
 
         $blockedByUserIdList = $this->isBlockedByUserIdList($userId, $userIdList);
         $onlineStatusByUserIdList = $this->getUserStatusForUserIdList($userIdList);
-        if (in_array('chat', $activeModes))
-        {
+        if (in_array('chat', $activeModes)) {
             $canInviteByUserIdList = $this->getInviteToChatPrivacySettingsForUserIdList($userId, $userIdList);
-        }
-        else
-        {
-            $canInviteByUserIdList = array();
+        } else {
+            $canInviteByUserIdList = [];
         }
 
-        foreach ($userIdList as $opponentId)
-        {
-            $info = array(
+        foreach ($userIdList as $opponentId) {
+            $info = [
                 'status' => $onlineStatusByUserIdList[$opponentId],
-            );
+            ];
 
-            if (in_array('chat', $activeModes))
-            {
+            if (in_array('chat', $activeModes)) {
                 $info['canInvite'] = $canInviteByUserIdList[$opponentId];
 
-                if ( !$info['canInvite'] )
-                {
+                if (!$info['canInvite']) {
                     $info['wasBlocked'] = true;
                 }
             }
@@ -3079,18 +2754,15 @@ final class MAILBOX_BOL_ConversationService
 
     public function getInviteToChatPrivacySettings($userId, $opponentId)
     {
-        $eventParams = array(
+        $eventParams = [
             'action' => 'mailbox_invite_to_chat',
             'ownerId' => $opponentId,
             'viewerId' => $userId
-        );
+        ];
 
-        try
-        {
+        try {
             OW::getEventManager()->getInstance()->call('privacy_check_permission', $eventParams);
-        }
-        catch ( RedirectException $e )
-        {
+        } catch (RedirectException $e) {
             return false;
         }
 
@@ -3099,45 +2771,37 @@ final class MAILBOX_BOL_ConversationService
 
     public function getViewPresenceOnSitePrivacySettings($userId, $opponentId)
     {
-        $eventParams = array(
+        $eventParams = [
             'action' => 'base_view_my_presence_on_site',
             'ownerId' => $opponentId,
             'viewerId' => $userId
-        );
+        ];
 
-        try
-        {
+        try {
             OW::getEventManager()->getInstance()->call('privacy_check_permission', $eventParams);
-        }
-        catch ( RedirectException $e )
-        {
-
+        } catch (RedirectException $e) {
             return false;
         }
 
         return true;
     }
 
-    private function getPrivacySettingsForUserIdList( $actionName, $userId, $userIdList)
+    private function getPrivacySettingsForUserIdList($actionName, $userId, $userIdList)
     {
-        $eventParams = array(
+        $eventParams = [
             'action' => $actionName,
             'ownerIdList' => $userIdList,
             'viewerId' => $userId
-        );
+        ];
 
         $permissions = OW::getEventManager()->getInstance()->call('privacy_check_permission_for_user_list', $eventParams);
 
-        $result = array();
+        $result = [];
 
-        foreach($userIdList as $opponentId)
-        {
-            if ( isset($permissions[$opponentId]['blocked']) && $permissions[$opponentId]['blocked'] == true )
-            {
+        foreach ($userIdList as $opponentId) {
+            if (isset($permissions[$opponentId]['blocked']) && $permissions[$opponentId]['blocked'] === true) {
                 $result[$opponentId] = false;
-            }
-            else
-            {
+            } else {
                 $result[$opponentId] = true;
             }
         }
@@ -3159,18 +2823,14 @@ final class MAILBOX_BOL_ConversationService
     {
         $userId = OW::getUser()->getId();
 
-        $userIdList = $this->messageDao->findUserListWithCorrespondence($userId);
-
-        return $userIdList;
+        return $this->messageDao->findUserListWithCorrespondence($userId);
     }
 
     public function getUserListWithCorrespondenceAlt($friendIdList)
     {
         $userId = OW::getUser()->getId();
 
-        $userIdList = $this->messageDao->findUserListWithCorrespondenceAlt($userId, $friendIdList);
-
-        return $userIdList;
+        return $this->messageDao->findUserListWithCorrespondenceAlt($userId, $friendIdList);
     }
 
     public function countConversationListByUserId($userId)
@@ -3180,28 +2840,26 @@ final class MAILBOX_BOL_ConversationService
         return (int)$this->conversationDao->countConversationListByUserId($userId, $activeModes);
     }
 
-    public function getConversationListByUserId($userId, $from = 0, $count = 50, $convId = null){
-        $data = array();
+    public function getConversationListByUserId($userId, $from = 0, $count = 50, $convId = null)
+    {
+        $data = [];
 
         $activeModes = $this->getActiveModeList();
         $conversationItemList = $this->conversationDao->findConversationItemListByUserId($userId, $activeModes, $from, $count, $convId);
 
-        foreach($conversationItemList as $i => $conversation)
-        {
-                $conversationItemList[$i]['timeStamp'] = (int)$conversation['initiatorMessageTimestamp'];
-                $conversationItemList[$i]['lastMessageSenderId'] = $conversation['initiatorMessageSenderId'];
-                $conversationItemList[$i]['isSystem'] = $conversation['initiatorMessageIsSystem'];
-                $conversationItemList[$i]['text'] = $conversation['initiatorText'];
+        foreach ($conversationItemList as $i => $conversation) {
+            $conversationItemList[$i]['timeStamp'] = (int)$conversation['initiatorMessageTimestamp'];
+            $conversationItemList[$i]['lastMessageSenderId'] = $conversation['initiatorMessageSenderId'];
+            $conversationItemList[$i]['isSystem'] = $conversation['initiatorMessageIsSystem'];
+            $conversationItemList[$i]['text'] = $conversation['initiatorText'];
 
-                $conversationItemList[$i]['lastMessageId'] = $conversation['initiatorLastMessageId'];
-                $conversationItemList[$i]['recipientRead'] = $conversation['initiatorRecipientRead'];
-                $conversationItemList[$i]['lastMessageRecipientId'] = $conversation['initiatorMessageRecipientId'];
-                $conversationItemList[$i]['lastMessageWasAuthorized'] = $conversation['initiatorMessageWasAuthorized'];
+            $conversationItemList[$i]['lastMessageId'] = $conversation['initiatorLastMessageId'];
+            $conversationItemList[$i]['recipientRead'] = $conversation['initiatorRecipientRead'];
+            $conversationItemList[$i]['lastMessageRecipientId'] = $conversation['initiatorMessageRecipientId'];
+            $conversationItemList[$i]['lastMessageWasAuthorized'] = $conversation['initiatorMessageWasAuthorized'];
         }
 
-        $data = $this->getConversationItemByConversationIdListForApi( $conversationItemList );
-
-        return $data;
+        return $this->getConversationItemByConversationIdListForApi($conversationItemList);
     }
 
 //    public function sortConversationList($a, $b)
@@ -3213,38 +2871,31 @@ final class MAILBOX_BOL_ConversationService
     {
         $deletedTimestamp = 0;
         $conversation = $this->getConversation($conversationId);
-        if ($conversation->initiatorId == OW::getUser()->getId())
-        {
+        if ($conversation->initiatorId === OW::getUser()->getId()) {
             $deletedTimestamp = $conversation->initiatorDeletedTimestamp;
-        }
-        else
-        {
+        } else {
             $deletedTimestamp = $conversation->interlocutorDeletedTimestamp;
         }
 
         return $deletedTimestamp;
     }
 
-    public function getNewConsoleConversationCount( $userId, $messageList )
+    public function getNewConsoleConversationCount($userId, $messageList)
     {
-        $convList = array();
-        foreach ($messageList as $messageData)
-        {
-            if (!in_array($messageData['convId'], $convList))
-            {
+        $convList = [];
+        foreach ($messageList as $messageData) {
+            if (!in_array($messageData['convId'], $convList)) {
                 $convList[] = $messageData['convId'];
             }
         }
         return $this->conversationDao->getNewConversationCountForConsole($userId, $convList);
     }
 
-    public function getViewedConversationCountForConsole( $userId, $messageList )
+    public function getViewedConversationCountForConsole($userId, $messageList)
     {
-        $convList = array();
-        foreach ($messageList as $messageData)
-        {
-            if (!in_array($messageData['convId'], $convList))
-            {
+        $convList = [];
+        foreach ($messageList as $messageData) {
+            if (!in_array($messageData['convId'], $convList)) {
                 $convList[] = $messageData['convId'];
             }
         }
@@ -3252,11 +2903,10 @@ final class MAILBOX_BOL_ConversationService
         return $this->conversationDao->getViewedConversationCountForConsole($userId, $convList);
     }
 
-    public function getConsoleConversationList( $userId, $first, $count, $lastPingTime, $ignoreList = array() )
+    public function getConsoleConversationList($userId, $first, $count, $lastPingTime, $ignoreList = [])
     {
-        if ( empty($userId) || !isset($first) || !isset($count) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($userId) || !isset($first) || !isset($count)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
         $activeModes = $this->getActiveModeList();
@@ -3264,22 +2914,20 @@ final class MAILBOX_BOL_ConversationService
         return $this->conversationDao->getConsoleConversationList($activeModes, $userId, $first, $count, $lastPingTime, $ignoreList);
     }
 
-    public function getMarkedUnreadConversationList( $userId, $ignoreList = array() )
+    public function getMarkedUnreadConversationList($userId, $ignoreList = [])
     {
-        $list = $this->conversationDao->getMarkedUnreadConversationList( $userId, $ignoreList, $this->getActiveModeList() );
-        foreach($list as $id => $value)
-        {
+        $list = $this->conversationDao->getMarkedUnreadConversationList($userId, $ignoreList, $this->getActiveModeList());
+        foreach ($list as $id => $value) {
             $list[$id] = (int)$value;
         }
 
         return $list;
     }
 
-    public function getInboxConversationList( $userId, $first, $count )
+    public function getInboxConversationList($userId, $first, $count)
     {
-        if ( empty($userId) || !isset($first) || !isset($count) )
-        {
-            throw new InvalidArgumentException("Not numeric params were provided! Numbers are expected!");
+        if (empty($userId) || !isset($first) || !isset($count)) {
+            throw new InvalidArgumentException('Not numeric params were provided! Numbers are expected!');
         }
 
         return $this->conversationDao->getInboxConversationList($userId, $first, $count);
@@ -3292,16 +2940,14 @@ final class MAILBOX_BOL_ConversationService
 
     public function countUnreadMessagesForConversationList($conversationIdList, $userId)
     {
-        if (count($conversationIdList) == 0)
-        {
-            return array();
+        if (count($conversationIdList) === 0) {
+            return [];
         }
 
         $list = $this->messageDao->countUnreadMessagesForConversationList($conversationIdList, $userId);
 
-        $result = array();
-        foreach($list as $item)
-        {
+        $result = [];
+        foreach ($list as $item) {
             $result[$item['conversationId']] = $item['count'];
         }
 
@@ -3312,57 +2958,47 @@ final class MAILBOX_BOL_ConversationService
     {
         $language = OW::getLanguage();
         $user = BOL_UserService::getInstance()->findUserById($conversationOpponentId);
-        $result = array();
+        $result = [];
 
-        if (empty($user))
-        {
+        if (empty($user)) {
             $result['isSuspended'] = true;
-            $result['suspendReasonMessage'] = $language->text('mailbox', 'user_is_deleted');//TODO add lang
-        }
-        else
-        {
+            $result['suspendReasonMessage'] = $language->text('mailbox', 'user_is_deleted'); //TODO add lang
+        } else {
             $suspendReason = '';
             $isDeleted = false;
 
             $isSuspended = BOL_UserService::getInstance()->isSuspended($conversationOpponentId);
-            if ($isSuspended)
-            {
+            if ($isSuspended) {
                 $suspendReasonMessage = $language->text('mailbox', 'user_is_suspended');
             }
 
             $isApproved = true;
-            if ( OW::getConfig()->getValue('base', 'mandatory_user_approve') )
-            {
+            if (OW::getConfig()->getValue('base', 'mandatory_user_approve')) {
                 $isApproved = BOL_UserService::getInstance()->isApproved($conversationOpponentId);
             }
-            if (!$isApproved)
-            {
+            if (!$isApproved) {
                 $suspendReasonMessage = $language->text('mailbox', 'user_is_not_approved');
             }
 
             $emailVerified = true;
-            if ( OW::getConfig()->getValue('base', 'confirm_email') )
-            {
+            if (OW::getConfig()->getValue('base', 'confirm_email')) {
                 $emailVerified = $user->emailVerify;
             }
-            if (!$emailVerified)
-            {
+            if (!$emailVerified) {
                 $suspendReasonMessage = $language->text('mailbox', 'user_is_not_verified');
             }
 
             $isAuthorizedReadMessage = true;
 
             $isBlocked = BOL_UserService::getInstance()->isBlocked($userId, $conversationOpponentId);
-            if ($isBlocked)
-            {
+            if ($isBlocked) {
                 $suspendReasonMessage = $language->text('base', 'user_block_message');
                 $suspendReason = 'isBlocked';
             }
 
             $result['isSuspended'] = $isSuspended || !$isApproved || !$emailVerified || !$isAuthorizedReadMessage || $isBlocked;
 
-            if ($result['isSuspended'])
-            {
+            if ($result['isSuspended']) {
                 $result['suspendReasonMessage'] = $suspendReasonMessage;
                 $result['suspendReason'] = $suspendReason;
             }
@@ -3381,26 +3017,22 @@ final class MAILBOX_BOL_ConversationService
     /**
      * Application event methods
      */
-    public function getUnreadMessageCount( $userId, $ignoreList = array(), $time = null, $activeModes = array() )
+    public function getUnreadMessageCount($userId, $ignoreList = [], $time = null, $activeModes = [])
     {
-        $ignoreList = empty($ignoreList) ? array() : (array)$ignoreList;
-        $time = $time == null ? time() : (int)$time;
+        $ignoreList = empty($ignoreList) ? [] : (array)$ignoreList;
+        $time = $time === null ? time() : (int)$time;
         $activeModes = empty($activeModes) ? $this->getActiveModeList() : $activeModes;
         $messageList = $this->messageDao->findUnreadMessages($userId, $ignoreList, $time, $activeModes);
 
-        $winkList = array();
-        if (OW::getPluginManager()->isPluginActive('winks'))
-        {
-            $winks = WINKS_BOL_Service::getInstance()->findWinkList( $userId, 0, 9999 );
-            foreach ($winks as $wink)
-            {
-                if ($wink->userId == $userId)
-                {
+        $winkList = [];
+        if (OW::getPluginManager()->isPluginActive('winks')) {
+            $winks = WINKS_BOL_Service::getInstance()->findWinkList($userId, 0, 9999);
+            foreach ($winks as $wink) {
+                if ($wink->userId === $userId) {
                     continue;
                 }
 
-                if ($wink->status == 'wait')
-                {
+                if ($wink->status === 'wait') {
                     $winkList[] = $wink->userId;
                 }
             }
@@ -3412,11 +3044,9 @@ final class MAILBOX_BOL_ConversationService
     public function getConversationRead(MAILBOX_BOL_Conversation $conversation, $userId)
     {
         $conversationRead = 0;
-        switch ( $userId )
-        {
+        switch ($userId) {
             case $conversation->initiatorId:
-                if ( (int) $conversation->read & MAILBOX_BOL_ConversationDao::READ_INITIATOR )
-                {
+                if ((int) $conversation->read & MAILBOX_BOL_ConversationDao::READ_INITIATOR) {
                     $conversationRead = 1;
                 }
 
@@ -3424,8 +3054,7 @@ final class MAILBOX_BOL_ConversationService
 
             case $conversation->interlocutorId:
 
-                if ( (int) $conversation->read & MAILBOX_BOL_ConversationDao::READ_INTERLOCUTOR )
-                {
+                if ((int) $conversation->read & MAILBOX_BOL_ConversationDao::READ_INTERLOCUTOR) {
                     $conversationRead = 1;
                 }
 
@@ -3435,35 +3064,29 @@ final class MAILBOX_BOL_ConversationService
         return $conversationRead;
     }
 
-    public function getShortUserInfo( $opponentId )
+    public function getShortUserInfo($opponentId)
     {
         $conversationId = $this->getChatConversationIdWithUserById(OW::getUser()->getId(), $opponentId);
-        if (!empty($conversationId))
-        {
+        if (!empty($conversationId)) {
             $conversation = $this->getConversation($conversationId);
 
             $conversationRead = $this->getConversationRead($conversation, OW::getUser()->getId());
             $lastMessageTimestamp = $this->getLastMessageTimestamp($conversationId);
-        }
-        else
-        {
+        } else {
             $conversationRead = 1;
             $lastMessageTimestamp = 0;
         }
 
-        return array(
-            'userId'=>$opponentId,
-            'conversationRead'=>$conversationRead,
-            'timeStamp'=>$lastMessageTimestamp
-        );
+        return [
+            'userId' => $opponentId,
+            'conversationRead' => $conversationRead,
+            'timeStamp' => $lastMessageTimestamp
+        ];
     }
 
-    public function getChatUserList( $userId, $from = 0, $count = 10 )
+    public function getChatUserList($userId, $from = 0, $count = 10)
     {
-        $conversationList = $this->getConversationListByUserId(OW::getUser()->getId(), $from, $count);
-
-        return $conversationList;
-
+        return $this->getConversationListByUserId(OW::getUser()->getId(), $from, $count);
 //        $data = array();
 //        $list = array();
 //
@@ -3537,41 +3160,34 @@ final class MAILBOX_BOL_ConversationService
     {
         $conversationId = $this->getChatConversationIdWithUserById($userId, $opponentId);
 
-        if (!empty($conversationId))
-        {
+        if (!empty($conversationId)) {
             $dtoList = $this->messageDao->findConversationMessagesByLastMessageTimestamp($conversationId, $lastMessageTimestamp);
-            $list = array();
-            foreach($dtoList as $dto)
-            {
+            $list = [];
+            foreach ($dtoList as $dto) {
                 $list[] = $this->getMessageDataForApi($dto);
             }
-        }
-        else
-        {
-            $list = array();
+        } else {
+            $list = [];
         }
 
         return $list;
     }
 
 
-    public function getNewMessagesForConversation( $conversationId, $lastMessageTimestamp = null )
+    public function getNewMessagesForConversation($conversationId, $lastMessageTimestamp = null)
     {
-        if ( ($conversation = $this->getConversation($conversationId)) === null )
-        {
-            return array();
+        if (($conversation = $this->getConversation($conversationId)) === null) {
+            return [];
         }
 
-        if ( empty($lastMessageTimestamp) )
-        {
+        if (empty($lastMessageTimestamp)) {
             $lastMessageTimestamp = time();
         }
 
-        $result = array();
+        $result = [];
         $messageList = $this->messageDao->findConversationMessagesByLastMessageTimestamp($conversation->id, $lastMessageTimestamp);
 
-        foreach ( $messageList as $message )
-        {
+        foreach ($messageList as $message) {
             $result[] = $this->getMessageDataForApi($message);
         }
 
@@ -3582,10 +3198,10 @@ final class MAILBOX_BOL_ConversationService
      * @param MAILBOX_BOL_Message $message
      * @return array
      */
-    public function getMessageDataForApi( $message )
+    public function getMessageDataForApi($message)
     {
         $defaultAvatarUrl = BOL_AvatarService::getInstance()->getDefaultAvatarUrl();
-        $item = array();
+        $item = [];
 
         $item['convId'] = (int)$message->conversationId;
         $item['mode'] = $this->getConversationMode((int)$message->conversationId);
@@ -3595,7 +3211,7 @@ final class MAILBOX_BOL_ConversationService
         $item['timeStamp'] = (int)$message->timeStamp;
 
         $militaryTime = (bool) OW::getConfig()->getValue('base', 'military_time');
-        $item['timeLabel'] = $militaryTime ? strftime("%H:%M", (int)$message->timeStamp) : strftime("%I:%M%p", (int)$message->timeStamp);
+        $item['timeLabel'] = $militaryTime ? strftime('%H:%M', (int)$message->timeStamp) : strftime('%I:%M%p', (int)$message->timeStamp);
         $item['recipientId'] = (int)$message->recipientId;
         $item['senderId'] = (int)$message->senderId;
 
@@ -3612,29 +3228,25 @@ final class MAILBOX_BOL_ConversationService
         $profileAvatarUrl = empty($avatarUrl) ? $defaultAvatarUrl : $avatarUrl;
         $item['recipientAvatarUrl'] = $profileAvatarUrl;
 
-        $item['isAuthor'] = (bool)((int)$message->senderId == OW::getUser()->getId());
+        $item['isAuthor'] = (bool)((int)$message->senderId === OW::getUser()->getId());
         $item['recipientRead'] = (int)$message->recipientRead;
         $item['isSystem'] = (int)$message->isSystem;
-        $item['attachments'] = array();
+        $item['attachments'] = [];
 
         $conversation = $this->getConversation($message->conversationId);
-        if ( (int)$conversation->initiatorId == OW::getUser()->getId() )
-        {
+        if ((int)$conversation->initiatorId === OW::getUser()->getId()) {
             $item['conversationViewed'] = (bool)((int)$conversation->viewed & MAILBOX_BOL_ConversationDao::VIEW_INITIATOR);
         }
 
-        if ( (int)$conversation->interlocutorId == OW::getUser()->getId() )
-        {
+        if ((int)$conversation->interlocutorId === OW::getUser()->getId()) {
             $item['conversationViewed'] = (bool)((int)$conversation->viewed & MAILBOX_BOL_ConversationDao::VIEW_INTERLOCUTOR);
         }
 
-        if ($item['mode'] == 'mail')
-        {
+        if ($item['mode'] === 'mail') {
             $actionName = 'read_message';
         }
 
-        if ($item['mode'] == 'chat')
-        {
+        if ($item['mode'] === 'chat') {
             $actionName = 'read_chat_message';
         }
 
@@ -3642,51 +3254,39 @@ final class MAILBOX_BOL_ConversationService
 
         $readMessageAuthorized = true;
 
-        if ( (int)$message->senderId != OW::getUser()->getId() && !$message->wasAuthorized )
-        {
-            if ($status['status'] == BOL_AuthorizationService::STATUS_AVAILABLE)
-            {
-                if ($status['authorizedBy'] == 'usercredits')
-                {
+        if ((int)$message->senderId !== OW::getUser()->getId() && !$message->wasAuthorized) {
+            if ($status['status'] === BOL_AuthorizationService::STATUS_AVAILABLE) {
+                if ($status['authorizedBy'] === 'usercredits') {
                     $action = USERCREDITS_BOL_CreditsService::getInstance()->findAction('mailbox', $actionName);
                     $actionPrice = USERCREDITS_BOL_CreditsService::getInstance()->findActionPriceForUser($action->id, OW::getUser()->getId());
 
-                    if ($actionPrice->amount == 0 || $actionPrice->disabled)
-                    {
+                    if ($actionPrice->amount === 0 || $actionPrice->disabled) {
                         $readMessageAuthorized = true;
                         $this->markMessageAuthorizedToRead($message->id);
-                    }
-                    else
-                    {
+                    } else {
                         $readMessageAuthorized = false;
                         $item['isSystem'] = 1;
 
-                        $text = array(
-                            'text'=>OW::getLanguage()->text('mailbox', 'api_read_the_message'),
-                            'eventName'=>'authorizationPromoted',
-                            'status'=>'available'
-                        );
+                        $text = [
+                            'text' => OW::getLanguage()->text('mailbox', 'api_read_the_message'),
+                            'eventName' => 'authorizationPromoted',
+                            'status' => 'available'
+                        ];
                     }
-                }
-                else
-                {
+                } else {
                     $readMessageAuthorized = true;
                     $this->markMessageAuthorizedToRead($message->id);
                 }
-            }
-            else if ($status['status'] == BOL_AuthorizationService::STATUS_PROMOTED)
-            {
+            } elseif ($status['status'] === BOL_AuthorizationService::STATUS_PROMOTED) {
                 $readMessageAuthorized = false;
 
                 $item['isSystem'] = 1;
-                $text = array(
-                    'text'=>strip_tags($status['msg']),
-                    'eventName'=>'authorizationPromoted',
-                    'status'=>'promoted'
-                );
-            }
-            else
-            {
+                $text = [
+                    'text' => strip_tags($status['msg']),
+                    'eventName' => 'authorizationPromoted',
+                    'status' => 'promoted'
+                ];
+            } else {
                 $readMessageAuthorized = false;
                 $text = OW::getLanguage()->text('mailbox', $actionName.'_permission_denied');
             }
@@ -3694,10 +3294,8 @@ final class MAILBOX_BOL_ConversationService
 
         $item['readMessageAuthorized'] = $readMessageAuthorized;
 
-        if ($readMessageAuthorized)
-        {
-            if ($message->isSystem)
-            {
+        if ($readMessageAuthorized) {
+            if ($message->isSystem) {
                 $eventParams = json_decode($message->text, true);
                 $eventParams['params']['messageId'] = (int)$message->id;
 
@@ -3706,32 +3304,25 @@ final class MAILBOX_BOL_ConversationService
 
                 $data = $event->getData();
 
-                if (!empty($data))
-                {
+                if (!empty($data)) {
                     $text = $data;
-                }
-                else
-                {
-                    $text = array(
+                } else {
+                    $text = [
                         'eventName' => $eventParams['eventName'],
-                        'text' => OW::getLanguage()->text('mailbox', 'can_not_display_entitytype_message', array('entityType'=>$eventParams['entityType']))
-                    );
+                        'text' => OW::getLanguage()->text('mailbox', 'can_not_display_entitytype_message', ['entityType' => $eventParams['entityType']])
+                    ];
                 }
-            }
-            else
-            {
+            } else {
                 $text = $this->splitLongMessages($message->text);
             }
 
             $attachments = $this->attachmentDao->findAttachmentsByMessageId($message->id);
-            if (!empty($attachments))
-            {
-                foreach($attachments as $attachment)
-                {
+            if (!empty($attachments)) {
+                foreach ($attachments as $attachment) {
                     $ext = UTIL_File::getExtension($attachment->fileName);
                     $attachmentPath = $this->getAttachmentFilePath($attachment->id, $attachment->hash, $ext, $attachment->fileName);
 
-                    $attItem = array();
+                    $attItem = [];
                     $attItem['id'] = $attachment->id;
                     $attItem['messageId'] = $attachment->messageId;
                     $attItem['downloadUrl'] = OW::getStorage()->getFileUrl($attachmentPath);
@@ -3751,35 +3342,32 @@ final class MAILBOX_BOL_ConversationService
 
     public function getMessagesForApi($userId, $conversationId)
     {
-        $list = array();
+        $list = [];
         $length = 0;
 
-        if (!empty($conversationId))
-        {
+        if (!empty($conversationId)) {
             $count = 16;
             $deletedTimestamp = $this->getConversationDeletedTimestamp($conversationId);
 
             $dtoList = $this->messageDao->findListByConversationId($conversationId, $count, $deletedTimestamp);
 
-            foreach($dtoList as $message)
-            {
+            foreach ($dtoList as $message) {
                 $list[] = $this->getMessageDataForApi($message);
             }
 
             $length = $this->getConversationLength($conversationId);
         }
 
-        return array('list'=>$list, 'length'=>$length);
+        return ['list' => $list, 'length' => $length];
     }
 
-    public function findUnreadMessagesForApi( $userId, $ignoreList, $timeStamp = null )
+    public function findUnreadMessagesForApi($userId, $ignoreList, $timeStamp = null)
     {
-        $list = array();
+        $list = [];
 
         $messages = $this->messageDao->findUnreadMessages($userId, $ignoreList, $timeStamp, $this->getActiveModeList());
 
-        foreach($messages as $id=>$message)
-        {
+        foreach ($messages as $id => $message) {
             $list[] = $this->getMessageDataForApi($message);
         }
 
@@ -3791,22 +3379,17 @@ final class MAILBOX_BOL_ConversationService
 
     public function getConversationsWithAttachmentFromConversationList($conversationIdList)
     {
-        if (empty($conversationIdList))
-        {
-            return array();
+        if (empty($conversationIdList)) {
+            return [];
         }
 
         $list = $this->attachmentDao->findConversationsWithAttachmentFromConversationList($conversationIdList);
 
-        $result = array();
-        foreach($conversationIdList as $conversationId)
-        {
-            if (in_array($conversationId, $list))
-            {
+        $result = [];
+        foreach ($conversationIdList as $conversationId) {
+            if (in_array($conversationId, $list)) {
                 $result[$conversationId] = true;
-            }
-            else
-            {
+            } else {
                 $result[$conversationId] = false;
             }
         }
@@ -3818,37 +3401,28 @@ final class MAILBOX_BOL_ConversationService
     {
         $send_message_interval = (int)OW::getConfig()->getValue('mailbox', 'send_message_interval');
         $conversation = $this->conversationDao->findUserLastConversation($userId);
-        if ($conversation != null)
-        {
-            if (time()-$conversation->createStamp < $send_message_interval)
-            {
+        if ($conversation !== null) {
+            if (time() - $conversation->createStamp < $send_message_interval) {
                 return false;
             }
         }
 
         return true;
     }
-    
+
     public function deleteAttachmentFiles()  // this method has calling from cron
     {
         $attachDtoList = $this->attachmentDao->getAttachmentForDelete();        
-     
-        foreach ($attachDtoList as $attachDto)
-        {   /* @var $attachDto MAILBOX_BOL_Attachment */
+
+        foreach ($attachDtoList as $attachDto) {   /* @var $attachDto MAILBOX_BOL_Attachment */
             $ext = UTIL_File::getExtension($attachDto->fileName);
             $attachmentPath = $this->getAttachmentFilePath($attachDto->id, $attachDto->hash, $ext, $attachDto->fileName);
-              
-            try
-            {
+
+            try {
                 OW::getStorage()->removeFile($attachmentPath);
                 $this->attachmentDao->deleteById($attachDto->id);
+            } catch (Exception $ex) {
             }
-            catch (Exception $ex)
-            {
-            }
-            
-            
-        }        
-        
+        }
     }
 }
