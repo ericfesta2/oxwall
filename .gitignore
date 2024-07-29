@@ -25,11 +25,14 @@ ow_static/plugins/*
 !ow_static/plugins/base
 
 ow_static/themes/*
+!ow_static/themes/.blank
 
 ow_pluginfiles/*
 !ow_pluginfiles/.htaccess
-!ow_pluginfiles/admin/languages/.blank
-!ow_pluginfiles/base/avatars/.blank
+!ow_pluginfiles/admin/languages/export/.blank
+!ow_pluginfiles/admin/languages/import/.blank
+!ow_pluginfiles/admin/languages/tmp/.blank
+!ow_pluginfiles/base/avatars/tmp/.blank
 !ow_pluginfiles/ow/.blank
 !ow_pluginfiles/plugin/.blank
 
