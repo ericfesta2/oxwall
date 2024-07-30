@@ -390,9 +390,8 @@ table.colorPicker td {
 	padding-bottom: 62px;
 }
 /* - admin_bg- */
-body.ow_admin_area {
-	background: #fff;
-	background-image: none;
+.ow_admin_area {
+	background-color: var(--main-background-color);
 	position: relative;
 	height: 100%;
 }
@@ -400,7 +399,6 @@ body.ow_admin_area {
 .ow_footer.ow_admin {
  	margin-top: -62px;
  	height: 60px;
- 	background-color: #fff;
 }
 .ow_footer.ow_admin .ow_canvas {
 	padding: 0 16px;
@@ -424,7 +422,7 @@ body.ow_admin_area {
 }
 .ow_admin_header .ow_site_panel {
 	height: 70px;
-	background-color: rgba(239,242,245,0.5);
+	background-color: var(--main-sect-color);
     position: static;
 }
 .ow_admin_header .ow_console{
