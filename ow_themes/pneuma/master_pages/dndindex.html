@@ -1,69 +1,63 @@
 <main id="ow_page_wrap">
-	<div class="ow_menu_fullpage">
-		<nav id="ow_menu_fullpage_wrap">{$main_menu}</nav>
-	</div>
-	<header id="ow_site_header" class="clearfix">
-		<div class="ow_site_panel">
-			<div id="ow_nav_btn"></div>
-			<a class="ow_logo ow_left" href="{$siteUrl}"></a>
-			<div class="ow_console_right">
-				{component class='BASE_CMP_Console'}
-			</div>
-			<menu id="ow_menu_wrap">{component class='BASE_CMP_MainMenu' responsive=true}</menu>
-		</div>
-	</header>
-	<div class="ow_page_padding">
-		<div class="ow_page_container">
-			<div class="ow_canvas">
-				<div class="ow_page clearfix">
-					{if !empty($heading)}<h1 class="ow_stdmargin {$heading_icon_class}">{$heading}</h1>{/if}
-					<div class="ow_content">
-						{$content}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div id="ow_page_top"></div>
+    <div class="ow_menu_fullpage">
+        <nav id="ow_menu_fullpage_wrap">{$main_menu}</nav>
+    </div>
+    <header id="ow_site_header" class="clearfix">
+        <div class="ow_site_panel">
+            <div id="ow_nav_btn"></div>
+            <a class="ow_logo ow_left" href="{$siteUrl}"></a>
+            <div class="ow_console_right">
+                {component class='BASE_CMP_Console'}
+            </div>
+            <menu id="ow_menu_wrap">{component class='BASE_CMP_MainMenu' responsive=true}</menu>
+        </div>
+    </header>
+    <div class="ow_page_padding">
+        <div class="ow_page_container">
+            <div class="ow_canvas">
+                <div class="ow_page clearfix">
+                    {if !empty($heading)}<h1 class="ow_stdmargin {$heading_icon_class}">{$heading}</h1>{/if}
+                    <div class="ow_content">
+                        {$content}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <footer id="ow_footer">
-	<div class="ow_canvas">
-		<div class="ow_page clearfix">
-			{$bottom_menu}
-			<div class="ow_copyright">
-				{text key='base+copyright'}
-			</div>
-			<div style="float:right;padding-bottom:30px">
-				{$bottomPoweredByLink}
-			</div>
-		</div>
-	</div>
+    <div class="ow_canvas">
+        <div class="ow_page clearfix">
+            {$bottom_menu}
+            <div class="ow_copyright">
+                {text key='base+copyright'}
+            </div>
+            <div style="float:right;padding-bottom:50px">
+                {$bottomPoweredByLink}
+            </div>
+        </div>
+    </div>
 </footer>
 {decorator name='floatbox'}
 <script>
-	window.addEventListener('scroll', function() {
-		const menuWrapPos = $('#ow_menu_wrap').offset().top;
-		const pageWrapRef = document.getElementById('ow_page_wrap');
+    const headerRef = document.getElementById('ow_site_header');
 
-		if ($(this).scrollTop() > menuWrapPos) {
-			pageWrapRef.classList.add('ow_hidden_menu');
-		} else {
-			pageWrapRef.classList.remove('ow_hidden_menu');
-		}
-
-		const sitePanelRef = document.getElementById('ow_site_header');
-
-		if (window.scrollY >= 35) {
-			sitePanelRef.classList.add('scroller');
-		} else {
-			sitePanelRef.classList.remove('scroller')
-		}
-	});
-
-	document.getElementById('ow_nav_btn').addEventListener('click', function() {
-    	document.body.classList.toggle('ow_menu_active');
+    const observer = new IntersectionObserver(entries => {
+        if (entries.length > 0 && entries[0].isIntersecting) {
+            headerRef.classList.remove('scroller');
+        } else {
+            headerRef.classList.add('scroller');
+        }
     });
 
-    document.querySelector('#ow_menu_fullpage_wrap a').addEventListener('click', function() {
-    	document.body.classList.remove('ow_menu_active');
+    observer.observe(document.getElementById('ow_page_top'));
+
+    document.getElementById('ow_nav_btn').addEventListener('click', () => {
+        document.body.classList.toggle('ow_menu_active');
+    });
+
+    document.querySelector('#ow_menu_fullpage_wrap a').addEventListener('click', () => {
+        document.body.classList.remove('ow_menu_active');
     });
 </script>

@@ -567,6 +567,7 @@ body.ow_menu_active {
     background-color: var(--mobile-menu-background-color);
     backdrop-filter: blur(8px) brightness(170%);
     display: none;
+    padding-bottom: 45px;
 }
 .ow_menu_active .ow_site_panel #ow_menu_wrap {
     display: none;
@@ -622,6 +623,13 @@ body.ow_menu_active {
     background-color: var(--main-background-color);
     z-index: 99;
     transition: box-shadow .3s;
+}
+.ow_page_top {
+    position: absolute;
+    top: 34px;
+    left: 0;
+    height: 1px;
+    width: 1px;
 }
 .scroller {
     box-shadow: 0 4px 12px var(--box-shadow-color);
@@ -5734,6 +5742,9 @@ h1.page_title{
     }
 }
 @media (max-width: 767px) {
+    #ow_footer {
+        margin-bottom: 50px;
+    }
     #ow_menu_wrap {
         display: none;
     }
@@ -5767,6 +5778,10 @@ h1.page_title{
         background-color: var(--main-sect-color);
         padding: 0;
         box-shadow: 0 3px 16px rgba(0,0,0,.2);
+    }
+    .ow_console_items_wrap {
+        display: flex;
+        justify-content: center;
     }
     .ow_lp_label br {
         margin: 6px 0;
