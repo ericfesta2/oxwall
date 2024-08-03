@@ -29,7 +29,6 @@
  */
 class BASE_MCTRL_BaseDocument extends OW_MobileActionController
 {
-
     public function page404()
     {
         OW::getResponse()->setHeader('HTTP/1.0', '404 Not Found');
@@ -37,10 +36,10 @@ class BASE_MCTRL_BaseDocument extends OW_MobileActionController
         $this->setPageHeading(OW::getLanguage()->text('base', 'base_document_404_heading'));
         $this->setPageTitle(OW::getLanguage()->text('base', 'base_document_404_title'));
         $this->setDocumentKey('base_page404');
-        $this->assign('message', OW::getLanguage()->text('mobile', 'page_is_not_available', array('url' => OW::getRouter()->urlForRoute('base.desktop_version'))));
+        $this->assign('message', OW::getLanguage()->text('mobile', 'page_is_not_available', ['url' => OW::getRouter()->urlForRoute('base.desktop_version')]));
     }
 
-    public function page403( array $params )
+    public function page403(array $params)
     {
         $language = OW::getLanguage();
         OW::getResponse()->setHeader('HTTP/1.0', '403 Forbidden');
@@ -55,20 +54,18 @@ class BASE_MCTRL_BaseDocument extends OW_MobileActionController
     {
         $urlToRedirect = OW::getRouter()->getBaseUrl();
 
-        if ( !empty($_GET['back-uri']) )
-        {
+        if (!empty($_GET['back-uri'])) {
             $urlToRedirect .= urldecode($_GET['back-uri']);
         }
 
         OW::getApplication()->redirect($urlToRedirect, OW::CONTEXT_DESKTOP);
     }
 
-    public function staticDocument( $params )
+    public function staticDocument($params)
     {
         $navService = BOL_NavigationService::getInstance();
 
-        if ( empty($params['documentKey']) )
-        {
+        if (empty($params['documentKey'])) {
             throw new Redirect404Exception();
         }
 
@@ -76,23 +73,19 @@ class BASE_MCTRL_BaseDocument extends OW_MobileActionController
         $documentKey = $params['documentKey'];
 
         $document = $navService->findDocumentByKey($documentKey);
-        
-        if ( $document === null )
-        {
+
+        if ($document === null) {
             throw new Redirect404Exception();
         }
 
         $menuItem = $navService->findMenuItemByDocumentKey($document->getKey());
 
-        if ( $menuItem !== null )
-        {
-            if ( !$menuItem->getVisibleFor() || ( $menuItem->getVisibleFor() == BOL_NavigationService::VISIBLE_FOR_GUEST && OW::getUser()->isAuthenticated() ) )
-            {
+        if ($menuItem !== null) {
+            if (!$menuItem->getVisibleFor() || ($menuItem->getVisibleFor() === BOL_NavigationService::VISIBLE_FOR_GUEST && OW::getUser()->isAuthenticated())) {
                 throw new Redirect403Exception();
             }
 
-            if ( $menuItem->getVisibleFor() == BOL_NavigationService::VISIBLE_FOR_MEMBER && !OW::getUser()->isAuthenticated() )
-            {
+            if ($menuItem->getVisibleFor() === BOL_NavigationService::VISIBLE_FOR_MEMBER && !OW::getUser()->isAuthenticated()) {
                 throw new AuthenticateException();
             }
         }
@@ -111,33 +104,28 @@ class BASE_MCTRL_BaseDocument extends OW_MobileActionController
 
     public function maintenance()
     {
-        if ( !OW::getRequest()->isAjax() )
-        {
+        if (!OW::getRequest()->isAjax()) {
             OW::getDocument()->getMasterPage()->setTemplate(OW::getThemeManager()->getMasterPageTemplate(OW_MobileMasterPage::TEMPLATE_BLANK));
-        }
-        else
-        {
+        } else {
             exit('{}');
         }
     }
 
     public function splashScreen()
     {
-        if ( isset($_GET['agree']) )
-        {
+        if (isset($_GET['agree'])) {
             setcookie('splashScreen', 1, time() + 3600 * 24 * 30, '/');
             $url = OW_URL_HOME;
-            $url .= isset($_GET['back_uri']) ? $_GET['back_uri'] : '';
+            $url .= $_GET['back_uri'] ?? '';
             $this->redirect($url);
         }
 
         OW::getDocument()->getMasterPage()->setTemplate(OW::getThemeManager()->getMasterPageTemplate(OW_MobileMasterPage::TEMPLATE_BLANK));
-        $this->assign('submit_url', OW::getRequest()->buildUrlQueryString(null, array('agree' => 1)));
+        $this->assign('submit_url', OW::getRequest()->buildUrlQueryString(null, ['agree' => 1]));
 
         $leaveUrl = OW::getConfig()->getValue('base', 'splash_leave_url');
 
-        if ( !empty($leaveUrl) )
-        {
+        if (!empty($leaveUrl)) {
             $this->assign('leaveUrl', $leaveUrl);
         }
     }
@@ -159,19 +147,14 @@ class BASE_MCTRL_BaseDocument extends OW_MobileActionController
         $form->addElement($submit);
         $this->addForm($form);
 
-        if ( OW::getRequest()->isAjax() && $form->isValid($_POST) )
-        {
+        if (OW::getRequest()->isAjax() && $form->isValid($_POST)) {
             $data = $form->getValues();
             $password = OW::getConfig()->getValue('base', 'guests_can_view_password');
-            $cryptedPassword = crypt($data['password'], OW_PASSWORD_SALT);
 
-            if ( !empty($data['password']) && $cryptedPassword === $password )
-            {
+            if (password_verify($data['password'], $password)) {
                 setcookie('base_password_protection', UTIL_String::getRandomString(), (time() + 86400 * 30), '/');
                 echo "OW.info('" . OW::getLanguage()->text('base', 'password_protection_success_message') . "');window.location.reload();";
-            }
-            else
-            {
+            } else {
                 echo "OW.error('" . OW::getLanguage()->text('base', 'password_protection_error_message') . "');";
             }
             exit;
@@ -183,10 +166,10 @@ class BASE_MCTRL_BaseDocument extends OW_MobileActionController
 
     public function notAvailable()
     {
-        $this->assign('message', OW::getLanguage()->text('mobile', 'page_is_not_available', array('url' => OW::getRouter()->urlForRoute('base.desktop_version'))));
+        $this->assign('message', OW::getLanguage()->text('mobile', 'page_is_not_available', ['url' => OW::getRouter()->urlForRoute('base.desktop_version')]));
     }
 
-    public function authorizationFailed( array $params )
+    public function authorizationFailed(array $params)
     {
         $language = OW::getLanguage();
         $this->setPageHeading($language->text('base', 'base_document_auth_failed_heading'));

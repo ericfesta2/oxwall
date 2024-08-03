@@ -38,16 +38,15 @@ class BASE_CTRL_BaseDocument extends OW_ActionController
 
     public function confirmPage()
     {
-        if ( empty($_GET['back_uri']) )
-        {
+        if (empty($_GET['back_uri'])) {
             throw new Redirect404Exception();
         }
 
         OW::getDocument()->getMasterPage()->setTemplate(OW::getThemeManager()->getMasterPageTemplate(OW_MasterPage::TEMPLATE_BLANK));
         $this->assign('text', OW::getSession()->get('baseConfirmPageMessage'));
         OW::getSession()->delete('baseConfirmPageMessage');
-        $this->assign('okBackUrl', OW::getRequest()->buildUrlQueryString(OW_URL_HOME . urlencode($_GET['back_uri']), array('confirm-result' => 1)));
-        $this->assign('clBackUrl', OW::getRequest()->buildUrlQueryString(OW_URL_HOME . urlencode($_GET['back_uri']), array('confirm-result' => 0)));
+        $this->assign('okBackUrl', OW::getRequest()->buildUrlQueryString(OW_URL_HOME . urlencode($_GET['back_uri']), ['confirm-result' => 1]));
+        $this->assign('clBackUrl', OW::getRequest()->buildUrlQueryString(OW_URL_HOME . urlencode($_GET['back_uri']), ['confirm-result' => 0]));
     }
 
     public function page404()
@@ -59,7 +58,7 @@ class BASE_CTRL_BaseDocument extends OW_ActionController
         $this->setDocumentKey('base_page404');
     }
 
-    public function page403( array $params )
+    public function page403(array $params)
     {
         $language = OW::getLanguage();
         OW::getResponse()->setHeader('HTTP/1.0', '403 Forbidden');
@@ -72,37 +71,31 @@ class BASE_CTRL_BaseDocument extends OW_ActionController
 
     public function maintenance()
     {
-        if ( !OW::getRequest()->isAjax() )
-        {
+        if (!OW::getRequest()->isAjax()) {
             OW::getDocument()->getMasterPage()->setTemplate(OW::getThemeManager()->getMasterPageTemplate('blank'));
-            if ( !empty($_COOKIE['adminToken']) && trim($_COOKIE['adminToken']) == OW::getConfig()->getValue('base', 'admin_cookie') )
-            {
-                $this->assign('disableMessage', OW::getLanguage()->text('base', 'maintenance_disable_message', array('url' => OW::getRequest()->buildUrlQueryString(OW::getRouter()->urlForRoute('static_sign_in'), array('back-uri' => urlencode('admin/pages/maintenance'))))));
+            if (!empty($_COOKIE['adminToken']) && trim($_COOKIE['adminToken']) === OW::getConfig()->getValue('base', 'admin_cookie')) {
+                $this->assign('disableMessage', OW::getLanguage()->text('base', 'maintenance_disable_message', ['url' => OW::getRequest()->buildUrlQueryString(OW::getRouter()->urlForRoute('static_sign_in'), ['back-uri' => urlencode('admin/pages/maintenance')])]));
             }
-        }
-        else
-        {
+        } else {
             exit('{}');
         }
     }
 
     public function splashScreen()
     {
-        if ( isset($_GET['agree']) )
-        {
+        if (isset($_GET['agree'])) {
             setcookie('splashScreen', 1, time() + 3600 * 24 * 30, '/');
             $url = OW::getRouter()->getBaseUrl();
-            $url .= isset($_GET['back_uri']) ? $_GET['back_uri'] : '';
+            $url .= $_GET['back_uri'] ?? '';
             $this->redirect($url);
         }
 
         OW::getDocument()->getMasterPage()->setTemplate(OW::getThemeManager()->getMasterPageTemplate('blank'));
-        $this->assign('submit_url', OW::getRequest()->buildUrlQueryString(null, array('agree' => 1)));
+        $this->assign('submit_url', OW::getRequest()->buildUrlQueryString(null, ['agree' => 1]));
 
         $leaveUrl = OW::getConfig()->getValue('base', 'splash_leave_url');
 
-        if ( !empty($leaveUrl) )
-        {
+        if (!empty($leaveUrl)) {
             $this->assign('leaveUrl', $leaveUrl);
         }
     }
@@ -122,19 +115,14 @@ class BASE_CTRL_BaseDocument extends OW_ActionController
         $form->addElement($submit);
         $this->addForm($form);
 
-        if ( OW::getRequest()->isAjax() && $form->isValid($_POST) )
-        {
+        if (OW::getRequest()->isAjax() && $form->isValid($_POST)) {
             $data = $form->getValues();
             $password = OW::getConfig()->getValue('base', 'guests_can_view_password');
-            $data['password'] = crypt($data['password'], OW_PASSWORD_SALT);
 
-            if ( !empty($data['password']) && $data['password'] === $password )
-            {
+            if (password_verify($data['password'], $password)) {
                 setcookie('base_password_protection', UTIL_String::getRandomString(), (time() + 86400 * 30), '/');
                 echo "OW.info('" . OW::getLanguage()->text('base', 'password_protection_success_message') . "');window.location.reload();";
-            }
-            else
-            {
+            } else {
                 echo "OW.error('" . OW::getLanguage()->text('base', 'password_protection_error_message') . "');";
             }
             exit;
@@ -145,18 +133,14 @@ class BASE_CTRL_BaseDocument extends OW_ActionController
 
     public function installCompleted()
     {
-        if ( !OW::getRequest()->isAjax() && !empty($_GET['redirect']) )
-        {
-            if ( !OW::getConfig()->configExists("base", "install_complete") )
-            {
-                OW::getConfig()->addConfig("base", "install_complete", 1);
-            }
-            else
-            {
-                OW::getConfig()->saveConfig("base", "install_complete", 1);
+        if (!OW::getRequest()->isAjax() && !empty($_GET['redirect'])) {
+            if (!OW::getConfig()->configExists('base', 'install_complete')) {
+                OW::getConfig()->addConfig('base', 'install_complete', 1);
+            } else {
+                OW::getConfig()->saveConfig('base', 'install_complete', 1);
             }
 
-            $this->redirect(OW::getRequest()->buildUrlQueryString(null, array('redirect' => null)));
+            $this->redirect(OW::getRequest()->buildUrlQueryString(null, ['redirect' => null]));
         }
 
         $masterPageFileDir = OW::getThemeManager()->getMasterPageTemplate('blank');
@@ -167,15 +151,14 @@ class BASE_CTRL_BaseDocument extends OW_ActionController
     {
         $urlToRedirect = OW::getRouter()->getBaseUrl();
 
-        if ( !empty($_GET['back-uri']) )
-        {
+        if (!empty($_GET['back-uri'])) {
             $urlToRedirect .= urldecode($_GET['back-uri']);
         }
-        
+
         OW::getApplication()->redirect($urlToRedirect, OW::CONTEXT_MOBILE);
     }
 
-    public function authorizationFailed( array $params )
+    public function authorizationFailed(array $params)
     {
         $language = OW::getLanguage();
         $this->setPageHeading($language->text('base', 'base_document_auth_failed_heading'));

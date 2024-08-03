@@ -48,7 +48,7 @@ class BASE_CLASS_StandardAuth extends OW_AuthAdapter
      * @param string $identity
      * @param string $password
      */
-    public function __construct( $identity, $password )
+    public function __construct($identity, $password)
     {
         $this->identity = trim($identity);
         $this->password = trim($password);
@@ -61,22 +61,20 @@ class BASE_CLASS_StandardAuth extends OW_AuthAdapter
      *
      * @return OW_AuthResult
      */
-    function authenticate()
+    public function authenticate()
     {
         $user = $this->userService->findUserForStandardAuth($this->identity);
 
         $language = OW::getLanguage();
 
-        if ( $user === null )
-        {
-            return new OW_AuthResult(OW_AuthResult::FAILURE_IDENTITY_NOT_FOUND, null, array($language->text('base', 'auth_identity_not_found_error_message')));
-        }
-        
-        if ( $user->getPassword() !== BOL_UserService::getInstance()->hashPassword($this->password) )
-        {
-            return new OW_AuthResult(OW_AuthResult::FAILURE_PASSWORD_INVALID, null, array($language->text('base', 'auth_invlid_password_error_message')));
+        if ($user === null) {
+            return new OW_AuthResult(OW_AuthResult::FAILURE_IDENTITY_NOT_FOUND, null, [$language->text('base', 'auth_identity_not_found_error_message')]);
         }
 
-        return new OW_AuthResult(OW_AuthResult::SUCCESS, $user->getId(), array($language->text('base', 'auth_success_message')));
+        if (!password_verify($this->password, $user->getPassword())) {
+            return new OW_AuthResult(OW_AuthResult::FAILURE_PASSWORD_INVALID, null, [$language->text('base', 'auth_invlid_password_error_message')]);
+        }
+
+        return new OW_AuthResult(OW_AuthResult::SUCCESS, $user->getId(), [$language->text('base', 'auth_success_message')]);
     }
 }

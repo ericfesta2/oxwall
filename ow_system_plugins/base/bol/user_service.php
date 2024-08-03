@@ -548,7 +548,7 @@ final class BOL_UserService
 
 
 
-         ;
+        ;
     }
 
     public function isRestrictedUsername($value)
@@ -563,7 +563,7 @@ final class BOL_UserService
 
 
 
-         ;
+        ;
     }
 
     public function isExistEmail($value)
@@ -574,11 +574,7 @@ final class BOL_UserService
 
         $email = $this->findByEmail(trim($value));
 
-        return (bool) (isset($email))
-
-
-
-         ;
+        return (bool) (isset($email));
     }
 
     public function isValidPassword($userId, $value)
@@ -591,11 +587,7 @@ final class BOL_UserService
 
         $password = $this->hashPassword($value);
 
-        return (bool) ($user->password === $password)
-
-
-
-         ;
+        return (bool) ($user->password === $password);
     }
 
     public function markAsFeatured($userId)
@@ -640,7 +632,7 @@ final class BOL_UserService
 
     public function countBlockedUsers($userId)
     {
-        return  $this->userBlockDao->countBlockedUsers($userId);
+        return $this->userBlockDao->countBlockedUsers($userId);
     }
 
     public function isBlocked($id, $byUserId = null)
@@ -942,9 +934,9 @@ final class BOL_UserService
         return $this->userSuspendDao->findByUserId($userId) !== null;
     }
 
-    public function hashPassword($password)
+    public function hashPassword(string $password): string
     {
-        return hash('sha256', OW_PASSWORD_SALT . $password);
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 
     public function findListByRoleId($roleId, $first, $count)
