@@ -16,8 +16,6 @@ define('OW_URL_STATIC', OW_URL_HOME.'ow_static/');
 define('OW_URL_USERFILES', OW_URL_HOME.'ow_userfiles/');
 define('OW_DIR_PLUGINFILES', OW_DIR_ROOT.'ow_pluginfiles/');
 
-define('OW_PASSWORD_SALT', '{$password_salt}');
-
 define('OW_DIR_CORE', OW_DIR_ROOT.'ow_core'.DS);
 define('OW_DIR_INC', OW_DIR_ROOT.'ow_includes'.DS);
 define('OW_DIR_LIB', OW_DIR_ROOT.'ow_libraries'.DS);

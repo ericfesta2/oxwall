@@ -3,6 +3,7 @@ CONTENTS OF THIS FILE
 
  * About Oxwall
  * About This Fork
+ * Compatibility with Legacy Oxwall
  * Copyright
  * Installation and Configuration
  * Appearance
@@ -20,6 +21,22 @@ ABOUT THIS FORK
 This fork of Oxwall is maintained by a longtime enthusiast unaffiliated with the Oxwall Foundation to keep the project
 up-to-date with modern technologies and standards. While the goal of this project is to maintain Oxwall's compatibility
 with a variety of web hosts, it raises the minimum supported version of PHP to 8.3 and MySQL to 8.0.
+
+COMPATIBILITY WITH LEGACY OXWALL
+================================
+
+This fork of Oxwall cannot be assumed to be compatible with the original ("legacy") Oxwall software, whose latest
+version is 1.8.4 as of July 2024, so seamless migrations of legacy Oxwall sites to this fork are presumed not to
+be possible. Known incompatibilities so far:
+
+* This fork does not have access to legacy Oxwall's official update system, so existing sites cannot be updated
+  in-place via the Oxwall admin area.
+* This fork improves the security of how users' passwords are stored and verified, removing a hardcoded salt
+  value that legacy Oxwall relies on. Switching to the new password management algorithms will prevent any
+  previously-registered users from logging in, unless those users' passwords were reset manually.
+
+Because of these limitations, this fork is designed primarily for setting up new Oxwall sites. If you need greater
+interoperability between legacy Oxwall and this fork, feel free to open a pull request in this repo!
 
 COPYRIGHT
 =========
