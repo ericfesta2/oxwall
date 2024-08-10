@@ -19,6 +19,8 @@
 -- Table structure for table `%%TBL-PREFIX%%base_attachment`
 --
 
+START TRANSACTION;
+
 DROP TABLE IF EXISTS `%%TBL-PREFIX%%base_attachment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -38,7 +40,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_attachment` (
   KEY `pluginKey` (`pluginKey`),
   KEY `userId_2` (`userId`),
   KEY `bundle_2` (`bundle`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,7 +66,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_authorization_action` (
   `availableForGuest` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `groupId` (`groupId`,`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=180 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,7 +92,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_authorization_group` (
   `moderated` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,7 +117,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_authorization_moderator` (
   `userId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -141,7 +143,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_authorization_moderator_permission` (
   PRIMARY KEY (`id`),
   KEY `moderatorId` (`moderatorId`),
   KEY `groupId` (`groupId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -166,7 +168,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_authorization_permission` (
   `roleId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `actionId` (`actionId`,`roleId`)
-) ENGINE=MyISAM AUTO_INCREMENT=69 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -194,7 +196,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_authorization_role` (
   `custom` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -222,7 +224,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_authorization_user_role` (
   UNIQUE KEY `user2role` (`userId`,`roleId`),
   KEY `userId` (`userId`),
   KEY `roleId` (`roleId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -248,7 +250,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_avatar` (
   `status` varchar(32) NOT NULL DEFAULT 'active',
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -279,7 +281,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_billing_gateway` (
   `currencies` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `gatewayKey` (`gatewayKey`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -304,7 +306,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_billing_gateway_config` (
   `name` varchar(50) NOT NULL,
   `value` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -331,7 +333,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_billing_gateway_product` (
   `entityId` int(10) NOT NULL,
   `productId` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -357,7 +359,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_billing_product` (
   `active` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `productKey` (`productKey`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -400,7 +402,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_billing_sale` (
   KEY `entityId` (`entityId`),
   KEY `userId` (`userId`),
   KEY `status` (`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -428,7 +430,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_cache` (
   PRIMARY KEY (`id`),
   KEY `key_index` (`key`),
   KEY `expire_index` (`expireTimestamp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -454,7 +456,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_cache_tag` (
   PRIMARY KEY (`id`),
   KEY `tag_index` (`tag`),
   KEY `cacheId_index` (`cacheId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -483,7 +485,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_comment` (
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`),
   KEY `commentEntityId` (`commentEntityId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -511,7 +513,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_comment_entity` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `entityType` (`entityType`,`entityId`),
   KEY `pluginKey` (`pluginKey`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -535,7 +537,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_component` (
   `className` varchar(50) NOT NULL,
   `clonable` tinyint(1) NOT NULL DEFAULT '0',
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=775 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=775 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -565,7 +567,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_component_entity_place` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`entityId`,`uniqName`),
   KEY `componentId` (`componentId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -592,7 +594,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_component_entity_position` (
   `entityId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`entityId`,`componentPlaceUniqName`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -620,7 +622,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_component_entity_setting` (
   `type` varchar(20) NOT NULL DEFAULT 'string',
   PRIMARY KEY (`id`),
   UNIQUE KEY `componentUniqName` (`entityId`,`componentPlaceUniqName`,`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -648,7 +650,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_component_place` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniqName` (`uniqName`),
   KEY `componentId` (`componentId`)
-) ENGINE=MyISAM AUTO_INCREMENT=100801 DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+) ENGINE=InnoDB AUTO_INCREMENT=100801 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -675,7 +677,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_component_place_cache` (
   `entityId` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `userId` (`entityId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -701,7 +703,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_component_position` (
   `order` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `componentPlaceUniqName` (`componentPlaceUniqName`)
-) ENGINE=MyISAM AUTO_INCREMENT=11280 DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+) ENGINE=InnoDB AUTO_INCREMENT=11280 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -729,7 +731,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_component_setting` (
   `type` varchar(20) NOT NULL DEFAULT 'string',
   PRIMARY KEY (`id`),
   UNIQUE KEY `componentPlaceUniqName` (`componentPlaceUniqName`,`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=1447 DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+) ENGINE=InnoDB AUTO_INCREMENT=1447 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -757,7 +759,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_config` (
   `description` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`key`,`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=751 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=751 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -783,7 +785,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_cron_job` (
   `runStamp` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `className` (`methodName`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -808,7 +810,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_db_cache` (
   `value` mediumtext NOT NULL,
   `expireStamp` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -838,7 +840,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_document` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`key`),
   KEY `uriIndex` (`uri`)
-) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -868,7 +870,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_email_verify` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`),
   UNIQUE KEY `hash` (`hash`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -897,7 +899,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_entity_tag` (
   KEY `entityId` (`entityId`),
   KEY `entityType` (`entityType`),
   KEY `tagId` (`tagId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -925,7 +927,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_file` (
   `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -954,7 +956,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_flag` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `entityType` (`entityType`,`entityId`,`userId`),
   KEY `timeStamp` (`timeStamp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -979,7 +981,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_geolocation_country` (
   `cc3` char(3) NOT NULL,
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=239 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=239 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1005,7 +1007,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_geolocation_ip_to_country` (
   `cc3` char(3) NOT NULL,
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1030,7 +1032,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_geolocationdata_ipv4` (
   `cc2` varchar(200) NOT NULL,
   `cc3` varchar(200) DEFAULT NULL,
   `name` varchar(200) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1065,7 +1067,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_invitation` (
   UNIQUE KEY `entityType` (`entityType`,`entityId`,`userId`),
   KEY `timeStamp` (`timeStamp`),
   KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1090,7 +1092,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_invite_code` (
   `expiration_stamp` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1118,7 +1120,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_language` (
   `rtl` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `tag` (`tag`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1129,6 +1131,32 @@ LOCK TABLES `%%TBL-PREFIX%%base_language` WRITE;
 /*!40000 ALTER TABLE `%%TBL-PREFIX%%base_language` DISABLE KEYS */;
 INSERT INTO `%%TBL-PREFIX%%base_language` VALUES (1,'en','English',1,'active',0);
 /*!40000 ALTER TABLE `%%TBL-PREFIX%%base_language` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `%%TBL-PREFIX%%base_language_prefix`
+--
+
+DROP TABLE IF EXISTS `%%TBL-PREFIX%%base_language_prefix`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `%%TBL-PREFIX%%base_language_prefix` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `prefix` varchar(255) NOT NULL,
+  `label` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `prefix` (`prefix`)
+) ENGINE=InnoDB AUTO_INCREMENT=259 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `%%TBL-PREFIX%%base_language_prefix`
+--
+
+LOCK TABLES `%%TBL-PREFIX%%base_language_prefix` WRITE;
+/*!40000 ALTER TABLE `%%TBL-PREFIX%%base_language_prefix` DISABLE KEYS */;
+INSERT INTO `%%TBL-PREFIX%%base_language_prefix` VALUES (1,'admin','Admin'),(6,'ow_custom','Custom'),(7,'base','BASE'),(11,'nav','Navigation'),(253,'mobile','Mobile');
+/*!40000 ALTER TABLE `%%TBL-PREFIX%%base_language_prefix` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1145,7 +1173,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_language_key` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `prefix_key` (`prefixId`,`key`),
   FOREIGN KEY (`prefixId`) REFERENCES `%%TBL-PREFIX%%base_language_prefix`(`id`) ON DELETE CASCADE
-) ENGINE=MyISAM AUTO_INCREMENT=19332 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19332 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1156,32 +1184,6 @@ LOCK TABLES `%%TBL-PREFIX%%base_language_key` WRITE;
 /*!40000 ALTER TABLE `%%TBL-PREFIX%%base_language_key` DISABLE KEYS */;
 INSERT INTO `%%TBL-PREFIX%%base_language_key` VALUES (5837,7,'forgot_password_heading'),(1603,1,'you_are_editing'),(1604,1,'check_other_langs'),(1605,1,'add_new_text'),(1606,1,'go'),(1607,1,'search_results_for_keyword'),(1608,1,'search'),(1609,1,'original_value'),(1610,1,'translation'),(1611,1,'delete'),(1612,1,'custom_keys'),(1613,1,'save_this_page'),(1614,1,'section'),(1615,1,'all_sections'),(1616,1,'missing_text'),(1617,1,'page_note_part_1'),(1618,1,'page_note_part_2'),(1619,1,'msg_one_active_constraint'),(1620,1,'empty'),(1621,1,'missing_keys2'),(1622,1,'active_languages'),(1623,1,'language'),(1624,1,'btn_label_edit'),(1625,1,'btn_label_clone'),(1626,1,'btn_label_deactivate'),(1627,1,'btn_label_activate'),(1628,1,'btn_label_delete'),(9030,7,'authorization_action_newsfeed_add_comment'),(1682,1,'import_lang_note'),(1683,1,'add_new_lang_or_pack'),(1684,1,'select_items_to_import_note'),(1685,1,'lang_import_check_all'),(1686,1,'import_lang_button_label'),(1687,1,'export_lang_header'),(1688,1,'export_lang_note'),(1689,1,'export_lang_button_label'),(1690,1,'export_lang_note2'),(1691,1,'export_lang_button_label2'),(1692,1,'show'),(1693,1,'edit_language'),(1694,1,'available_languages'),(1695,1,'add_key_form_lbl_key'),(1696,1,'add_key_form_lbl_val'),(1697,1,'add_key_form_lbl_add'),(1698,1,'lang_file'),(1699,1,'inactive_languages'),(1700,1,'clone_language'),(1701,1,'clone_form_lbl_label'),(1702,1,'title_add_new_text'),(1703,1,'clone_form_descr_label'),(1704,1,'are_you_sure'),(1705,1,'clone_form_lbl_tag'),(1706,1,'clone_form_descr_tag'),(1708,1,'clone_form_lbl_submit'),(1709,1,'search_no_results_for_keyword'),(1710,1,'no_values'),(1711,7,'forgot_password_submit_label'),(1712,1,'def'),(1713,1,'msg_dublicate_key'),(9029,7,'authorization_group_newsfeed'),(1741,7,'month_2'),(1742,7,'month_8'),(1743,7,'month_9'),(1745,7,'all'),(1746,7,'archive'),(1747,7,'are_you_sure'),(15468,1,'themes_item_add_success_message'),(1752,7,'comments_label'),(1754,7,'by'),(1755,7,'more'),(5833,7,'forgot_password_no_user_error_message'),(15469,1,'theme_add_duplicated_dir_error'),(1768,7,'flag'),(1769,7,'edit'),(1770,7,'delete'),(15467,1,'themes_add_theme_page_heading'),(1773,7,'approve'),(1774,7,'disapprove'),(15472,7,'user_search_back_to_search'),(15471,7,'edit_remote_field_synchronize_title'),(1855,7,'avatar_avatar_is'),(1856,7,'avatar_current'),(1857,7,'avatar_new'),(1858,7,'avatar_crop'),(1859,7,'avatar_crop_instructions'),(1860,7,'avatar_picture'),(1861,7,'avatar_apply_crop'),(16390,1,'error_cant_connect_to_host'),(1863,7,'avatar_preview'),(1886,1,'permissions_roles'),(1887,1,'sidebar_menu_item_settings_language'),(18697,1,'widgets_admin_profile_heading'),(1890,1,'themes_choose_activate_button_label'),(1891,1,'theme_settings_form_submit_label'),(2583,1,'permissions_edit_role'),(1893,1,'theme_settings_no_controls_label'),(1894,7,'not_valid_image'),(1895,7,'questions_question_user_photo_label'),(1896,7,'join_error_photo_file_is_not_valid'),(1897,1,'sidebar_menu_item_theme_choose'),(1898,7,'join_error_password_too_long'),(1899,7,'join_error_password_too_short'),(1900,7,'join_error_password_not_valid'),(1901,7,'join_error_email_already_exist'),(1902,7,'join_error_email_not_valid'),(1903,7,'join_error_username_not_valid'),(1904,1,'themes_choose_list_cap_title'),(1906,7,'join_error_username_already_exist'),(1918,1,'delete_btn_label'),(1919,7,'date_time_today'),(1920,1,'save_btn_label'),(1921,1,'updated_msg'),(1922,1,'page_default_title'),(1923,1,'page_default_heading'),(1926,11,'page_custom_title'),(1927,7,'main_menu_my_profile'),(1928,7,'main_menu_index'),(1930,11,'page_default_title'),(1931,11,'page_default_heading'),(1932,11,'page_default_description'),(1933,11,'page_default_keywords'),(1935,1,'sidebar_menu_settings'),(18698,1,'page_title_manage_plugins'),(1937,1,'sidebar_menu_appearance'),(1938,1,'sidebar_menu_users'),(1939,1,'sidebar_menu_plugins'),(1940,7,'sign_in_submit_label'),(1942,1,'sidebar_menu_item_theme_edit'),(1943,1,'theme_css_edit_css_box_cap_label'),(1944,1,'theme_css_edit_submit_label'),(1948,7,'tag_cloud_cap_label'),(1949,1,'permissions_moderators'),(1950,1,'permissions_index'),(1951,11,'menu_item_main_photo_list'),(1952,11,'menu_item_main_forum'),(1953,1,'theme_css_existing_css_box_cap_label'),(1954,1,'theme_graphics_delete_success_message'),(1955,1,'theme_graphics_upload_form_fail_message'),(1956,1,'theme_graphics_upload_form_success_message'),(1957,1,'theme_graphics_upload_form_submit_label'),(1958,1,'theme_graphics_table_delete'),(1959,1,'theme_graphics_table_url'),(1960,1,'theme_graphics_table_preview'),(1961,1,'theme_graphics_list_cap_label'),(1962,1,'theme_graphics_upload_label'),(1963,7,'questions_question_account_type_label'),(2170,1,'site_tagline'),(1965,1,'theme_settings_cap_label'),(1966,1,'theme_info_author_url_label'),(1967,1,'theme_info_author_label'),(1968,7,'pages_label'),(1970,1,'main_menu_admin'),(1971,7,'date_time_within_one_minute'),(1972,7,'date_time_one_minute_ago'),(1973,7,'date_time_minutes_ago'),(1974,7,'users_main_menu_item'),(1976,1,'theme_info_compatibility_label'),(1977,7,'cmp_add_new_content_box_cap_label'),(1978,1,'theme_info_version_label'),(2601,1,'permissions_default_role'),(2556,7,'email_verify_template_html'),(2476,1,'questions_question_description_label'),(3807,1,'sidebar_menu_privacy'),(1992,7,'comment_add_submit_label'),(1993,7,'comment_box_cap_label'),(1994,7,'avatar_btn_upload'),(1995,7,'avatar_upload_types'),(2643,7,'questions_question_realname_description'),(1998,7,'avatar_change_avatar'),(1999,7,'questions_no_section_label'),(2000,7,'questions_add_new_account_type'),(2008,7,'join_submit_button_continue'),(2009,7,'join_submit_button_join'),(2010,7,'questions_question_9221d78a4201eac23c972e1d4aa2cee6_label'),(2011,7,'questions_question_c441a8a9b955647cdf4c81562d39068a_label'),(2012,7,'questions_section_47f3a94e6cfe733857b31116ce21c337_label'),(2013,1,'sidebar_menu_item_plugin_photo'),(2014,1,'sidebar_menu_item_plugin_video'),(2015,7,'comment_add_post_error'),(2016,7,'comment_add_auth_error'),(2017,7,'comment_no_comments'),(2018,7,'comment_delete_label'),(2019,7,'date_time_one_hour_ago'),(2020,7,'date_time_hours_ago'),(2021,7,'date_time_yesterday'),(2022,7,'date_time_at_label'),(2025,7,'date_time_month_short_9'),(2026,7,'date_time_month_short_1'),(2027,7,'date_time_month_short_2'),(2028,7,'date_time_month_short_3'),(2029,7,'date_time_month_short_4'),(2030,7,'date_time_month_short_5'),(2031,7,'date_time_month_short_6'),(2032,7,'date_time_month_short_7'),(2033,7,'date_time_month_short_8'),(2034,7,'date_time_month_short_10'),(2035,7,'date_time_month_short_11'),(2036,7,'date_time_month_short_12'),(2037,1,'sidebar_menu_item_graphics'),(2038,1,'sidebar_menu_item_css'),(2039,1,'sidebar_menu_item_settings'),(2041,7,'questions_question_repeat_password_label'),(2042,7,'questions_question_password_label'),(2043,7,'questions_question_email_label'),(2044,1,'sidebar_menu_item_questions'),(2047,7,'questions_question_username_label'),(2397,7,'questions_account_type_ef5e279523aed72d87fd8a1fd59d592f'),(2427,7,'questions_section_f90cde5913235d172603cc4e7b9726e3_label'),(2051,1,'sidebar_menu_item_permissions'),(2058,7,'widgets_customize_btn'),(2059,7,'avatar_change'),(2060,7,'avatar_console_edit_profile'),(2061,7,'base_document_404_heading'),(2062,7,'base_document_404'),(2065,7,'view_all'),(2066,7,'month_12'),(2070,7,'user_list_menu_item_latest'),(2071,7,'user_list_menu_item_featured'),(2072,7,'widgets_finish_customize_btn'),(2073,7,'widgets_reset_customization'),(2074,7,'custom_html_widget_default_title'),(2075,1,'sidebar_menu_admin'),(2076,7,'widgets_section_box_title'),(2077,1,'sidebar_menu_dashboard'),(2078,1,'sidebar_menu_item_user_dashboard'),(2079,1,'sidebar_menu_item_user_profile'),(2080,7,'join_index_join_button'),(2081,1,'sidebar_menu_plugins_manage'),(2082,7,'authorization_role_guest'),(2611,7,'massmailing_unsubscribe_successful'),(2085,7,'widgets_action_edit'),(2086,7,'widgets_action_delete'),(2088,7,'custom_html_widget_content_label'),(2093,7,'custom_html_widget_nl2br_label'),(2096,7,'authorization_group_video'),(2097,7,'authorization_action_video_add'),(2098,7,'authorization_action_video_view'),(2099,7,'authorization_group_photo'),(2100,7,'authorization_action_photo_view'),(2101,7,'authorization_action_photo_upload'),(2102,7,'authorization_action_photo_add_comment'),(2103,7,'authorization_action_photo_delete_comment_by_content_owner'),(2104,7,'authorization_group_base'),(2105,7,'authorization_action_base_add_comment'),(2106,7,'authorization_action_base_delete_comment_by_content_owner'),(2107,1,'back_to_site_label'),(2108,7,'widgets_fb_default_settings_label'),(2109,7,'widgets_default_settings_title'),(2110,7,'widgets_default_settings_show_title'),(2111,7,'widgets_default_settings_icon'),(2112,7,'widgets_default_settings_wib'),(2113,7,'widgets_default_settings_freeze'),(2114,7,'widgets_admin_section_information'),(2115,7,'widgets_admin_legend'),(2116,7,'widgets_allow_customize_legend'),(2117,7,'widgets_delete_component_confirm'),(2118,7,'widgets_allow_customize_label'),(2122,7,'widgets_fb_setting_box_title'),(2130,1,'main_menu_item'),(2125,7,'cmp_widget_wall_comments_count'),(2126,7,'cmp_widget_wall_comments_mode'),(2127,7,'cmp_widget_wall_comments_mode_option_2'),(2128,7,'cmp_widget_wall_comments_mode_option_1'),(2131,7,'user_list_widget_empty'),(2132,7,'user_list_menu_item_online'),(2134,7,'widgets_customize_label'),(2135,7,'questions_question_birthdate_label'),(2997,7,'base_join_menu_item'),(18693,1,'pages_page_heading'),(2142,1,'sidebar_menu_item_users'),(2143,1,'sidebar_menu_item_main_settings'),(2144,7,'view_index'),(2145,7,'rss_widget_default_title'),(2146,7,'rss_widget_count_label'),(2147,7,'rss_widget_url_label'),(2148,7,'rss_widget_url_invalid_msg'),(2555,7,'email_verify_send_verify_mail_button_label'),(2257,1,'questions_delete_question_confirmation'),(2155,7,'join_promo'),(2536,1,'questions_add_new_account_type'),(2523,1,'questions_add_values_description'),(18692,1,'themes_settings_page_title'),(2162,1,'menu_item_basics'),(9873,1,'heading_user_settings'),(2164,7,'questions_question_accountType_description'),(2165,7,'questions_question_username_description'),(2166,7,'questions_question_email_description'),(2167,7,'join_index'),(2168,1,'site_installation'),(2169,1,'site_title'),(2171,1,'site_tagline_desc'),(2172,1,'site_description'),(2173,1,'site_description_desc'),(2174,1,'time_settings'),(2175,1,'timezone'),(2176,1,'use_relative_time'),(2177,1,'site_relative_time_desc'),(2178,7,'questions_question_sex_label'),(2179,7,'questions_question_sex_description'),(2180,7,'questions_question_sex_value_1'),(2181,7,'questions_question_sex_value_2'),(2182,7,'questions_question_accountType_label'),(2183,7,'questions_checkbox_value_true'),(2184,7,'questions_checkbox_value_false'),(2185,1,'main_settings_updated'),(2186,7,'widgets_no_content'),(2187,7,'rss_widget_title_only_label'),(2188,7,'view_no_section_label'),(4717,1,'core_update_leave_button_label'),(3812,1,'menu_item_users_recently_active'),(2196,1,'menu_item_user_roles'),(2200,7,'questions_empty_lang_value'),(2207,7,'authorization_group_blogs'),(2208,7,'authorization_action_blogs_add_comment'),(2214,7,'about_me_widget_inv_text'),(2215,7,'about_me_widget_default_title'),(2216,7,'about_me_widget_content_saved'),(2217,1,'heading_browse_users'),(2218,1,'no_users'),(2219,7,'check_all'),(2220,7,'with_selected'),(2231,1,'joined'),(2232,1,'user'),(2233,7,'form_element_select_field_invitation_label'),(2234,7,'form_element_common_invitation_text'),(2235,1,'user_delete_msg'),(2236,1,'confirm_delete_users'),(2642,7,'questions_question_realname_label'),(2554,7,'email_verify_index'),(2582,1,'massmailing_send_mails_message'),(5832,7,'forgot_password_form_text'),(2256,1,'questions_question_was_deleted'),(2269,7,'component_sign_in_login_invitation'),(2270,7,'rates_box_cap_label'),(2271,1,'questions_section_was_deleted'),(2430,7,'questions_admin_description_label'),(2429,7,'questions_admin_question_label'),(2329,7,'questions_menu_add'),(2330,7,'questions_menu_editAccountType'),(2436,7,'copyright'),(2324,7,'questions_account_type_was_added'),(2314,1,'questions_account_type_was_deleted'),(2307,7,'questions_admin_edit_label'),(2308,7,'questions_admin_delete_label'),(2660,7,'suspended_user_page_content'),(2328,7,'questions_menu_index'),(2312,7,'forgot_password_cap_label'),(2313,7,'forgot_password_email_invitation_message'),(2315,7,'forgot_password_mail_template_subject'),(6052,7,'reset_password_mail_template_subject'),(2365,7,'questions_menu_settings'),(16387,1,'add_button'),(2333,7,'comments_add_auth_message'),(2334,7,'questions_question_presentation_text_label'),(15499,7,'questions_question_55c95a36e50b0d7a795fb1caa8a8e520_label'),(2337,7,'questions_question_presentation_textarea_label'),(2338,7,'questions_question_presentation_checkbox_label'),(2339,7,'questions_question_presentation_multicheckbox_label'),(2340,7,'questions_question_presentation_date_label'),(2341,7,'questions_question_presentation_url_label'),(2342,7,'questions_question_presentation_password_label'),(2654,7,'email_verify_verify_mail_was_sent'),(2655,7,'suspend_user_btn'),(2656,7,'user_suspend_btn_lbl'),(2366,7,'questions_config_user_view_presentation_description'),(2355,1,'sidebar_menu_item_plugin_blogs'),(2356,1,'sidebar_menu_item_plugin_links'),(2367,7,'questions_config_user_view_presentation_label'),(2368,7,'authorization_action_blogs_add'),(2370,7,'authorization_action_blogs_view'),(2374,7,'edit_button'),(2375,7,'edit_successfull_edit'),(2376,7,'edit_index'),(2390,1,'questions_edit_section_name_title'),(2381,7,'widgets_panel_dashboard_label'),(18684,1,'user_settings_profile_questions'),(2383,1,'manage_plugins_active_box_cap_label'),(2384,1,'manage_plugins_inactive_box_cap_label'),(2385,1,'manage_plugins_settings_button_label'),(2386,1,'manage_plugins_deactivate_button_label'),(2387,1,'manage_plugins_activate_button_label'),(2388,1,'manage_plugins_uninstall_button_label'),(2389,1,'manage_plugins_install_button_label'),(2391,1,'questions_edit_question_value_title'),(2392,1,'questions_edit_question_name_title'),(2393,1,'questions_edit_question_description_title'),(2394,7,'questions_account_type_all'),(2395,1,'questions_edit_account_type_name_title'),(2396,1,'manage_plugins_install_success_message'),(2406,7,'questions_account_type_290365aadde35a97f11207ca7e4279cc'),(16389,1,'default_role'),(2593,7,'massmailing_unsubscribe'),(2594,1,'permissions_roles_deleted_msg'),(2599,1,'permissions_user_role'),(2600,1,'permissions_number_of_users'),(2595,1,'permissions_please_select_role'),(2589,1,'permissions_role_added_msg'),(2588,1,'permissions_add_form_role_lbl'),(2581,7,'rate_cmp_success_message'),(2425,7,'auth_identity_not_found_error_message'),(2426,7,'auth_invlid_password_error_message'),(2431,7,'auth_success_message'),(2468,1,'msg_lang_cloned'),(2469,1,'heading_questions'),(2472,1,'languages_page_heading'),(2473,1,'questions_account_type_label'),(2474,1,'questions_new_question_label'),(2475,1,'questions_question_name_label'),(2477,1,'questions_for_account_type_label'),(2478,1,'questions_for_account_type_description'),(2479,1,'questions_question_section_label'),(2480,1,'questions_answer_type_label'),(18463,1,'questions_delete_account_type_confirmation'),(2486,1,'questions_possible_values_description'),(2487,1,'questions_columns_count_label'),(2488,1,'questions_required_label'),(2489,1,'questions_required_description'),(2490,1,'questions_on_sing_up_label'),(2491,1,'questions_on_sing_up_description'),(2492,1,'questions_on_edit_label'),(2493,1,'questions_on_edit_description'),(2494,1,'questions_on_view_label'),(2495,1,'questions_on_view_description'),(2496,1,'questions_on_search_description'),(2497,1,'questions_on_search_label'),(2498,1,'questions_save_and_new_label'),(2585,1,'massmailing_unsubscribe_link_text'),(2584,1,'massmailing_unsubscribe_link_html'),(2501,1,'questions_add_question_message'),(2504,1,'questions_update_question_message'),(18472,253,'admin_nav_item_type_external'),(2505,1,'pages_new_form_or'),(2506,1,'questions_edit_delete_value_confirm_message'),(2511,1,'pages_page_field_meta_desc'),(16388,1,'add_question_value_description'),(2513,1,'questions_edit_question_description_label'),(2515,1,'questions_admin_existing_values'),(2516,1,'questions_admin_dragndrop_reorder'),(2517,1,'questions_add_question_values_title'),(2518,1,'questions_question_was_not_update_message'),(2519,1,'questions_question_was_not_updated_message'),(2541,1,'questions_section_was_added'),(2522,1,'questions_add_values_label'),(2525,1,'questions_add_values_submit_button'),(18688,1,'heading_user_input_settings'),(2531,1,'questions_empty_lang_value'),(2529,1,'questions_question_is_not_exist'),(2533,1,'questions_add_question_values_message'),(2542,1,'questions_index_info_txt'),(2540,1,'questions_account_type_was_added'),(2543,1,'questions_index_drag_n_drop_info_txt'),(2544,1,'questions_add_new_question_button'),(2545,1,'questions_profile_question_sections_title'),(2546,1,'questions_section_info_txt'),(2547,1,'questions_new_section_label'),(2549,1,'questions_delete_section_confirmation'),(2557,7,'email_verify_template_text'),(2558,7,'email_verify_email_verify_success'),(2559,1,'questions_add_new_section_button'),(2561,7,'new_message_count_text'),(2562,1,'sidebar_menu_item_dev_langs'),(2661,7,'user_feedback_profile_unsuspended'),(2564,7,'email_verify_promo'),(2565,7,'email_verify_email_verify_fail'),(2568,1,'permissions_edit_role_btn'),(2569,1,'permissions_add_role_btn'),(2570,1,'massmailing_ignore_unsubscribe_label'),(2571,1,'massmailing_email_format_html'),(2572,1,'massmailing_email_format_text'),(2573,1,'massmailing_body_label'),(2574,1,'massmailing_subject_label'),(2575,1,'massmailing_email_format_label'),(2576,1,'massmailing_user_section_label'),(2577,1,'massmailing_total_members'),(2578,1,'massmailing_preview_label'),(2579,1,'massmailing_compose_email'),(2580,1,'massmailing_start_mailing_button'),(2602,1,'permissions_check_all_selected'),(2603,1,'permissions_delete_role'),(2604,1,'permissions_are_you_sure'),(2605,1,'permissions_go_to_permissions_page'),(2609,7,'authorization_role_wqewq'),(2612,7,'massmailing_unsubscribe_failed'),(2613,1,'massmailing'),(2615,7,'questions_section_user_photo_label'),(2616,7,'questions_section_captcha_label'),(2707,7,'questions_question_relationship_label'),(2620,1,'massmailing_following_variables_text'),(2850,7,'widgets_admin_customization_box_title'),(2626,1,'user_display_settings'),(2627,1,'user_avatar_settings'),(2628,1,'user_settings_updated'),(2629,1,'user_settings_avatar_size'),(2630,1,'user_settings_big_avatar_size'),(2632,1,'user_settings_display_name'),(2633,1,'user_settings_display_name_desc'),(2634,1,'user_settings_avatar_size_desc'),(2635,1,'user_settings_big_avatar_size_desc'),(2662,7,'user_unsuspend_btn_lbl'),(2657,7,'user_feedback_profile_suspended'),(2659,1,'user_feedback_profiles_suspended'),(2736,1,'pages_edit_local_page_content'),(2735,1,'pages_edit_local_visible_for'),(2743,1,'themes_settings_reset_label'),(2667,7,'widgets_admin_dashboard_heading'),(2668,7,'widgets_admin_profile_heading'),(2670,7,'join_successful_join'),(2671,7,'user_page_suspended'),(2673,7,'profile_view_title'),(2674,7,'profile_view_heading'),(2675,7,'my_profile_title'),(2676,1,'my_profile_heading'),(2677,1,'theme_settings_reset_confirm_message'),(2680,1,'theme_graphics_image_delete_confirm_message'),(2732,1,'pages_edit_local_menu_name'),(2784,1,'permissions_successfully_updated'),(2734,1,'pages_edit_local_page_url'),(2733,1,'pages_edit_local_page_title'),(2698,7,'questions_question_match_sex_label'),(2703,7,'questions_question_match_sex_value_2'),(2702,7,'questions_question_match_sex_value_1'),(2731,1,'pages_edit_external_visible_for'),(2834,1,'permissions_go_to_role_management_page'),(2727,1,'pages_edit_external_menu_name_label'),(2728,1,'pages_edit_external_url_label'),(2729,7,'comments_add_login_message'),(2730,1,'pages_edit_external_url_open_in_new_window'),(2723,7,'questions_question_relationship_value_1'),(2724,7,'questions_question_relationship_value_2'),(2725,7,'questions_question_relationship_value_4'),(2726,7,'questions_question_relationship_value_8'),(2737,1,'pages_edit_visible_for_guests'),(2738,1,'pages_edit_visible_for_members'),(2739,1,'pages_add_menu_name'),(2740,1,'pages_add_page_content'),(2741,1,'page_add_page_address'),(15519,7,'page_81959573'),(2745,7,'wackwall'),(2746,7,'openwack'),(2747,1,'themes_settings_graphics_preview_cap_label'),(2748,7,'my_profile_heading'),(3016,7,'local_page_title_page-283934'),(2860,7,'component_add_new_box_cap_label'),(2783,1,'permissions_page_heading'),(2785,1,'permissions_feedback_user_not_found'),(2786,1,'permissions_feedback_moderator_added'),(2789,1,'permissions_feedback_user_kicked_from_moders'),(2788,1,'permissions_feedback_user_is_already_moderator'),(2790,1,'permissions_feedback_cant_remove_moder'),(2791,1,'permissions_index_who_can_join'),(2792,1,'permissions_index_anyone_can_join'),(2793,1,'permissions_index_by_invitation_only_can_join'),(2794,1,'permissions_index_who_can_invite'),(2795,1,'permissions_index_all_users_can_invate'),(2796,1,'permissions_index_admin_only_can_invate'),(2798,1,'permissions_index_mandatory_member_approve'),(2799,1,'permissions_index_moders_approve_members_manually'),(2800,1,'permissions_index_guests_can_view_site'),(2801,1,'permissions_index_yes'),(2802,1,'permissions_index_no'),(2804,1,'permissions_index_with_password'),(2805,1,'permissions_idex_if_not_yes_will_override_settings'),(18695,1,'maintenance_section_label'),(2807,1,'permissions_moders_content'),(2809,1,'permissions_moders_add_moder'),(2810,1,'permissions_moders_username'),(2812,1,'permissions_moders_make_moderator'),(2815,7,'empty_list'),(2822,1,'sidebar_menu_item_plugin_mass_mailing'),(2823,7,'authorization_action_video_add_comment'),(2824,7,'authorization_action_video_delete_comment_by_content_owner'),(2825,1,'confirm_suspend_users'),(2827,7,'authorization_action_blogs_delete_comment_by_content_owner'),(2829,7,'users_browse_page_heading'),(2830,1,'manage_plugins_activate_success_message'),(2831,1,'manage_plugins_deactivate_success_message'),(2835,7,'authorization_failed_feedback'),(2843,7,'authorization_failed_msg'),(2844,7,'form_validator_required_error_message'),(2845,7,'comments_widget_label'),(2846,7,'avatar_widget'),(2847,7,'email_verify_subject'),(2868,7,'questions_question_d37d41b71a78dfb62b379d0aa7bd3ba5_value_1'),(2876,1,'languages_values_updated'),(2877,7,'user_no_users'),(2880,1,'site_email'),(2881,1,'site_email_desc'),(2884,7,'activity_widget_title'),(3011,1,'sidebar_menu_item_plugin_contact_importer'),(3012,7,'rate_cmp_auth_error_message'),(3021,7,'local_page_title_page-225003'),(3029,7,'page-728242'),(3018,7,'local_page_content_page-283934'),(2895,7,'month_1'),(2899,7,'user_feedback_marked_as_featured'),(2900,7,'user_feedback_unmarked_as_featured'),(2901,7,'user_action_mark_as_featured'),(2902,7,'user_action_unmark_as_featured'),(2903,7,'authorization_group_friends'),(2904,7,'authorization_action_friends_add_friend'),(2906,7,'avatar_select_image'),(2923,7,'change_password'),(2924,7,'change_password_old_password'),(2925,7,'change_password_new_password'),(2926,7,'change_password_repeat_password'),(2927,7,'change_password_success'),(2928,7,'change_password_error'),(2932,7,'avatar_activity_string'),(2934,7,'join_activity_string'),(2935,7,'join_activity_user_avatar'),(2936,7,'edit_activity_string'),(2958,7,'widgets_reset_position_confirm'),(5796,7,'authorization_group_membership'),(2993,7,'unsuspend_user_btn'),(2994,7,'user_feedback_profiles_unsuspended'),(2995,1,'user_feedback_profiles_unsuspended'),(3770,7,'flag_spam'),(3023,7,'local_page_content_page-225003'),(3025,7,'local_page_title_page-6940'),(3027,7,'local_page_content_page-6940'),(3030,7,'local_page_title_page-728242'),(3032,7,'local_page_content_page-728242'),(3037,7,'delete_user_cancel_button'),(3034,7,'local_page_title_page-366195'),(3036,7,'local_page_content_page-366195'),(3038,7,'delete_user_delete_button'),(3039,7,'delete_user_index'),(3040,7,'edit_profile_link'),(3041,7,'delete_profile'),(3045,7,'delete_user_confirmation'),(3046,7,'email_verify_verification_code_label'),(3050,7,'email_verify_invalid_verification_code'),(3048,7,'email_verify_verification_code_submit_button_label'),(3049,7,'email_verify_form_promo'),(3051,7,'questions_config_date_field_format_label'),(3052,7,'questions_config_date_field_format_mdy'),(3053,7,'questions_config_date_field_format_dmy'),(3056,7,'delete_user_content_label'),(3066,7,'local_page_title_page-775058'),(3068,7,'local_page_content_page-775058'),(3070,7,'local_page_title_page-312097'),(3072,7,'local_page_content_page-312097'),(3077,7,'profile_toolbar_user_delete_label'),(3078,7,'delete_user_confirmation_label'),(3079,7,'delete_user_success_message'),(3081,7,'admin_delete_user_text'),(3082,1,'mail_settings_updated'),(3083,1,'menu_item_mail_settings'),(3084,1,'mail_smtp_title_enabled'),(3085,1,'mail_smtp_title_enabled_desc'),(3086,1,'mail_smtp_title_host'),(3087,1,'mail_smtp_title_user'),(3088,1,'mail_smtp_title_password'),(3089,1,'mail_smtp_connection_prefix'),(3090,1,'mail_smtp_connection_prefix_desc'),(18690,1,'heading_mail_settings'),(3097,1,'mail_smtp_secure_invitation'),(3096,1,'mail_smtp_test_connection_title'),(3098,1,'mail_smtp_connection_desc'),(3099,1,'mail_smtp_test_connection_btn'),(3100,1,'smtp_test_connection_success'),(3101,7,'month_3'),(3102,7,'month_4'),(3104,7,'month_5'),(3105,7,'month_6'),(3106,7,'month_7'),(3107,7,'month_10'),(3108,7,'month_11'),(15498,7,'questions_question_55c95a36e50b0d7a795fb1caa8a8e520_description'),(3116,7,'questions_age_year_old'),(4661,1,'manage_plugins_core_update_request_box_cap_label'),(4662,1,'manage_plugins_core_update_request_text'),(3349,1,'sign_in_button_list_text'),(18696,1,'splash_screen_section_label'),(3230,7,'join_form_title'),(3231,7,'join_connect_title'),(3232,7,'join_or'),(3352,7,'authorization_feedback_roles_updated'),(18694,1,'maintenance_page_heading'),(3236,7,'password_protection_cap_label'),(3237,7,'password_protection_text'),(3238,7,'password_protection_submit_label'),(3239,7,'password_protection_success_message'),(3240,7,'password_protection_error_message'),(3241,7,'paging_label_first'),(3242,7,'paging_label_prev'),(3243,7,'paging_label_next'),(3244,7,'paging_label_last'),(3246,1,'splash_intro_label'),(3247,1,'splash_intro_desc'),(3248,1,'splash_button_label'),(3249,1,'splash_button_label_desc'),(3250,1,'splash_leave_url_label'),(3251,1,'splash_leave_url_desc'),(3252,1,'splash_intro_value'),(3253,1,'splash_button_value'),(3261,1,'sidebar_menu_item_splash_screen'),(18685,1,'admin_admin_dashboard'),(3260,1,'splash_leave_button_label'),(3274,7,'join_not_valid_invite_code'),(3308,7,'authorization_user_roles'),(3283,1,'splash_enable_label'),(3284,1,'splash_enable_desc'),(3285,1,'invite_members_button_label'),(3286,1,'invite_members_cap_label'),(3287,1,'invite_members_textarea_invitation_text'),(3288,1,'invite_members_submit_label'),(3289,1,'invite_members_max_limit_message'),(3290,1,'invite_members_min_limit_message'),(3291,1,'invite_members_success_message'),(3292,7,'mail_template_admin_invite_user_subject'),(3293,7,'mail_template_admin_invite_user_content_html'),(3294,7,'mail_template_admin_invite_user_content_text'),(3309,7,'authorization_give_user_role'),(3345,7,'moderator_panel'),(3346,7,'approve_users'),(3347,7,'wait_for_approval'),(3348,1,'permissions_index_user_approve'),(3351,7,'profile_toolbar_user_approve_label'),(3353,7,'user_approved'),(3354,7,'user_approved_mail_subject'),(3355,7,'user_approved_mail_txt'),(3356,7,'user_approved_mail_html'),(3371,1,'sidebar_menu_item_maintenance'),(18687,1,'heading_main_settings'),(18686,1,'heading_user_roles'),(3374,1,'maintenance_text_value'),(3379,1,'maintenance_enable_label'),(3380,1,'maintenance_enable_desc'),(3381,1,'maintenance_text_label'),(3382,1,'maintenance_text_desc'),(3383,1,'maintenance_submit_success_message'),(3391,7,'geolocation_country_name_ABW'),(3392,7,'geolocation_country_name_AFG'),(3393,7,'geolocation_country_name_AGO'),(3394,7,'geolocation_country_name_AIA'),(3395,7,'geolocation_country_name_ALB'),(3396,7,'geolocation_country_name_AND'),(3397,7,'geolocation_country_name_ANT'),(3398,7,'geolocation_country_name_ARE'),(3399,7,'geolocation_country_name_ARG'),(3400,7,'geolocation_country_name_ARM'),(3401,7,'geolocation_country_name_ASM'),(3402,7,'geolocation_country_name_ATA'),(3403,7,'geolocation_country_name_ATF'),(3404,7,'geolocation_country_name_ATG'),(3405,7,'geolocation_country_name_AUS'),(3406,7,'geolocation_country_name_AUT'),(3407,7,'geolocation_country_name_AZE'),(3408,7,'geolocation_country_name_BDI'),(3409,7,'geolocation_country_name_BEL'),(3410,7,'geolocation_country_name_BEN'),(3411,7,'geolocation_country_name_BFA'),(3412,7,'geolocation_country_name_BGD'),(3413,7,'geolocation_country_name_BGR'),(3414,7,'geolocation_country_name_BHR'),(3415,7,'geolocation_country_name_BHS'),(3416,7,'geolocation_country_name_BIH'),(3417,7,'geolocation_country_name_BLR'),(3418,7,'geolocation_country_name_BLZ'),(3419,7,'geolocation_country_name_BMU'),(3420,7,'geolocation_country_name_BOL'),(3421,7,'geolocation_country_name_BRA'),(3422,7,'geolocation_country_name_BRB'),(3423,7,'geolocation_country_name_BRN'),(3424,7,'geolocation_country_name_BTN'),(3425,7,'geolocation_country_name_BVT'),(3426,7,'geolocation_country_name_BWA'),(3427,7,'geolocation_country_name_CAF'),(3428,7,'geolocation_country_name_CAN'),(3429,7,'geolocation_country_name_CHE'),(3430,7,'geolocation_country_name_CHL'),(3431,7,'geolocation_country_name_CHN'),(3432,7,'geolocation_country_name_CIV'),(3433,7,'geolocation_country_name_CMR'),(3434,7,'geolocation_country_name_COD'),(3435,7,'geolocation_country_name_COG'),(3436,7,'geolocation_country_name_COK'),(3437,7,'geolocation_country_name_COL'),(3438,7,'geolocation_country_name_COM'),(3439,7,'geolocation_country_name_CPV'),(3440,7,'geolocation_country_name_CRI'),(3441,7,'geolocation_country_name_CUB'),(3442,7,'geolocation_country_name_CYM'),(3443,7,'geolocation_country_name_CYP'),(3444,7,'geolocation_country_name_CZE'),(3445,7,'geolocation_country_name_DEU'),(3446,7,'geolocation_country_name_DJI'),(3447,7,'geolocation_country_name_DMA'),(3448,7,'geolocation_country_name_DNK'),(3449,7,'geolocation_country_name_DOM'),(3450,7,'geolocation_country_name_DZA'),(3451,7,'geolocation_country_name_ECU'),(3452,7,'geolocation_country_name_EGY'),(3453,7,'geolocation_country_name_ERI'),(3454,7,'geolocation_country_name_ESP'),(3455,7,'geolocation_country_name_EST'),(3456,7,'geolocation_country_name_ETH'),(3457,7,'geolocation_country_name_FIN'),(3458,7,'geolocation_country_name_FJI'),(3459,7,'geolocation_country_name_FLK'),(3460,7,'geolocation_country_name_FRA'),(3461,7,'geolocation_country_name_FRO'),(3462,7,'geolocation_country_name_FSM'),(3463,7,'geolocation_country_name_GAB'),(3464,7,'geolocation_country_name_GBR'),(3465,7,'geolocation_country_name_GEO'),(3466,7,'geolocation_country_name_GGY'),(3467,7,'geolocation_country_name_GHA'),(3468,7,'geolocation_country_name_GIB'),(3469,7,'geolocation_country_name_GIN'),(3470,7,'geolocation_country_name_GLP'),(3471,7,'geolocation_country_name_GMB'),(3472,7,'geolocation_country_name_GNB'),(3473,7,'geolocation_country_name_GNQ'),(3474,7,'geolocation_country_name_GRC'),(3475,7,'geolocation_country_name_GRD'),(3476,7,'geolocation_country_name_GRL'),(3477,7,'geolocation_country_name_GTM'),(3478,7,'geolocation_country_name_GUF'),(3479,7,'geolocation_country_name_GUM'),(3480,7,'geolocation_country_name_GUY'),(3481,7,'geolocation_country_name_HKG'),(3482,7,'geolocation_country_name_HND'),(3483,7,'geolocation_country_name_HRV'),(3484,7,'geolocation_country_name_HTI'),(3485,7,'geolocation_country_name_HUN'),(3486,7,'geolocation_country_name_IDN'),(3487,7,'geolocation_country_name_IMN'),(3488,7,'geolocation_country_name_IND'),(3489,7,'geolocation_country_name_IOT'),(3490,7,'geolocation_country_name_IRL'),(3491,7,'geolocation_country_name_IRN'),(3492,7,'geolocation_country_name_IRQ'),(3493,7,'geolocation_country_name_ISL'),(3494,7,'geolocation_country_name_ISR'),(3495,7,'geolocation_country_name_ITA'),(3496,7,'geolocation_country_name_JAM'),(3497,7,'geolocation_country_name_JEY'),(3498,7,'geolocation_country_name_JOR'),(3499,7,'geolocation_country_name_JPN'),(3500,7,'geolocation_country_name_KAZ'),(3501,7,'geolocation_country_name_KEN'),(3502,7,'geolocation_country_name_KGZ'),(3503,7,'geolocation_country_name_KHM'),(3504,7,'geolocation_country_name_KIR'),(3505,7,'geolocation_country_name_KNA'),(3506,7,'geolocation_country_name_KOR'),(3507,7,'geolocation_country_name_KWT'),(3508,7,'geolocation_country_name_LAO'),(3509,7,'geolocation_country_name_LBN'),(3510,7,'geolocation_country_name_LBR'),(3511,7,'geolocation_country_name_LBY'),(3512,7,'geolocation_country_name_LCA'),(3513,7,'geolocation_country_name_LIE'),(3514,7,'geolocation_country_name_LKA'),(3515,7,'geolocation_country_name_LSO'),(3516,7,'geolocation_country_name_LTU'),(3517,7,'geolocation_country_name_LUX'),(3518,7,'geolocation_country_name_LVA'),(3519,7,'geolocation_country_name_MAC'),(3520,7,'geolocation_country_name_MAF'),(3521,7,'geolocation_country_name_MAR'),(3522,7,'geolocation_country_name_MCO'),(3523,7,'geolocation_country_name_MDA'),(3524,7,'geolocation_country_name_MDG'),(3525,7,'geolocation_country_name_MDV'),(3526,7,'geolocation_country_name_MEX'),(3527,7,'geolocation_country_name_MHL'),(3528,7,'geolocation_country_name_MKD'),(3529,7,'geolocation_country_name_MLI'),(3530,7,'geolocation_country_name_MLT'),(3531,7,'geolocation_country_name_MMR'),(3532,7,'geolocation_country_name_MNE'),(3533,7,'geolocation_country_name_MNG'),(3534,7,'geolocation_country_name_MNP'),(3535,7,'geolocation_country_name_MOZ'),(3536,7,'geolocation_country_name_MRT'),(3537,7,'geolocation_country_name_MSR'),(3538,7,'geolocation_country_name_MTQ'),(3539,7,'geolocation_country_name_MUS'),(3540,7,'geolocation_country_name_MWI'),(3541,7,'geolocation_country_name_MYS'),(3542,7,'geolocation_country_name_MYT'),(3543,7,'geolocation_country_name_NAM'),(3544,7,'geolocation_country_name_NCL'),(3545,7,'geolocation_country_name_NER'),(3546,7,'geolocation_country_name_NFK'),(3547,7,'geolocation_country_name_NGA'),(3548,7,'geolocation_country_name_NIC'),(3549,7,'geolocation_country_name_NIU'),(3550,7,'geolocation_country_name_NLD'),(3551,7,'geolocation_country_name_NOR'),(3552,7,'geolocation_country_name_NPL'),(3553,7,'geolocation_country_name_NRU'),(3554,7,'geolocation_country_name_NZL'),(3555,7,'geolocation_country_name_OMN'),(3556,7,'geolocation_country_name_PAK'),(3557,7,'geolocation_country_name_PAN'),(3558,7,'geolocation_country_name_PER'),(3559,7,'geolocation_country_name_PHL'),(3560,7,'geolocation_country_name_PLW'),(3561,7,'geolocation_country_name_PNG'),(3562,7,'geolocation_country_name_POL'),(3563,7,'geolocation_country_name_PRI'),(3564,7,'geolocation_country_name_PRK'),(3565,7,'geolocation_country_name_PRT'),(3566,7,'geolocation_country_name_PRY'),(3567,7,'geolocation_country_name_PSE'),(3568,7,'geolocation_country_name_PYF'),(3569,7,'geolocation_country_name_QAT'),(3570,7,'geolocation_country_name_REU'),(3571,7,'geolocation_country_name_ROM'),(3572,7,'geolocation_country_name_RUS'),(3573,7,'geolocation_country_name_RWA'),(3574,7,'geolocation_country_name_SAU'),(3575,7,'geolocation_country_name_SCG'),(3576,7,'geolocation_country_name_SDN'),(3577,7,'geolocation_country_name_SEN'),(3578,7,'geolocation_country_name_SGP'),(3579,7,'geolocation_country_name_SGS'),(3580,7,'geolocation_country_name_SLB'),(3581,7,'geolocation_country_name_SLE'),(3582,7,'geolocation_country_name_SLV'),(3583,7,'geolocation_country_name_SMR'),(3584,7,'geolocation_country_name_SOM'),(3585,7,'geolocation_country_name_SPM'),(3586,7,'geolocation_country_name_SRB'),(3587,7,'geolocation_country_name_STP'),(3588,7,'geolocation_country_name_SUR'),(3589,7,'geolocation_country_name_SVK'),(3590,7,'geolocation_country_name_SVN'),(3591,7,'geolocation_country_name_SWE'),(3592,7,'geolocation_country_name_SWZ'),(3593,7,'geolocation_country_name_SYC'),(3594,7,'geolocation_country_name_SYR'),(3595,7,'geolocation_country_name_TCA'),(3596,7,'geolocation_country_name_TCD'),(3597,7,'geolocation_country_name_TGO'),(3598,7,'geolocation_country_name_THA'),(3599,7,'geolocation_country_name_TJK'),(3600,7,'geolocation_country_name_TKL'),(3601,7,'geolocation_country_name_TKM'),(3602,7,'geolocation_country_name_TLS'),(3603,7,'geolocation_country_name_TON'),(3604,7,'geolocation_country_name_TTO'),(3605,7,'geolocation_country_name_TUN'),(3606,7,'geolocation_country_name_TUR'),(3607,7,'geolocation_country_name_TUV'),(3608,7,'geolocation_country_name_TWN'),(3609,7,'geolocation_country_name_TZA'),(3610,7,'geolocation_country_name_UGA'),(3611,7,'geolocation_country_name_UKR'),(3612,7,'geolocation_country_name_UMI'),(3613,7,'geolocation_country_name_URY'),(3614,7,'geolocation_country_name_USA'),(3615,7,'geolocation_country_name_UZB'),(3616,7,'geolocation_country_name_VAT'),(3617,7,'geolocation_country_name_VCT'),(3618,7,'geolocation_country_name_VEN'),(3619,7,'geolocation_country_name_VGB'),(3620,7,'geolocation_country_name_VIR'),(3621,7,'geolocation_country_name_VNM'),(3622,7,'geolocation_country_name_VUT'),(3623,7,'geolocation_country_name_WLF'),(3624,7,'geolocation_country_name_WSM'),(3625,7,'geolocation_country_name_YEM'),(3626,7,'geolocation_country_name_ZAF'),(3627,7,'geolocation_country_name_ZMB'),(3628,7,'geolocation_country_name_ZWE'),(3665,7,'unique_local_page_error'),(3790,7,'flags_users_reported'),(3791,7,'flags_deleted'),(3792,7,'dashboard_heading'),(3798,1,'sidebar_menu_item_plugin_forum'),(3808,1,'maintenance_page_title'),(3813,1,'menu_item_users_suspended'),(3814,1,'menu_item_users_unverified'),(3815,1,'menu_item_users_unapproved'),(3816,1,'user_status'),(3819,1,'user_status_unapproved'),(3817,1,'user_status_suspended'),(3818,1,'user_status_unverified'),(3735,1,'search_by_name'),(3771,7,'flag_offence'),(3772,7,'flag_illegal'),(3773,7,'flag_as'),(3774,7,'flag_flag'),(3776,7,'flag_accepted'),(3777,7,'flag_already_flagged'),(3823,1,'user_search_result'),(3820,7,'activity_stamp'),(3821,7,'activity_online'),(3843,7,'pages_add_submit'),(15466,1,'themes_add_new_box_cap_label'),(3828,7,'users'),(3829,7,'for_approval'),(3830,7,'flagged_content'),(3832,1,'heading_user_role'),(3833,1,'back_to_roles'),(3834,1,'sidebar_menu_item_permission'),(3835,1,'sidebar_menu_item_roles'),(3836,1,'sidebar_menu_item_permission_roles'),(3837,1,'sidebar_menu_item_permission_moders'),(3844,7,'pages_add_item'),(3845,7,'pages_back'),(3854,7,'forgot_password_success_message'),(3852,1,'theme_change_success_message'),(3851,7,'dashboard'),(3858,1,'sidebar_menu_plugins_installed'),(3859,1,'sidebar_menu_plugins_available'),(3860,1,'sidebar_menu_plugins_add'),(3861,1,'finance_settings'),(3862,1,'currency'),(18683,1,'user_settings_permissions'),(3864,1,'manage_plugins_plugin_not_found'),(3865,1,'manage_plugins_delete_confirm_message'),(3866,1,'manage_plugins_delete_button_label'),(3867,1,'manage_plugins_uninstall_success_message'),(3868,1,'page_title_manage_plugins_ftp_info'),(3869,1,'manage_plugins_ftp_box_cap_label'),(3870,7,'upload'),(3871,1,'plugins_manage_ftp_form_login_label'),(3872,1,'plugins_manage_ftp_form_password_label'),(3873,1,'plugins_manage_ftp_form_submit_label'),(3874,1,'plugins_manage_need_ftp_attrs_message'),(3875,1,'plugins_manage_ftp_form_port_label'),(5840,7,'reset_password_request_submit_label'),(3878,1,'plugins_manage_ftp_attrs_invalid_host_message'),(4126,7,'user_list_menu_item_birthdays'),(3887,1,'plugins_manage_ftp_form_host_label'),(3888,7,'forgot_password_label'),(5839,7,'reset_password_request_form_text'),(3892,7,'sign_in_remember_me_label'),(5842,7,'reset_password_request_invalid_code_error_message'),(3902,1,'manage_plugins_delete_success_message'),(5125,1,'user_settings_email'),(5126,1,'user_settings_confirm_email'),(5124,1,'user_settings_confirm_email_desc'),(3918,1,'plugins_manage_add_submit_label'),(3921,7,'tf_allow_pics'),(3922,7,'tf_max_img_size'),(3923,7,'tf_sett_section'),(3924,7,'tf_img_url'),(3925,7,'tf_insert'),(3926,7,'tf_img_types'),(3927,7,'tf_img_max_size'),(3928,7,'tf_img_choose_file'),(3929,7,'tf_img_from_url'),(3930,7,'tf_img_gal'),(3931,7,'mp_gal_show'),(3932,7,'mp_gal_hide'),(3933,7,'mp_gal_pic_url'),(3934,7,'mp_gal_delete'),(3935,7,'mp_gal_preview'),(3936,7,'mp_gal_fullsize'),(3937,7,'mp_gal_align'),(3938,7,'mp_gal_none'),(3939,7,'mp_gal_left'),(3940,7,'mp_gal_center'),(3941,7,'mp_gal_right'),(3942,7,'mp_gal_ins_into_post'),(3943,1,'manage_plugins_update_button_label'),(3945,7,'billing_no_gateways'),(3950,1,'manage_plugins_update_request_box_cap_label'),(3951,1,'free_plugin_request_text'),(3952,1,'plugin_update_yes_button_label'),(3953,1,'plugin_update_no_button_label'),(3956,7,'billing_pay_with'),(5841,7,'reset_password_request_heading'),(3987,1,'plugins_manage_ftp_attrs_invalid_login_params_message'),(3988,7,'billing_currency_not_supported'),(4004,1,'com_plugin_request_key_label'),(4005,1,'license_form_leave_label'),(4006,1,'license_form_submit_label'),(4010,1,'com_plugin_request_text'),(4012,7,'date_time_week_0'),(4013,7,'date_time_week_1'),(4014,7,'date_time_week_2'),(4015,7,'date_time_week_3'),(4016,7,'date_time_week_4'),(4017,7,'date_time_week_5'),(4018,7,'date_time_week_6'),(4019,1,'plugins_manage_invalid_license_key_error_message'),(4020,7,'user_search_submit_button_label'),(4021,7,'user_search_display_name_search_label'),(4022,7,'user_search_page_heading'),(4032,7,'user_search_main_search_label'),(4034,7,'user_search_menu_item_label'),(4035,7,'user_search_back_to_search_from'),(15465,1,'sidebar_menu_themes_add'),(4038,7,'form_element_from'),(4039,7,'form_element_to'),(4040,7,'form_element_age_range'),(4043,7,'user_search_authorization_warning'),(4044,7,'authorization_action_base_search_users'),(4046,7,'rate_cmp_owner_cant_rate_error_message'),(4047,7,'comment_delete_confirm_message'),(4048,7,'year'),(4049,7,'month'),(4050,7,'day'),(4051,1,'permission_global_privacy_empty_pass_error_message'),(4078,1,'permission_global_privacy_pass_length_error_message'),(4087,1,'manage_plugins_uninstall_confirm_message'),(4090,7,'base_sign_in_cap_label'),(4091,7,'base_sign_in_or_label'),(4100,7,'confirm_page_ok_label'),(4101,7,'confirm_page_cancel_label'),(4102,7,'email_notifications_setting_user_comment'),(4103,7,'profile_comment_notification'),(5836,7,'forgot_password_code_exists_error_message'),(4128,1,'verify_site_email'),(4129,1,'send_verification_email'),(4130,1,'email_already_verify'),(4131,1,'site_email_verify_promo'),(4132,7,'site_email_verify_subject'),(4133,7,'site_email_verify_template_text'),(4134,7,'site_email_verify_template_html'),(4140,7,'date_time_tomorrow'),(4145,1,'manage_plugins_uninstall_request_box_cap_label'),(4146,1,'plugin_uninstall_request_text'),(4149,7,'form_validator_captcha_error_message'),(4165,7,'form_validator_float_error_message'),(4164,7,'form_validator_date_error_message'),(4166,7,'form_validator_int_error_message'),(4167,7,'form_validator_alphanumeric_error_message'),(4168,7,'form_validator_url_error_message'),(4169,7,'form_validator_email_error_message'),(4170,7,'form_validator_regexp_error_message'),(4171,7,'form_validator_string_error_message'),(4515,7,'console_item_label_preferences'),(4516,7,'console_item_label_profile'),(4514,7,'console_item_label_dashboard'),(4517,7,'console_item_label_mailbox'),(4518,7,'console_item_label_sign_out'),(4519,1,'notification_soft_update'),(4520,1,'notification_plugins_to_update'),(5838,7,'reset_password_request_cap_label'),(4595,1,'manage_plugins_uninstall_error_message'),(4598,7,'media_panel_file_deleted'),(4939,1,'manage_plugins_update_success_message'),(4766,7,'my_avatar_widget'),(4767,1,'page_title_finance'),(4770,1,'sidebar_menu_item_dashboard_finance'),(4769,7,'join_error_username_restricted'),(5843,7,'reset_password_heading'),(4772,1,'sidebar_menu_item_restricted_usernames'),(4773,1,'restrictedusernames'),(4774,1,'restrictedusernames_add_username'),(4775,1,'restrictedusernames_username_label'),(4776,1,'restrictedusernames_add_username_button'),(4777,1,'restrictedusernames_restricted_list_label'),(4783,1,'restrictedusernames_username_added'),(4785,1,'manage_plugins_manual_update_request'),(4786,1,'plugin_manual_update_button_label'),(4793,7,'billing_gateway_not_found'),(4832,1,'plugin'),(4810,7,'billing_sale_not_found'),(5853,7,'reset_password_success_message'),(4843,7,'billing_amount'),(4842,7,'time'),(4811,7,'billing_order_init_failed'),(5852,7,'reset_password_length_error_message'),(5851,7,'reset_password_not_equal_error_message'),(4854,7,'billing_details'),(4855,7,'billing_gateway'),(4856,7,'billing_transaction_id'),(4857,7,'billing_statistics'),(4868,1,'questions_config_year_range_label'),(4869,7,'form_element_year_range'),(4870,7,'billing_gateway_unavailable'),(4871,7,'billing_order_canceled'),(4872,7,'billing_order_failed'),(4873,7,'billing_order_completed_successfully'),(4874,7,'billing_order_verified'),(4875,7,'billing_order_processing'),(4906,7,'billing_order_page_heading'),(4907,7,'billing_order_status_page_heading'),(5849,7,'reset_password_repeat_field_label'),(5848,7,'reset_password_field_label'),(5846,7,'reset_password_form_text'),(5845,7,'forgot_password_instructions'),(5844,7,'reset_password_cap_label'),(5576,1,'massmailing_expire_text'),(6079,7,'questions_question_7f2450f06779439551c75a8566c4070e_value_1'),(6073,7,'authorization_action_market_post_jobs'),(5847,7,'reset_password_submit_label'),(6051,7,'reset_password_mail_template_content_txt'),(6050,7,'reset_password_mail_template_content_html'),(6048,7,'authorization_action_market_delete_comment_by_content_owner'),(6046,7,'authorization_group_market'),(6045,1,'questions_edit_username_warning'),(6082,7,'questions_question_7f2450f06779439551c75a8566c4070e_value_8'),(6081,7,'questions_question_7f2450f06779439551c75a8566c4070e_value_4'),(6080,7,'questions_question_7f2450f06779439551c75a8566c4070e_value_2'),(6047,7,'authorization_action_market_add_comment'),(6020,7,'questions_question_c5dc53f371fe6ba3001a7c7e31bd95fc_value_1'),(6021,7,'questions_question_c5dc53f371fe6ba3001a7c7e31bd95fc_value_2'),(6022,7,'questions_question_c5dc53f371fe6ba3001a7c7e31bd95fc_value_4'),(6023,7,'questions_question_c5dc53f371fe6ba3001a7c7e31bd95fc_value_8'),(6024,7,'questions_question_c5dc53f371fe6ba3001a7c7e31bd95fc_value_16'),(6083,7,'questions_question_7f2450f06779439551c75a8566c4070e_value_16'),(6084,7,'questions_question_7f2450f06779439551c75a8566c4070e_value_32'),(6155,7,'authorization_group_links'),(6156,7,'authorization_action_links_add_comment'),(6157,7,'authorization_action_links_add'),(6158,7,'authorization_action_links_delete_comment_by_content_owner'),(6159,7,'authorization_action_links_view'),(6377,1,'css_edit_success_message'),(6378,7,'comment_view_all'),(6406,7,'ajax_floatbox_users_title'),(6697,7,'feed_user_join'),(6696,7,'feed_user_edit_profile'),(6275,7,'cannot_delete_admin_user_msg'),(6301,7,'white_spaces_dissalowed'),(6308,1,'user_feedback_email_verified'),(6306,7,'mark_email_verified_btn'),(9251,7,'tag_search'),(6366,1,'user_settings_avatar_image'),(8574,7,'authorization_action_virtualgifts_send_gift'),(8573,7,'authorization_group_virtualgifts'),(6376,1,'plugins_manage_ftp_attrs_invalid_user'),(6473,1,'user_settings_avatar_image_desc'),(6477,7,'change'),(6478,7,'cancel'),(6486,1,'confirm_avatar_delete'),(6487,1,'default_avatar_deleted'),(6489,7,'empty_user_avatar_list'),(6497,7,'avatar_user_list_select_count_label'),(6498,7,'avatar_user_list_select_button_label'),(6516,7,'user_page_heading_status'),(7918,7,'authorization_action_event_add_comment'),(7915,7,'authorization_group_event'),(6568,7,'base_document_403_heading'),(6569,7,'base_document_403'),(6570,7,'base_document_404_title'),(6571,7,'base_document_403_title'),(7917,7,'authorization_action_event_view_event'),(7916,7,'authorization_action_event_add_event'),(9493,7,'form_element_submit_default_value'),(7429,7,'empty_user_avatar_list_select'),(9728,7,'questions_question_a5115de7f38988e748370a59ba0b311d_value_8'),(9727,7,'questions_question_a5115de7f38988e748370a59ba0b311d_value_4'),(9726,7,'questions_question_a5115de7f38988e748370a59ba0b311d_value_2'),(9725,7,'questions_question_a5115de7f38988e748370a59ba0b311d_value_1'),(8664,7,'authorization_group_usercredits'),(6671,7,'avatar_feed_string'),(6673,7,'widgets_enable_js'),(6674,7,'widgets_disable_js'),(6675,7,'reset_password_code_expired_cap_label'),(6677,7,'reset_password_code_expired_text'),(6678,1,'total_users'),(6714,7,'avatar_user_select_empty_list_message'),(6779,7,'authorization_group_mailbox'),(6780,7,'authorization_action_mailbox_read_message'),(6781,7,'authorization_action_mailbox_send_message'),(6823,7,'manage_plugins_add_success_message'),(9509,7,'questions_question_7fbd88047415229961f4d2aac620fe25_value_8'),(9508,7,'questions_question_7fbd88047415229961f4d2aac620fe25_value_4'),(9507,7,'questions_question_7fbd88047415229961f4d2aac620fe25_value_2'),(9506,7,'questions_question_7fbd88047415229961f4d2aac620fe25_value_1'),(6861,7,'date_time_cap_hour'),(6862,7,'date_time_cap_minute'),(9510,7,'questions_question_7fbd88047415229961f4d2aac620fe25_value_16'),(9495,7,'user_list_widget_settings_count'),(9494,7,'user_list_widget_settings_title'),(6890,1,'plugins_manage_no_available_items'),(7218,7,'manage_plugins_install_empty_key_error_message'),(7219,7,'manage_plugins_install_error_message'),(7302,1,'add_language_pack_empty_file_error_message'),(7304,1,'language_import_complete_success_message'),(7528,7,'questions_question_joinStamp_label'),(7828,1,'warning_cron_is_not_active'),(8987,7,'authorization_group_forum'),(8988,7,'authorization_action_forum_view'),(8989,7,'authorization_action_forum_edit'),(8990,7,'authorization_action_forum_subscribe'),(8993,1,'avatar_label'),(8994,7,'yes'),(8995,7,'no'),(8996,1,'display_avatar_label'),(8997,1,'avatar_label_color'),(8999,1,'permissions_role_updated'),(9106,7,'checkout'),(9129,1,'permissions_role_actions_label'),(9133,1,'sidebar_menu_item_users_roles'),(15464,1,'manage_theme_add_extract_error'),(16076,7,'ignore'),(9173,7,'usercredits_action_daily_login'),(9174,7,'usercredits_action_user_join'),(9175,7,'usercredits_action_search_users'),(9176,7,'usercredits_action_add_comment'),(9208,7,'your_rate_label'),(9209,7,'total_score_label'),(10306,7,'local_page_title_page_13904610'),(9285,1,'add_new_role_block_cap_label'),(9286,1,'user_role_permissions_cap_label'),(9297,1,'questions_edit_account_types_button'),(9291,7,'add_comment'),(9293,1,'questions_values_count'),(9294,7,'delete_comment_by_content_owner'),(9295,7,'search_users'),(9296,1,'auth_group_label'),(9375,1,'question_column_question'),(9377,1,'question_column_type'),(9381,1,'theme_info_cap_label'),(9382,1,'question_column_values'),(9386,1,'pages_and_menus_instructions'),(9387,1,'pages_and_menus_main_menu_label'),(9388,1,'question_column_require'),(9389,1,'pages_and_menus_bottom_menu_label'),(9390,1,'pages_and_menus_hidden_pages_label'),(9391,1,'question_column_sign_up'),(9392,1,'pages_and_menus_hidden_desc'),(9393,1,'question_column_profile_edit'),(9395,1,'question_column_view'),(9396,1,'pages_and_menus_item_label'),(9397,1,'pages_and_menus_legend_everyone_label'),(9398,1,'question_column_search'),(9399,1,'pages_and_menus_legend_guests_label'),(9400,1,'pages_and_menus_legend_members_label'),(9401,7,'auth_view_profile'),(9402,1,'pages_and_menus_legend_label'),(9403,1,'or'),(9404,1,'question_column_account_type'),(9405,1,'question_column_exclusive_questions'),(9406,7,'view_profile_no_permission'),(18462,1,'questions_admin_add_new_values'),(9417,7,'tag_search_empty_value_error'),(9423,7,'form_element_submit_default_balue'),(9462,7,'notification_section_label'),(9469,7,'user_list_activity'),(9467,7,'user_list_online'),(9472,1,'soft_version'),(9511,7,'questions_question_7fbd88047415229961f4d2aac620fe25_value_32'),(9512,7,'questions_question_7fbd88047415229961f4d2aac620fe25_value_64'),(9522,1,'clone_language_cap_label'),(9528,1,'join_display_photo_upload'),(9530,1,'join_display_terms_of_use'),(9531,1,'join_page'),(9532,1,'join_display_terms_of_use_desc'),(9534,1,'join_display_photo_upload_desc'),(9542,7,'local_page_title_page-119658'),(16385,1,'account_type_sort_order'),(9541,7,'page-119658'),(9539,7,'questions_section_terms_of_use_label'),(9540,7,'questions_question_user_terms_of_use_label'),(9544,7,'local_page_content_page-119658'),(9913,1,'language_edit_form_error_message'),(9912,1,'language_edit_form_success_message'),(9567,1,'use_military_time'),(9568,1,'sidebar_menu_item_permission_role'),(9683,7,'preference_index'),(9694,7,'config_join_display_photo_upload_display_and_require_label'),(9693,7,'config_join_display_photo_upload_display_label'),(9686,7,'preference_submit_button'),(9687,7,'preference_section_general'),(9688,7,'preference_preference_data_was_saved'),(9689,7,'preference_preference_data_not_changed'),(9690,7,'preference_no_items'),(9691,7,'preference_mass_mailing_subscribe_label'),(9692,7,'preference_mass_mailing_subscribe_description'),(9695,7,'config_join_display_photo_upload_not_display_label'),(9911,1,'lang_edit_form_rtl_desc'),(9910,1,'lang_edit_form_rtl_label'),(9909,1,'edit_langs_cap_label'),(9908,1,'btn_label_edit_values'),(9870,7,'privacy_action_view_profile'),(9871,1,'core_update_download_error'),(9872,1,'sidebar_menu_item_user_settings'),(9874,1,'menu_item_page_settings'),(18691,1,'themes_choose_page_title'),(9879,1,'page_settings_form_headcode_label'),(9877,1,'settings_submit_error_message'),(9878,1,'settings_submit_success_message'),(9880,1,'page_settings_form_headcode_desc'),(9881,1,'page_settings_form_bottomcode_label'),(9882,1,'page_settings_form_bottomcode_desc'),(9883,1,'page_settings_form_favicon_label'),(9884,1,'page_settings_form_favicon_desc'),(10253,7,'view_more_label'),(10266,7,'ws_button_label_bold'),(10267,7,'ws_button_label_italic'),(10268,7,'ws_button_label_underline'),(10269,7,'ws_button_label_orderedlist'),(10270,7,'ws_button_label_unorderedlist'),(10271,7,'ws_button_label_link'),(10272,7,'ws_button_label_image'),(10273,7,'ws_button_label_video'),(10274,7,'ws_button_label_html'),(10275,7,'ws_button_label_switch_html'),(10282,7,'ws_add_label'),(10283,7,'ws_insert_label'),(10284,7,'ws_link_empty_fields'),(10285,7,'ws_video_head_label'),(10287,7,'ws_video_empty_field'),(10288,7,'ws_html_head_label'),(10289,7,'welcome_letter_subject'),(18575,1,'admin_suspend_floatbox_title'),(18576,1,'input_settings_avatar_max_upload_size_label'),(10308,7,'local_page_content_page_13904610'),(10578,7,'ws_button_label_more'),(10580,1,'feed_content_registration'),(10581,1,'feed_content_edit'),(10689,7,'authorization_action_groups_add_topic'),(10688,7,'authorization_action_groups_add_comment'),(10687,7,'forgot_password_mail_template_content_txt'),(10601,1,'menu_item_user_input_settings'),(10602,1,'user_input_settings_user_content'),(10605,1,'user_input_settings_comments'),(10607,1,'user_input_settings_rich_media'),(18660,7,'form_validator_range_error_message'),(10609,1,'input_settings_max_upload_size_label'),(10610,1,'input_settings_resource_list_label'),(10612,7,'ws_html_textarea_label'),(10613,7,'ws_video_textarea_label'),(10614,1,'feed_content_user_comment'),(15470,1,'theme_add_extract_error'),(10618,1,'menu_item_user_settings_general'),(10619,1,'menu_item_user_settings_content_input'),(10666,1,'input_settings_user_rich_media_disable_label'),(10665,1,'input_settings_user_custom_html_disable_desc'),(10664,1,'input_settings_user_custom_html_disable_label'),(10623,1,'input_settings_resource_list_desc'),(10626,7,'privacy_action_view_my_presence_on_site'),(10667,1,'input_settings_user_rich_media_disable_desc'),(10668,1,'input_settings_comments_rich_media_disable_label'),(10669,1,'input_settings_comments_rich_media_disable_desc'),(10685,1,'menu_item_user_settings'),(10686,7,'forgot_password_mail_template_content_html'),(10676,1,'page_settings_favicon_submit_error_message'),(10690,7,'authorization_action_groups_create'),(10678,7,'local_page_title_page_7680520'),(10679,7,'local_page_meta_tags_page_7680520'),(10680,7,'local_page_content_page_7680520'),(10691,7,'authorization_action_groups_delete_comment_by_content_owner'),(10692,7,'authorization_group_groups'),(16065,7,'accept'),(10725,1,'join_photo_upload_set_required'),(10726,1,'join_photo_upload_set_required_desc'),(10727,7,'local_page_content_page-290357'),(10729,7,'local_page_title_page-290357'),(10730,7,'page-290357'),(10731,7,'local_page_content_page_24622628'),(10733,7,'local_page_content_page_88027910'),(10734,7,'local_page_meta_tags_page_24622628'),(10737,7,'local_page_title_page_24622628'),(10738,7,'local_page_title_page_45248787'),(10739,7,'local_page_title_page_88027910'),(10740,7,'page_13904610'),(10741,7,'page_24622628'),(10742,7,'page_45248787'),(10743,7,'page_88027910'),(11634,7,'questions_section_e46697c921740b10b1ac7223a14155b2_label'),(11631,1,'manage_plugins_add_ftp_move_error'),(10835,1,'found_users'),(10836,1,'search_by'),(10839,7,'questions_question_d8aa20d67fbb6c6864e46c474d0bde10_value_1'),(10923,7,'attch_video_add_button_label'),(10924,7,'attch_video_button_label'),(10925,7,'attch_photo_button_label'),(10926,7,'attch_add_video_button_label'),(10927,7,'attch_attachment_label'),(10928,7,'upload_file_max_upload_filesize_error'),(10929,7,'upload_file_file_partially_uploaded_error'),(10930,7,'upload_file_no_file_error'),(10931,7,'upload_file_no_tmp_dir_error'),(10932,7,'upload_file_cant_write_file_error'),(10933,7,'upload_file_invalid_extention_error'),(10934,7,'upload_file_fail'),(10940,7,'questions_question_d8aa20d67fbb6c6864e46c474d0bde10_value_4'),(10939,7,'questions_question_d8aa20d67fbb6c6864e46c474d0bde10_value_2'),(10941,7,'questions_question_d8aa20d67fbb6c6864e46c474d0bde10_value_8'),(10942,7,'questions_question_d8aa20d67fbb6c6864e46c474d0bde10_value_16'),(10943,7,'questions_question_d8aa20d67fbb6c6864e46c474d0bde10_value_32'),(10944,7,'questions_question_d8aa20d67fbb6c6864e46c474d0bde10_value_64'),(10945,7,'questions_question_d8aa20d67fbb6c6864e46c474d0bde10_value_128'),(10946,7,'questions_question_d8aa20d67fbb6c6864e46c474d0bde10_value_256'),(10947,7,'questions_question_d8aa20d67fbb6c6864e46c474d0bde10_value_512'),(11296,7,'comment_required_validator_message'),(11310,7,'sidebar_menu_view_all_questions'),(11311,1,'sidebar_menu_question_settings'),(11312,1,'sidebar_menu_basic_label'),(11313,1,'sidebar_menu_theme_css_label'),(11314,1,'sidebar_menu_pages_menus_label'),(11317,7,'widgets_avaliable_legend'),(11318,7,'widgets_avaliable_description'),(11573,1,'core_update_unzip_error'),(11574,7,'ws_link_text_label'),(11579,1,'page_settings_no_favicon_label'),(11577,7,'ws_link_url_label'),(11578,7,'ws_link_new_window_label'),(11635,7,'max_upload_filesize'),(15361,1,'massmailing_user_roles_label'),(15362,1,'settings_max_upload_size_error'),(15363,1,'user_feedback_email_unverified'),(15364,7,'authorization_action_forum_move_topic_to_hidden'),(15365,7,'authorization_role_gold'),(15366,7,'authorization_role_silver'),(15367,7,'authorization_role_silver1'),(15368,7,'billing_gateway_products_binding'),(15369,7,'billing_product'),(15370,7,'billing_product_id'),(15371,7,'block_user_confirmation_label'),(15372,7,'cancel_button'),(15373,7,'confirm_button'),(15374,7,'local_page_content_page_10919570'),(15375,7,'local_page_content_page_61525903'),(15376,7,'local_page_meta_tags_page_10919570'),(15377,7,'local_page_meta_tags_page_61525903'),(15378,7,'local_page_title_page_10919570'),(15379,7,'local_page_title_page_61525903'),(15380,7,'maintenance_disable_message'),(15381,7,'mark_email_unverified_btn'),(15382,7,'massmailing_unsubscribe_confirmation'),(15383,7,'page_10919570'),(15385,7,'questions_account_type_77f92557420351da5a45e37a13857657'),(15386,7,'questions_account_type_db5c851569c8660abb5ad2441d38d3fc'),(15387,7,'questions_account_type_df9807bd2ba1808afb2ab52a7b74fc90'),(15388,7,'questions_question_06c1ce07a38cb0267e45ec955ed84a6f_description'),(15389,7,'questions_question_06c1ce07a38cb0267e45ec955ed84a6f_label'),(15390,7,'questions_question_2be5f9666f2a291d33705d58a902d84a_description'),(15391,7,'questions_question_2be5f9666f2a291d33705d58a902d84a_label'),(15392,7,'questions_question_739a83996f701966485290779f4ff2b5_description'),(15393,7,'questions_question_739a83996f701966485290779f4ff2b5_label'),(15394,7,'questions_question_739a83996f701966485290779f4ff2b5_value_1'),(15395,7,'questions_question_739a83996f701966485290779f4ff2b5_value_1024'),(15396,7,'questions_question_739a83996f701966485290779f4ff2b5_value_128'),(15397,7,'questions_question_739a83996f701966485290779f4ff2b5_value_16'),(15398,7,'questions_question_739a83996f701966485290779f4ff2b5_value_16384'),(15399,7,'questions_question_739a83996f701966485290779f4ff2b5_value_2'),(15400,7,'questions_question_739a83996f701966485290779f4ff2b5_value_2048'),(15401,7,'questions_question_739a83996f701966485290779f4ff2b5_value_256'),(15402,7,'questions_question_739a83996f701966485290779f4ff2b5_value_32'),(15403,7,'questions_question_739a83996f701966485290779f4ff2b5_value_32768'),(15404,7,'questions_question_739a83996f701966485290779f4ff2b5_value_4'),(15405,7,'questions_question_739a83996f701966485290779f4ff2b5_value_4096'),(15406,7,'questions_question_739a83996f701966485290779f4ff2b5_value_512'),(15407,7,'questions_question_739a83996f701966485290779f4ff2b5_value_64'),(15408,7,'questions_question_739a83996f701966485290779f4ff2b5_value_8'),(15409,7,'questions_question_739a83996f701966485290779f4ff2b5_value_8192'),(15411,7,'questions_question_c5dc53f371fe6ba3001a7c7e31bd95fc_label'),(15413,7,'questions_question_d8aa20d67fbb6c6864e46c474d0bde10_label'),(15414,7,'questions_question_ecef9fe729d11241c04609c3a7ca468e_description'),(15415,7,'questions_question_ecef9fe729d11241c04609c3a7ca468e_label'),(15416,7,'user_block_btn_lbl'),(15417,7,'user_block_confirm_message'),(15418,7,'user_block_message'),(15419,7,'user_feedback_profile_blocked'),(15420,7,'user_feedback_profile_unblocked'),(15421,7,'user_unblock_btn_lbl'),(15473,1,'manage_plugins_add_empty_field_error_message'),(15475,1,'manage_plugins_update_process_error'),(15476,1,'manage_plugins_up_to_date_message'),(15477,1,'manage_plugin_add_extract_error'),(15478,1,'plugin_update_download_error'),(15479,1,'plugin_update_request_error'),(15480,7,'forgot_password_request_exists_error_message'),(15481,1,'user_feedback_profiles_approved'),(15482,1,'user_feedback_profiles_disapproved'),(15483,1,'user_settings_avatar_size_error'),(15484,1,'user_settings_avatar_size_label'),(15485,1,'user_settings_big_avatar_size_error'),(15486,1,'user_settings_big_avatar_size_label'),(15487,1,'warning_url_fopen_disabled'),(15488,7,'ajax_attachment_select_image'),(15489,7,'ajax_attachment_select_image_title'),(15490,7,'approve_user_btn'),(15491,7,'disapprove_user_btn'),(15492,7,'feed_activity_avatar_string'),(15493,7,'feed_activity_avatar_string_like'),(15494,7,'feed_activity_join_profile_string'),(15495,7,'feed_activity_join_profile_string_like'),(15496,7,'not_writable_avatar_dir'),(15497,7,'upload_file_extension_is_not_allowed'),(15500,7,'questions_question_55c95a36e50b0d7a795fb1caa8a8e520_value_1'),(15501,7,'questions_question_55c95a36e50b0d7a795fb1caa8a8e520_value_2'),(15502,7,'questions_question_55c95a36e50b0d7a795fb1caa8a8e520_value_4'),(15503,7,'questions_question_7747d430cc0be5d22223baf1082b34c9_description'),(15504,7,'questions_question_7747d430cc0be5d22223baf1082b34c9_label'),(15505,7,'questions_question_7747d430cc0be5d22223baf1082b34c9_value_1'),(15506,7,'questions_question_7747d430cc0be5d22223baf1082b34c9_value_2'),(15507,7,'questions_question_7747d430cc0be5d22223baf1082b34c9_value_4'),(15508,7,'questions_question_dc15d35b1be0e31b4c69bdaddb5298ff_description'),(15509,7,'questions_question_dc15d35b1be0e31b4c69bdaddb5298ff_label'),(15590,1,'questions_account_type_has_exclusive_questions'),(15588,1,'cron_configuration_required_notice'),(15589,1,'manage_plugins_install_error_message'),(15513,7,'questions_question_presentation_range_label'),(15515,7,'quick_links_cap_label'),(15516,7,'sort_control_sortby'),(15517,7,'tags_cloud_cap_label'),(15518,7,'user_deleted_message'),(15520,7,'local_page_title_page_81959573'),(15522,7,'local_page_content_page_81959573'),(15523,1,'console_item_admin_dashboard'),(15524,1,'console_item_manage_pages'),(15525,1,'console_item_manage_plugins'),(15526,1,'console_item_manage_theme'),(15527,1,'console_item_manage_users'),(15528,1,'feed_content_avatar_change'),(15529,1,'language_activated'),(15530,1,'language_deactivated'),(15531,1,'language_deleted'),(15532,1,'msg_lang_clone_failed'),(15533,1,'msg_lang_invalid_language_tag'),(15534,1,'restrictedusernames_username_already_exists'),(15535,1,'restrictedusernames_username_deleted'),(15536,7,'authorization_role_admin'),(15537,7,'auth_action_add_comment'),(15538,7,'base_invisible_profile_field_tooltip'),(15539,7,'base_sign_in_txt'),(15540,7,'cannot_delete_admin_user_message'),(15541,7,'console_item_invitations_label'),(15542,7,'console_item_sign_up_label'),(15543,7,'contex_action_comment_delete_label'),(15544,7,'contex_action_user_delete_label'),(15545,7,'custom_html_widget_no_content'),(15546,7,'deleted_user'),(15547,7,'flag_own_content_not_accepted'),(15550,7,'local_page_content_page_65118983'),(15551,7,'local_page_meta_tags_page_19271127'),(15554,7,'local_page_title_page_19271127'),(15555,7,'local_page_title_page_58148315'),(15556,7,'local_page_title_page_65118983'),(15557,7,'pages_wrong_local_url'),(15558,7,'page_19271127'),(15559,7,'page_3784014'),(15560,7,'page_58148315'),(15561,7,'page_65118983'),(15562,7,'preference_menu_item'),(15563,7,'questions_account_type_7f23216f76dfbd9e7f6dacd58ea58beb'),(15564,7,'questions_question_44e544653804655d52235ac14aaa10fb_description'),(15565,7,'questions_question_44e544653804655d52235ac14aaa10fb_label'),(15566,7,'questions_section_a9073700994b20e339e21d061c44e5b0_label'),(15567,7,'skalfa'),(15568,7,'text_is_too_long'),(15569,7,'user_deleted_page_message'),(15570,7,'user_list_chat_now'),(15591,1,'questions_cant_delete_default_account_type'),(15592,7,'comment_form_element_invitation_text'),(15593,7,'page_57271912'),(15594,7,'profile_toolbar_group_moderation'),(15595,7,'questions_account_type_8c103538900bda26f08d9ccd2aad61f8'),(15596,7,'questions_question_07f4c1294598ea15ae43fafdefbc6919_description'),(15597,7,'questions_question_07f4c1294598ea15ae43fafdefbc6919_label'),(15598,7,'questions_question_07f4c1294598ea15ae43fafdefbc6919_value_1'),(15599,7,'questions_question_07f4c1294598ea15ae43fafdefbc6919_value_2'),(15600,7,'questions_question_07f4c1294598ea15ae43fafdefbc6919_value_4'),(15601,7,'questions_question_2e9938cadc1786aa6ad39edea8d00ddf_description'),(15602,7,'questions_question_2e9938cadc1786aa6ad39edea8d00ddf_label'),(15604,7,'questions_question_googlemap_location_label'),(15605,7,'questions_question_presentation_age_label'),(15606,7,'questions_question_presentation_birthdate_label'),(15607,7,'questions_question_presentation_radio_label'),(15608,7,'questions_question_presentation_select_label'),(15609,7,'questions_section_location_label'),(15610,7,'tags_input_field_invitation'),(15611,7,'widgets_default_settings_access_restrictions'),(15612,7,'widgets_default_settings_restrict_view'),(15613,1,'back_to_theme_list'),(15614,1,'com_theme_request_name_label'),(15615,1,'com_theme_request_text'),(15616,1,'delete_content_warning'),(15617,1,'free_theme_request_text'),(15618,1,'manage_themes_theme_not_found'),(15619,1,'manage_themes_update_process_error'),(15620,1,'manage_themes_update_request_box_cap_label'),(15621,1,'manage_themes_update_success_message'),(15622,1,'manage_themes_up_to_date_message'),(15624,1,'questions_delete_question_parent_confirmation'),(16386,1,'account_type_translation'),(15626,1,'sidebar_menu_mobile'),(15627,1,'themes_manage_invalid_license_key_error_message'),(15628,1,'theme_update_download_error'),(15629,1,'theme_update_not_available_error'),(15630,1,'theme_update_request_error'),(15636,7,'authorization_role_ekip_yesi'),(15637,7,'authorization_role_ewrwe'),(15641,7,'authorization_role_ms_test'),(15644,7,'desktop_version_menu_item'),(15646,7,'index_menu_item'),(15647,7,'local_page_content_page_31935233'),(15648,7,'local_page_content_page_61962499'),(15649,7,'local_page_content_page_80273168'),(15650,7,'local_page_content_test'),(15651,7,'local_page_content_test2'),(15653,7,'local_page_meta_tags_page_61962499'),(15654,7,'local_page_meta_tags_page_80273168'),(15655,7,'local_page_meta_tags_test'),(15656,7,'local_page_meta_tags_test2'),(15657,7,'local_page_title_page_31935233'),(15658,7,'local_page_title_page_61962499'),(15659,7,'local_page_title_page_80273168'),(15660,7,'local_page_title_test'),(15661,7,'local_page_title_test2'),(15662,7,'mobile_version_menu_item'),(15663,7,'page_31935233'),(15664,7,'page_38157820'),(15665,7,'page_61962499'),(15666,7,'page_73405194'),(15667,7,'page_80273168'),(15668,7,'profile_view_description'),(15670,7,'questions_question_0fe69011e890106732951b49d131490c_description'),(15671,7,'questions_question_0fe69011e890106732951b49d131490c_label'),(15672,7,'questions_question_0fe69011e890106732951b49d131490c_value_1'),(15673,7,'questions_question_0fe69011e890106732951b49d131490c_value_2'),(15674,7,'questions_question_0fe69011e890106732951b49d131490c_value_4'),(15675,7,'questions_question_0fe69011e890106732951b49d131490c_value_8'),(15677,7,'questions_question_1fedc27c0e003f16fb8ab66d29727451_label'),(15678,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_description'),(15679,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_label'),(15680,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_1'),(15681,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_1024'),(15682,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_1048576'),(15683,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_1073741824'),(15684,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_128'),(15685,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_131072'),(15686,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_134217728'),(15687,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_16'),(15688,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_16384'),(15689,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_16777216'),(15690,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_2'),(15691,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_2048'),(15692,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_2097152'),(15693,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_256'),(15694,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_262144'),(15695,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_268435456'),(15696,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_32'),(15697,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_32768'),(15698,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_33554432'),(15699,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_4'),(15700,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_4096'),(15701,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_4194304'),(15702,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_512'),(15703,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_524288'),(15704,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_536870912'),(15705,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_64'),(15706,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_65536'),(15707,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_67108864'),(15708,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_8'),(15709,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_8192'),(15710,7,'questions_question_36e39f917cbcf4fb10aa753186ced60d_value_8388608'),(15713,7,'questions_question_557256153cd10f5f711ac4ee14a7b675_value_1'),(15714,7,'questions_question_557256153cd10f5f711ac4ee14a7b675_value_2'),(15715,7,'questions_question_557256153cd10f5f711ac4ee14a7b675_value_4'),(15719,7,'questions_question_5eab269060488cd69d49fbe31c9cb0a1_label'),(15720,7,'questions_question_5eab269060488cd69d49fbe31c9cb0a1_value_1'),(15721,7,'questions_question_5eab269060488cd69d49fbe31c9cb0a1_value_2'),(15722,7,'questions_question_5eab269060488cd69d49fbe31c9cb0a1_value_4'),(15723,7,'questions_question_5eab269060488cd69d49fbe31c9cb0a1_value_8'),(15724,7,'questions_question_6363dd2f3b50a8a775a5030b0da6bd65_value_1'),(15725,7,'questions_question_6363dd2f3b50a8a775a5030b0da6bd65_value_16'),(15726,7,'questions_question_6363dd2f3b50a8a775a5030b0da6bd65_value_2'),(15727,7,'questions_question_6363dd2f3b50a8a775a5030b0da6bd65_value_4'),(15728,7,'questions_question_6363dd2f3b50a8a775a5030b0da6bd65_value_8'),(15732,7,'questions_question_96c41d906ac020757eae6a0ba339e398_label'),(15733,7,'questions_question_96c41d906ac020757eae6a0ba339e398_value_1'),(15734,7,'questions_question_96c41d906ac020757eae6a0ba339e398_value_2'),(15735,7,'questions_question_96c41d906ac020757eae6a0ba339e398_value_4'),(15736,7,'questions_question_96c41d906ac020757eae6a0ba339e398_value_8'),(15737,7,'questions_question_a023dd4e406571f6e805e52e5dd9b9ef_description'),(15738,7,'questions_question_a023dd4e406571f6e805e52e5dd9b9ef_label'),(15739,7,'questions_question_a023dd4e406571f6e805e52e5dd9b9ef_value_1'),(15740,7,'questions_question_a023dd4e406571f6e805e52e5dd9b9ef_value_2'),(15741,7,'questions_question_a023dd4e406571f6e805e52e5dd9b9ef_value_4'),(15742,7,'questions_question_a023dd4e406571f6e805e52e5dd9b9ef_value_8'),(15743,7,'questions_question_a5115de7f38988e748370a59ba0b311d_description'),(15744,7,'questions_question_a5115de7f38988e748370a59ba0b311d_label'),(15745,7,'questions_question_b9b93e695cbc4475751d3fa98a417832_description'),(15746,7,'questions_question_b9b93e695cbc4475751d3fa98a417832_label'),(15747,7,'questions_question_b9b93e695cbc4475751d3fa98a417832_value_1'),(15748,7,'questions_question_b9b93e695cbc4475751d3fa98a417832_value_2'),(15749,7,'questions_question_b9b93e695cbc4475751d3fa98a417832_value_4'),(15750,7,'questions_question_birthday_label_presentation_age'),(15754,7,'questions_question_d88bae51bcd9f1a0c303164d567ea297_label'),(15756,7,'questions_question_da61580794d0318812eab8c09b147cd6_label'),(15757,7,'questions_question_da61580794d0318812eab8c09b147cd6_value_1'),(15758,7,'questions_question_da61580794d0318812eab8c09b147cd6_value_2'),(15759,7,'questions_question_da61580794d0318812eab8c09b147cd6_value_4'),(15760,7,'questions_question_da61580794d0318812eab8c09b147cd6_value_8'),(15761,7,'questions_question_e559834ab837e866e80aea0d1b453fc2_value_1'),(15762,7,'questions_question_e559834ab837e866e80aea0d1b453fc2_value_2'),(15763,7,'questions_question_e559834ab837e866e80aea0d1b453fc2_value_4'),(15764,7,'questions_question_e559834ab837e866e80aea0d1b453fc2_value_8'),(15766,7,'questions_question_match_739a83996f701966485290779f4ff2b5_label'),(15768,7,'questions_question_match_age_label'),(15770,7,'questions_question_sex_value_4'),(15771,7,'questions_section_about_my_match_label'),(15772,7,'test'),(15773,7,'users_list_birthdays_meta_description'),(15774,7,'users_list_latest_meta_description'),(15775,7,'users_list_online_meta_description'),(15776,7,'users_list_user_search_meta_description'),(15777,253,'about'),(15778,253,'admin_nav_adding_message'),(15779,253,'admin_nav_bottom_section_label'),(15780,253,'admin_nav_default_menu_name'),(15781,253,'admin_nav_default_page_content'),(15782,253,'admin_nav_default_page_title'),(15783,253,'admin_nav_hidden_section_label'),(15784,253,'admin_nav_item_content_field'),(15785,253,'admin_nav_item_label_field'),(15786,253,'admin_nav_item_title_field'),(15787,253,'admin_nav_new_item_label'),(15788,253,'admin_nav_settings_fb_title'),(15789,253,'admin_nav_top_section_label'),(15790,253,'admin_widgets_hidden_section_label'),(15791,253,'admin_widgets_main_section_label'),(15792,253,'mobile_admin_navigation'),(15793,253,'mobile_admin_pages_dashboard'),(15794,253,'mobile_admin_pages_index'),(15795,253,'mobile_admin_pages_profile'),(15796,253,'page_default_heading'),(15797,253,'page_default_title'),(15798,253,'sign_out'),(15799,253,'view_profile'),(15800,253,'widgets_admin_dashboard_heading'),(15801,253,'widgets_admin_index_heading'),(15802,253,'widgets_admin_profile_heading'),(16033,6,'mobile_page_14788567'),(16034,6,'mobile_page_14788567_title'),(16035,6,'mobile_page_14788567_content'),(16036,253,'mobile_pages_dashboard'),(16037,7,'mobile_disabled_item_message'),(16038,7,'mobile_notifications_console_empty'),(16101,7,'page_61525903'),(16103,253,'right_sidebar_guest_heading'),(16383,1,'notification_themes_to_update'),(16384,253,'page_is_not_available'),(16391,1,'error_empty_credentials_provided'),(16392,1,'error_empty_host_provided'),(16393,1,'error_ftp_function_is_not_available'),(16394,1,'error_invalid_credentials_provided'),(18682,1,'sidebar_menu_item_pages_manage'),(16396,1,'input_settings_attch_ext_list_desc'),(16397,1,'input_settings_attch_ext_list_label'),(16398,1,'input_settings_attch_max_upload_size_label'),(16399,1,'manage_plugin_cant_add_duplicate_key_error'),(16400,1,'mobile_settings_mobile_context_disable_desc'),(16401,1,'mobile_settings_mobile_context_disable_label'),(18681,1,'sidebar_menu_pages'),(16403,1,'possible_values_disable_message'),(16404,1,'questions_account_type_was_updated'),(16405,1,'questions_add_account_type_title'),(16406,1,'questions_add_edit_type_title'),(16407,1,'questions_add_profile_question_title'),(16408,1,'questions_add_question_button'),(16409,1,'questions_add_section_button'),(18464,1,'questions_matched_question_values'),(18465,1,'questions_possible_values_label'),(16412,1,'questions_edit_account_type_title'),(16413,1,'questions_edit_profile_question_title'),(16415,1,'questions_page_description'),(16416,1,'questions_save_account_type'),(16417,1,'question_menu_account_types'),(16418,1,'question_menu_properties'),(16419,1,'themes_cant_delete_active_theme'),(16420,1,'themes_cant_delete_default_theme'),(16421,1,'themes_choose_delete_button_label'),(16422,1,'themes_choose_delete_confirm_msg'),(16423,1,'themes_delete_success_message'),(16424,1,'user_input_settings_attachments'),(16425,253,'mobile_admin_settings'),(16427,7,'authorization_action_promotion'),(16428,7,'authorization_limited_permissions'),(16476,7,'base+questions_add_account_type'),(16477,7,'base_document_auth_failed_heading'),(16478,7,'btn_label_send'),(16479,7,'comment_load_more_label'),(16480,7,'complete_profile'),(16481,7,'complete_profile_info'),(16482,7,'complete_your_profile_page_heading'),(16483,7,'complite_profile'),(16484,7,'continue_button'),(16485,7,'empty_comment_error_msg'),(16486,7,'feed_activity_avatar_string_like_own'),(16487,7,'feed_activity_avatar_string_own'),(16594,7,'no_items'),(16595,7,'or'),(16672,7,'questions_account_type_1b4bbdb5419b2352aa276a7f58a585fa'),(16677,7,'questions_add_account_type'),(16679,7,'questions_edit_description_label_title'),(16680,7,'questions_edit_question_label_title'),(16681,7,'questions_edit_question_value_title'),(16828,7,'questions_question_0fbf517c6c3eb5c266894b51bdd07700_value_1'),(16829,7,'questions_question_0fbf517c6c3eb5c266894b51bdd07700_value_2'),(16830,7,'questions_question_0fbf517c6c3eb5c266894b51bdd07700_value_4'),(16831,7,'questions_question_0fbf517c6c3eb5c266894b51bdd07700_value_8'),(16994,7,'questions_question_25397eeec0dd1715655bbd5e2488bb50_value_1'),(16995,7,'questions_question_25397eeec0dd1715655bbd5e2488bb50_value_128'),(16996,7,'questions_question_25397eeec0dd1715655bbd5e2488bb50_value_16'),(16997,7,'questions_question_25397eeec0dd1715655bbd5e2488bb50_value_2'),(16998,7,'questions_question_25397eeec0dd1715655bbd5e2488bb50_value_32'),(16999,7,'questions_question_25397eeec0dd1715655bbd5e2488bb50_value_4'),(17000,7,'questions_question_25397eeec0dd1715655bbd5e2488bb50_value_64'),(17001,7,'questions_question_25397eeec0dd1715655bbd5e2488bb50_value_8'),(17071,7,'questions_question_399c943d354454ee1f3280603d4cf01e_value_1'),(17072,7,'questions_question_399c943d354454ee1f3280603d4cf01e_value_2'),(17073,7,'questions_question_399c943d354454ee1f3280603d4cf01e_value_4'),(17074,7,'questions_question_399c943d354454ee1f3280603d4cf01e_value_8'),(17151,7,'questions_question_48078777a47f521a8d2db15e8c43aeb4_value_1'),(17152,7,'questions_question_48078777a47f521a8d2db15e8c43aeb4_value_16'),(17153,7,'questions_question_48078777a47f521a8d2db15e8c43aeb4_value_2'),(17154,7,'questions_question_48078777a47f521a8d2db15e8c43aeb4_value_4'),(17155,7,'questions_question_48078777a47f521a8d2db15e8c43aeb4_value_8'),(17473,7,'questions_question_71ca7b196a4926b36ceb0e5f2f79f83f_value_1'),(17474,7,'questions_question_71ca7b196a4926b36ceb0e5f2f79f83f_value_2'),(17475,7,'questions_question_71ca7b196a4926b36ceb0e5f2f79f83f_value_32'),(17476,7,'questions_question_71ca7b196a4926b36ceb0e5f2f79f83f_value_4'),(17477,7,'questions_question_71ca7b196a4926b36ceb0e5f2f79f83f_value_64'),(17526,7,'questions_question_757d226391f04cf0ccb26cfa570026e0_value_1'),(17527,7,'questions_question_757d226391f04cf0ccb26cfa570026e0_value_2'),(17528,7,'questions_question_757d226391f04cf0ccb26cfa570026e0_value_4'),(17951,7,'questions_question_b9b93e695cbc4475751d3fa98a417832_value_16'),(17952,7,'questions_question_b9b93e695cbc4475751d3fa98a417832_value_32'),(17953,7,'questions_question_b9b93e695cbc4475751d3fa98a417832_value_8'),(18025,7,'questions_question_c4b93fbdd34a1892021fe179bff33834_value_1'),(18026,7,'questions_question_c4b93fbdd34a1892021fe179bff33834_value_16'),(18027,7,'questions_question_c4b93fbdd34a1892021fe179bff33834_value_2'),(18028,7,'questions_question_c4b93fbdd34a1892021fe179bff33834_value_4'),(18029,7,'questions_question_c4b93fbdd34a1892021fe179bff33834_value_8'),(18043,7,'questions_question_c897c809bc8a4f004f27a1e4637a99e6_description'),(18044,7,'questions_question_c897c809bc8a4f004f27a1e4637a99e6_label'),(18179,7,'questions_question_d570618c786b27617afb52192274c4e9_value_1'),(18180,7,'questions_question_d570618c786b27617afb52192274c4e9_value_128'),(18181,7,'questions_question_d570618c786b27617afb52192274c4e9_value_16'),(18182,7,'questions_question_d570618c786b27617afb52192274c4e9_value_2'),(18183,7,'questions_question_d570618c786b27617afb52192274c4e9_value_256'),(18184,7,'questions_question_d570618c786b27617afb52192274c4e9_value_32'),(18185,7,'questions_question_d570618c786b27617afb52192274c4e9_value_4'),(18186,7,'questions_question_d570618c786b27617afb52192274c4e9_value_512'),(18187,7,'questions_question_d570618c786b27617afb52192274c4e9_value_64'),(18188,7,'questions_question_d570618c786b27617afb52192274c4e9_value_8'),(18329,7,'questions_question_f17d6da3dec6687a509721adee152573_description'),(18330,7,'questions_question_f17d6da3dec6687a509721adee152573_label'),(18429,7,'questions_question__value_16'),(18430,7,'questions_question__value_8'),(18441,7,'questions_section_4e9e55a664473acae206ec14c58aa45e_label'),(18459,7,'required_profile_questions'),(18466,1,'question_possible_values_label'),(18467,7,'avatar_back_profile_edit'),(18468,7,'form_validate_common_error_message'),(18469,7,'questions_admin_add_new_values'),(18470,7,'questions_question_password_description'),(18471,7,'submit_attachment_not_loaded'),(18473,253,'admin_nav_item_type_field'),(18474,253,'admin_nav_item_type_local'),(18475,253,'admin_nav_item_url_field'),(18476,253,'mobile_join_promo'),(18477,1,'pages_page_field_content_desc'),(18478,1,'questions_cant_delete_last_account_type'),(18479,1,'themes_admin_list_cap_title'),(18480,7,'comments_see_more_label'),(18481,7,'questions_question_field_098faf82d91306b42c070711da8bf177_description'),(18482,7,'questions_question_field_098faf82d91306b42c070711da8bf177_label'),(18483,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_1'),(18484,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_1024'),(18485,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_1048576'),(18486,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_128'),(18487,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_131072'),(18488,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_134217728'),(18489,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_16'),(18490,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_16384'),(18491,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_16777216'),(18492,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_2'),(18493,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_2048'),(18494,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_2097152'),(18495,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_256'),(18496,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_262144'),(18497,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_32'),(18498,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_32768'),(18499,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_33554432'),(18500,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_4'),(18501,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_4096'),(18502,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_4194304'),(18503,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_512'),(18504,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_524288'),(18505,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_64'),(18506,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_65536'),(18507,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_67108864'),(18508,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_8'),(18509,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_8192'),(18510,7,'questions_question_field_098faf82d91306b42c070711da8bf177_value_8388608'),(18511,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_description'),(18512,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_label'),(18513,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_1'),(18514,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_1024'),(18515,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_1048576'),(18516,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_1073741824'),(18517,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_128'),(18518,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_131072'),(18519,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_134217728'),(18520,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_16'),(18521,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_16384'),(18522,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_16777216'),(18523,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_2'),(18524,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_2048'),(18525,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_2097152'),(18526,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_256'),(18527,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_262144'),(18528,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_268435456'),(18529,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_32'),(18530,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_32768'),(18531,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_33554432'),(18532,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_4'),(18533,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_4096'),(18534,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_4194304'),(18535,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_512'),(18536,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_524288'),(18537,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_536870912'),(18538,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_64'),(18539,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_65536'),(18540,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_67108864'),(18541,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_8'),(18542,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_8192'),(18543,7,'questions_question_field_d4492405b06aa44625c25fce4f077e47_value_8388608'),(18544,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_description'),(18545,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_label'),(18546,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_1'),(18547,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_1024'),(18548,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_1048576'),(18549,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_128'),(18550,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_131072'),(18551,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_134217728'),(18552,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_16'),(18553,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_16384'),(18554,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_16777216'),(18555,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_2'),(18556,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_2048'),(18557,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_2097152'),(18558,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_256'),(18559,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_262144'),(18560,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_268435456'),(18561,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_32'),(18562,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_32768'),(18563,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_33554432'),(18564,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_4'),(18565,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_4096'),(18566,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_4194304'),(18567,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_512'),(18568,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_524288'),(18569,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_64'),(18570,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_65536'),(18571,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_67108864'),(18572,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_8'),(18573,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_8192'),(18574,7,'questions_question_field_f601014ed0ceba2d4e25606de1992eba_value_8388608'),(18577,1,'manage_plugins_add_size_error_message'),(18578,1,'manage_themes_add_empty_field_error_message'),(18579,1,'questions_delete_section_confirmation_with_move_questions'),(18580,1,'set_suspend_message_label'),(18581,7,'auth_group_label'),(18582,7,'avatar_changed'),(18583,7,'avatar_choose_from_library'),(18584,7,'avatar_drop_single_image'),(18585,7,'avatar_has_been_approved'),(18586,7,'avatar_image_too_small'),(18587,7,'avatar_pending_approval'),(18588,7,'avatar_update_string'),(18589,7,'back'),(18590,7,'check_all_to'),(18591,7,'comment_added_string'),(18592,7,'comment_content_label'),(18593,7,'content_avatars_label'),(18594,7,'content_avatar_label'),(18595,7,'content_comments_label'),(18596,7,'content_comment_label'),(18597,7,'content_profiles_label'),(18598,7,'content_profile_label'),(18599,7,'crop_avatar_failed'),(18600,7,'drag_image_or_browse'),(18601,7,'drop_image_here'),(18602,7,'flagged_time'),(18603,7,'input_settings_avatar_max_upload_size_label'),(18604,7,'moderation_action'),(18605,7,'moderation_delete_confirmation'),(18606,7,'moderation_delete_multiple_confirmation'),(18607,7,'moderation_feedback_delete'),(18608,7,'moderation_feedback_delete_multiple'),(18609,7,'moderation_feedback_unflag'),(18610,7,'moderation_feedback_unflag_multiple'),(18611,7,'moderation_flags_item_string'),(18612,7,'moderation_no_items'),(18613,7,'moderation_no_items_warning'),(18614,7,'moderation_panel'),(18615,7,'moderation_reason'),(18616,7,'moderation_reporter'),(18617,7,'moderation_tools'),(18618,7,'pending_approval'),(18619,7,'set_suspend_message_label'),(18661,7,'suspend_floatbox_title'),(18621,7,'suspend_notification_html'),(18622,7,'suspend_notification_subject'),(18623,7,'suspend_notification_text'),(18624,7,'unflag'),(18625,7,'welcome_letter_template_html'),(18626,7,'welcome_letter_template_text'),(18627,7,'welcome_widget_content'),(18628,7,'welcome_widget_legend'),(18629,7,'welcome_widget_title'),(18630,1,'add_password'),(18654,1,'change_password'),(18659,7,'join_index_new_to_site'),(18662,7,'authorization_role_grey'),(18663,7,'sing_in_to_flag'),(18664,7,'ws_error_video'),(18665,7,'invalid_file_type_acceptable_file_types_jpg_png_gif'),(18666,7,'ws_video_text_label'),(18667,1,'smtp_test_connection_failed'),(18669,1,'permissions'),(18671,1,'sidebar_menu_item_content_settings'),(18672,1,'sidebar_menu_item_general'),(18673,1,'sidebar_menu_item_manage_pages'),(18674,1,'sidebar_menu_item_page_settings'),(18675,1,'sidebar_menu_item_smtp_settings'),(18676,1,'sidebar_menu_item_special_pages'),(18677,1,'sidebar_menu_item_themes'),(18678,1,'sidebar_menu_item_themes_customize'),(18679,1,'sidebar_menu_main'),(18689,1,'heading_page_settings'),(18699,1,'manage_plugins_available_box_cap_label'),(18700,1,'manage_plugins_add_box_cap_label'),(18701,1,'page_title_available_plugins'),(18702,1,'page_title_add_new_plugin'),(18703,1,'page_title_mobile_menus'),(18704,1,'heading_mobile_settings'),(18705,1,'mobile_settings_tabe_heading'),(18706,1,'admin_dashboard'),(18707,1,'admin_password'),(18708,1,'permissions_index_save'),(18709,1,'permission_global_privacy_settings_success_message'),(18710,1,'question_settings_updated'),(18711,1,'site_password'),(18712,1,'splash_screen_page_heading'),(18713,1,'splash_screen_page_title'),(18714,1,'splash_screen_submit_success_message'),(18715,1,'all_files'),(18716,1,'copy_url'),(18717,1,'delete_image'),(18718,1,'undefined_action'),(18719,1,'not_enough_params'),(18720,1,'no_photo_selected'),(18721,1,'select_mode'),(18722,1,'delete_selected'),(18723,1,'exit_select_mode'),(18724,1,'period'),(18725,1,'all_time'),(18726,1,'title'),(18727,1,'url'),(18728,1,'date'),(18729,1,'size'),(18730,1,'filesize'),(18731,1,'upload_date'),(18732,1,'confirm_delete_images'),(18733,1,'no_items'),(18734,1,'album'),(18735,1,'confirm_delete'),(18736,1,'describe_photo'),(18737,1,'dnd_not_support'),(18738,1,'dnd_support'),(18739,1,'drop_here'),(18740,1,'error_cant_write'),(18741,1,'error_extension'),(18742,1,'error_form_size'),(18743,1,'error_ini_size'),(18744,1,'error_no_file'),(18745,1,'error_no_tmp_dir'),(18746,1,'error_partial'),(18747,1,'mark_featured'),(18748,1,'not_all_photos_uploaded'),(18749,1,'no_photo_uploaded'),(18750,1,'of'),(18751,1,'pending_approval'),(18752,1,'photos_uploaded'),(18753,1,'photo_upload_error'),(18754,1,'please_wait'),(18755,1,'rating_total'),(18756,1,'rating_your'),(18757,1,'remove_from_featured'),(18758,1,'size_limit'),(18759,1,'slideshow_interval'),(18760,1,'tb_edit_photo'),(18761,1,'type_error'),(18762,1,'widget_content_statistics'),(18763,1,'widget_content_statistics_default_content_group'),(18764,1,'site_statistics_today_period'),(18765,1,'site_statistics_yesterday_period'),(18766,1,'site_statistics_last_7_days_period'),(18767,1,'site_statistics_last_30_days_period'),(18768,1,'site_statistics_last_year_period'),(18769,1,'site_statistics_default_period'),(18770,1,'widget_user_statistics'),(18771,1,'site_statistics_user_registrations'),(18772,1,'site_statistics_user_logins'),(18773,1,'statistics_amount_for_period'),(18774,1,'site_statistics_finance_transactions'),(18775,1,'site_statistics_finance_transactions_amount'),(18776,1,'widget_finance_statistics'),(18777,1,'statistics_history'),(18778,1,'statistics_browse_users'),(18779,1,'item_license_request_box_cap_label'),(18780,1,'item_update_request_platform_update_warning'),(18781,1,'license_form_back_label'),(18782,1,'license_form_button_label'),(18783,1,'license_request_text'),(18784,253,'menu_item_dashboard'),(18785,1,'site_password_letter_subject'),(18786,1,'site_password_letter_template_html'),(18787,1,'site_password_letter_template_text'),(19195,1,'captcha_settings'),(19196,1,'display_captcha_label'),(19197,7,'edit_profile_warning'),(19198,7,'moderation_user_update'),(19199,7,'message_label'),(19200,7,'subject_label'),(19201,7,'send_message_to_email'),(19202,7,'write_message'),(19203,7,'save_and_approve'),(19204,7,'message_send'),(19205,7,'invalid_user'),(19206,7,'empty_subject'),(19207,7,'empty_message'),(19208,7,'delete_user_feedback'),(19209,7,'message_invitation'),(19210,7,'page_6820666'),(19235,1,'invalid _license_item_notification'),(19236,1,'mail_template_admin_invalid_license_content_html'),(19237,1,'mail_template_admin_invalid_license_content_text'),(19238,1,'mail_template_admin_invalid_license_subject'),(19239,1,'manage_plugins_add_license_label'),(19242,1,'plugins_manage_license_key_check_success'),(19243,1,'questions_add_account_type'),(19328,7,'questions_question_presentation_fselect_label'),(19329,1,'questions_infinite_possible_values_description'),(19330,1,'questions_infinite_possible_values_label'),(19331,1,'questions_values_should_not_be_empty'),(19332,7,'blocked_users_browse_page_heading'),(19333,7,'my_blocked_users'),(19334,7,'wrong_file_extension'),(19335,7,'component_sign_in_password_invitation'),(19336,1,'sidebar_menu_item_seo_settings'),(19337,1,'seo_page_heading'),(19338,1,'seo_page'),(19339,1,'seo_sitemap'),(19340,1,'seo_social_meta'),(19341,1,'seo_sitemap_page_types'),(19342,1,'seo_sitemap_note_desc'),(19343,1,'seo_sitemap_settings_updated'),(19344,1,'seo_sitemap_settings'),(19345,1,'seo_sitemap_schedule_updates'),(19346,1,'seo_sitemap_schedule_updates_desc'),(19347,1,'seo_sitemap_users'),(19348,1,'seo_sitemap_users_desc'),(19349,1,'seo_sitemap_update_daily'),(19350,1,'seo_sitemap_update_weekly'),(19351,1,'seo_sitemap_update_monthly'),(19352,1,'seo_sitemap_base_pages'),(19353,7,'meta_title_user_list'),(19354,7,'meta_desc_user_list'),(19355,7,'user_list_type_latest'),(19356,7,'user_list_type_online'),(19357,7,'seo_meta_section_users'),(19358,7,'seo_meta_form_element_title_label'),(19359,7,'seo_meta_form_element_title_desc'),(19360,7,'seo_meta_form_element_desc_label'),(19361,7,'seo_meta_form_element_desc_desc'),(19362,7,'seo_meta_form_element_keywords_label'),(19363,7,'seo_meta_form_element_index_label'),(19364,7,'seo_meta_choose_pages_label'),(19365,7,'seo_meta_user_list_label'),(19366,7,'seo_meta_section_base_pages'),(19367,7,'meta_title_index'),(19368,7,'meta_desc_index'),(19369,7,'seo_meta_index_label'),(19370,7,'meta_title_join'),(19371,7,'meta_desc_join'),(19372,7,'seo_meta_join_label'),(19373,7,'meta_title_sign_in'),(19374,7,'meta_desc_sign_in'),(19375,7,'seo_meta_sign_in_label'),(19376,7,'meta_title_forgot_pass'),(19377,7,'meta_desc_forgot_pass'),(19378,7,'seo_meta_forgot_pass_label'),(19379,7,'meta_title_user_page'),(19380,7,'meta_desc_user_page'),(19381,7,'seo_meta_user_page_label'),(19382,7,'meta_title_user_search'),(19383,7,'meta_desc_user_search'),(19384,7,'seo_meta_user_search_label'),(19385,7,'meta_title_search_result'),(19386,7,'meta_desc_search_result'),(19387,7,'seo_meta_search_result_label'),(19388,7,'form_social_meta_logo_label'),(19389,7,'social_meta_logo_desc'),(19390,7,'seo_upload_logo_label'),(19391,7,'pages_page_meta_desc_label'),(19392,7,'pages_page_meta_desc_desc'),(19393,7,'pages_page_meta_keywords_label'),(19394,7,'invalid_meta_error_message'),(19395,7,'search_results'),(19396,7,'suspend_reason'),(19397,1,'plugin_update_platform_avail_yes_button_label'),(19398,1,'plugin_update_platform_first_button_label'),(19399,1,'permissions_delete_confirmation'),(19400,1,'plugin_update_platform_invalid_php_version_msg'),(19401,1,'plugin_update_platform_invalid_php_version_back_btn_label'),(19402,1,'check_updates_success_message'),(19403,253,'edit_profile'),(19404,253,'edit_other_profile'),(19405,253,'edit_profile_page'),(19406,253,'avatar_cannot_be_deleted'),(19407,253,'wrong_avatar_format'),(19408,253,'change_password_page'),(19409,7,'user_reactivation_mail_subject'),(19410,7,'user_reactivation_mail_txt'),(19411,7,'user_reactivation_mail_html'),(19412,1,'lang_in_key'),(19413,1,'lang_in_key_doc_link'),(19414,1,'lang_in_key_doc_link_value'),(19415,7,'admin_logs_drop_filters'),(19416,7,'admin_logs'),(19417,7,'admin_logs_empty'),(19418,7,'admin_logs_log_message'),(19419,7,'admin_logs_log_type'),(19420,7,'admin_logs_log_key'),(19421,7,'admin_logs_log_time'),(19422,7,'admin_logs_total'),(19423,7,'admin_logs_per_page'),(19424,7,'admin_logs_total_entries_sing'),(19425,7,'admin_logs_total_entries_mul'),(19426,7,'admin_log_entry'),(19427,7,'admin_log_entry_date_added'),(19428,7,'admin_log_entry_added_timestamp'),(19429,7,'admin_log_entry_key'),(19430,7,'admin_log_entry_type'),(19431,7,'admin_log_search'),(19432,7,'age_validator_error');
 /*!40000 ALTER TABLE `%%TBL-PREFIX%%base_language_key` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `%%TBL-PREFIX%%base_language_prefix`
---
-
-DROP TABLE IF EXISTS `%%TBL-PREFIX%%base_language_prefix`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `%%TBL-PREFIX%%base_language_prefix` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `prefix` varchar(255) NOT NULL,
-  `label` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `prefix` (`prefix`)
-) ENGINE=MyISAM AUTO_INCREMENT=259 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `%%TBL-PREFIX%%base_language_prefix`
---
-
-LOCK TABLES `%%TBL-PREFIX%%base_language_prefix` WRITE;
-/*!40000 ALTER TABLE `%%TBL-PREFIX%%base_language_prefix` DISABLE KEYS */;
-INSERT INTO `%%TBL-PREFIX%%base_language_prefix` VALUES (1,'admin','Admin'),(6,'ow_custom','Custom'),(7,'base','BASE'),(11,'nav','Navigation'),(253,'mobile','Mobile');
-/*!40000 ALTER TABLE `%%TBL-PREFIX%%base_language_prefix` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1198,9 +1200,8 @@ CREATE TABLE `%%TBL-PREFIX%%base_language_value` (
   `value` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `keyId` (`keyId`,`languageId`),
-  FOREIGN KEY (`languageId`) REFERENCES `%%TBL-PREFIX%%base_language`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`keyId`) REFERENCES `%%TBL-PREFIX%%base_language_key`(`id`) ON DELETE CASCADE
-) ENGINE=MyISAM AUTO_INCREMENT=62762 DEFAULT CHARSET=utf8;
+  FOREIGN KEY (`languageId`) REFERENCES `%%TBL-PREFIX%%base_language`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=62762 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1227,7 +1228,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_log` (
   `key` varchar(100) DEFAULT NULL,
   `timeStamp` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1253,7 +1254,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_login_cookie` (
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`),
   KEY `cookie` (`cookie`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1285,7 +1286,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_mail` (
   `senderSuffix` int(11) NOT NULL,
   `sent` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1309,7 +1310,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_mass_mailing_ignore_user` (
   `userId` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1336,7 +1337,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_media_panel_file` (
   `data` text NOT NULL,
   `stamp` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1369,7 +1370,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_menu_item` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`key`,`prefix`),
   KEY `documentKey` (`documentKey`)
-) ENGINE=MyISAM AUTO_INCREMENT=487 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=487 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1395,7 +1396,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_place` (
   `editableByUser` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1422,7 +1423,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_place_entity_scheme` (
   `entityId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `userId` (`entityId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1446,7 +1447,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_place_scheme` (
   `placeId` int(11) DEFAULT NULL,
   `schemeId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1485,7 +1486,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_plugin` (
   UNIQUE KEY `key` (`key`),
   UNIQUE KEY `module` (`module`),
   KEY `licenseCheckTimestamp` (`licenseCheckTimestamp`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1514,7 +1515,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_preference` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`key`),
   KEY `sortOrder` (`sortOrder`)
-) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1542,7 +1543,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_preference_data` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`,`key`),
   KEY `key` (`key`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1567,7 +1568,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_preference_section` (
   `sortOrder` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1608,7 +1609,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_question` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `sectionId` (`sectionName`)
-) ENGINE=MyISAM AUTO_INCREMENT=120 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1635,7 +1636,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_question_account_type` (
   `roleId` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`,`name`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1662,7 +1663,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_question_config` (
   `description` varchar(1024) DEFAULT NULL,
   `presentationClass` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1693,7 +1694,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_question_data` (
   UNIQUE KEY `userId` (`userId`,`questionName`),
   KEY `fieldName` (`questionName`),
   KEY `intValue` (`intValue`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1720,7 +1721,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_question_section` (
   `isDeletable` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `sectionName` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1745,7 +1746,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_question_to_account_type` (
   `accountType` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
   `questionName` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1772,7 +1773,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_question_value` (
   `sortOrder` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `questionName` (`questionName`,`value`)
-) ENGINE=MyISAM AUTO_INCREMENT=427 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=427 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1804,7 +1805,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_rate` (
   KEY `entityType` (`entityType`),
   KEY `entityId` (`entityId`),
   KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1831,7 +1832,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_remote_auth` (
   `timeStamp` int(11) NOT NULL,
   `custom` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1854,7 +1855,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_restricted_usernames` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1879,7 +1880,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_scheme` (
   `leftCssClass` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
   `cssClass` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1904,7 +1905,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_search` (
   `timeStamp` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `timeStamp` (`timeStamp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1935,7 +1936,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_search_entity` (
   KEY `entity` (`entityType`,`entityId`),
   KEY `status` (`status`,`activated`,`timeStamp`),
   FULLTEXT KEY `entityText` (`text`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1961,7 +1962,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_search_entity_tag` (
   PRIMARY KEY (`id`),
   KEY `searchEntityId` (`searchEntityId`),
   KEY `entityTag` (`entityTag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1987,7 +1988,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_search_result` (
   `sortOrder` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `searchResult` (`searchId`,`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2014,7 +2015,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_site_statistic` (
   `timeStamp` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `entity` (`entityType`,`timeStamp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2038,7 +2039,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_tag` (
   `label` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `label` (`label`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2074,7 +2075,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_theme` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`key`),
   KEY `licenseCheckTimestamp` (`licenseCheckTimestamp`)
-) ENGINE=MyISAM AUTO_INCREMENT=957 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=957 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2102,7 +2103,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_theme_content` (
   PRIMARY KEY (`id`),
   KEY `themeId` (`themeId`),
   KEY `type` (`type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2136,7 +2137,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_theme_control` (
   PRIMARY KEY (`id`),
   KEY `name` (`key`),
   KEY `themeId` (`themeId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2162,7 +2163,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_theme_control_value` (
   `themeId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `themeControlKey` (`themeControlKey`,`themeId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2189,7 +2190,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_theme_image` (
   `dimensions` varchar(20) DEFAULT NULL,
   `filesize` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2216,7 +2217,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_theme_master_page` (
   PRIMARY KEY (`id`),
   KEY `themeId` (`themeId`),
   KEY `documentKey` (`documentKey`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2251,7 +2252,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_user` (
   KEY `accountType` (`accountType`),
   KEY `joinStamp` (`joinStamp`),
   KEY `activityStamp` (`activityStamp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='utf8_general_ci';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2277,7 +2278,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_user_auth_token` (
   `timeStamp` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`,`token`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2304,7 +2305,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_user_block` (
   UNIQUE KEY `userId_blockedUserId` (`userId`,`blockedUserId`),
   KEY `userId` (`userId`),
   KEY `blockedUserId` (`blockedUserId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2328,7 +2329,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_user_disapprove` (
   `userId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2352,7 +2353,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_user_featured` (
   `userId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 MIN_ROWS=20;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 MIN_ROWS=20;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2378,7 +2379,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_user_online` (
   `context` tinyint(3) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2405,7 +2406,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_user_reset_password` (
   `updateTimeStamp` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2430,7 +2431,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_user_status` (
   `status` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2456,7 +2457,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_user_suspend` (
   `message` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2487,7 +2488,7 @@ CREATE TABLE `%%TBL-PREFIX%%base_vote` (
   KEY `userId` (`userId`),
   KEY `entityId` (`entityId`),
   KEY `entityType` (`entityType`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2514,7 +2515,7 @@ CREATE TABLE `%%TBL-PREFIX%%file_temporary` (
   `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2536,3 +2537,5 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2016-01-04 11:22:20
+
+COMMIT;
