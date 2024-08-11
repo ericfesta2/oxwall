@@ -21,33 +21,33 @@
  * Display of Attribution Information is required in Larger Works which are defined in the CPAL as a work
  * which combines Covered Code or portions thereof with code not governed by the terms of the CPAL.
  */
-define("_OW_", true);
-define("DS", DIRECTORY_SEPARATOR);
-define("OW_DIR_ROOT", dirname(dirname(__FILE__)) . DS);
-define("UPDATE_DIR_ROOT", OW_DIR_ROOT . "ow_updates" . DS);
+define('_OW_', true);
+define('DS', DIRECTORY_SEPARATOR);
+define('OW_DIR_ROOT', dirname(dirname(__FILE__)) . DS);
+define('UPDATE_DIR_ROOT', OW_DIR_ROOT . 'ow_updates' . DS);
 
-require_once OW_DIR_ROOT . "ow_includes/config.php";
-require_once OW_DIR_ROOT . "ow_includes/define.php";
-require_once OW_DIR_UTIL . "debug.php";
-require_once OW_DIR_UTIL . "string.php";
-require_once OW_DIR_UTIL . "file.php";
-require_once UPDATE_DIR_ROOT . "classes" . DS . "autoload.php";
-require_once UPDATE_DIR_ROOT . "classes" . DS . "error_manager.php";
-require_once UPDATE_DIR_ROOT . "classes" . DS . "updater.php";
-require_once UPDATE_DIR_ROOT . "classes" . DS . "update_executor.php";
-require_once OW_DIR_CORE . "ow.php";
-require_once OW_DIR_CORE . "plugin.php";
+require_once OW_DIR_ROOT . 'ow_includes/config.php';
+require_once OW_DIR_ROOT . 'ow_includes/define.php';
+require_once OW_DIR_UTIL . 'debug.php';
+require_once OW_DIR_UTIL . 'string.php';
+require_once OW_DIR_UTIL . 'file.php';
+require_once UPDATE_DIR_ROOT . 'classes' . DS . 'autoload.php';
+require_once UPDATE_DIR_ROOT . 'classes' . DS . 'error_manager.php';
+require_once UPDATE_DIR_ROOT . 'classes' . DS . 'updater.php';
+require_once UPDATE_DIR_ROOT . 'classes' . DS . 'update_executor.php';
+require_once OW_DIR_CORE . 'ow.php';
+require_once OW_DIR_CORE . 'plugin.php';
 
-spl_autoload_register(array("UPDATE_Autoload", "autoload"));
+spl_autoload_register(['UPDATE_Autoload', 'autoload']);
 
 UPDATE_ErrorManager::getInstance(true);
 
 $autoloader = UPDATE_Autoload::getInstance();
-$autoloader->addPackagePointer("BOL", OW_DIR_SYSTEM_PLUGIN . "base" . DS . "bol" . DS);
-$autoloader->addPackagePointer("BASE_CLASS", OW_DIR_SYSTEM_PLUGIN . "base" . DS . "classes" . DS);
-$autoloader->addPackagePointer("OW", OW_DIR_CORE);
-$autoloader->addPackagePointer("UTIL", OW_DIR_UTIL);
-$autoloader->addPackagePointer("UPDATE", UPDATE_DIR_ROOT . "classes" . DS);
+$autoloader->addPackagePointer('BOL', OW_DIR_SYSTEM_PLUGIN . 'base' . DS . 'bol' . DS);
+$autoloader->addPackagePointer('BASE_CLASS', OW_DIR_SYSTEM_PLUGIN . 'base' . DS . 'classes' . DS);
+$autoloader->addPackagePointer('OW', OW_DIR_CORE);
+$autoloader->addPackagePointer('UTIL', OW_DIR_UTIL);
+$autoloader->addPackagePointer('UPDATE', UPDATE_DIR_ROOT . 'classes' . DS);
 
 $db = Updater::getDbo();
 $dbPrefix = OW_DB_PREFIX;
@@ -56,66 +56,49 @@ $dbPrefix = OW_DB_PREFIX;
 OW_Auth::getInstance()->setAuthenticator(new OW_SessionAuthenticator());
 $updater = new UPDATE_UpdateExecutor();
 
-$status = "";
-$message = "";
+$status = '';
+$message = '';
 
-if ( empty($_GET[UPDATE_UpdateExecutor::URI_VAR_ACTION]) )
-{
+if (empty($_GET[UPDATE_UpdateExecutor::URI_VAR_ACTION])) {
     $status = UPDATE_UpdateExecutor::STATUS_EMPTY_ACTION;
-    $message = "Error! Action not provided.";
-}
-else
-{
-    switch ( trim($_GET[UPDATE_UpdateExecutor::URI_VAR_ACTION]) )
-    {
+    $message = 'Error! Action not provided.';
+} else {
+    switch (trim($_GET[UPDATE_UpdateExecutor::URI_VAR_ACTION])) {
         case UPDATE_UpdateExecutor::URI_VAR_ACTION_VAL_UPDATE_PLUGIN:
 
-            if ( !empty($_GET[UPDATE_UpdateExecutor::URI_VAR_PLUGIN_KEY]) )
-            {
+            if (!empty($_GET[UPDATE_UpdateExecutor::URI_VAR_PLUGIN_KEY])) {
                 $pluginKey = trim($_GET[UPDATE_UpdateExecutor::URI_VAR_PLUGIN_KEY]);
 
-                try
-                {
+                try {
                     $pluginArr = $updater->updateSinglePlugin($pluginKey);
                     $status = UPDATE_UpdateExecutor::STATUS_SUCCESS;
-                    $message = "Update Complete! Plugin '<b>{$pluginArr["key"]}</b>' successfully updated.";
-                }
-                catch ( LogicUpToDateException $ex )
-                {
+                    $message = "Update Complete! Plugin '<b>{$pluginArr['key']}</b>' successfully updated.";
+                } catch (LogicUpToDateException $ex) {
                     $status = UPDATE_UpdateExecutor::STATUS_UP_TO_DATE;
                     $message = "Error! Plugin '<b>" . htmlspecialchars($pluginKey) . "</b>' is up to date.";
-                }
-                catch ( LogicException $ex )
-                {
+                } catch (LogicException $ex) {
                     $status = UPDATE_UpdateExecutor::STATUS_FAIL;
                     $message = "Error! Plugin '<b>" . htmlspecialchars($pluginKey) . "</b>' not found.";
                 }
-            }
-            else
-            {
+            } else {
                 $status = UPDATE_UpdateExecutor::STATUS_FAIL;
-                $message = "Error! Empty plugin key.";
+                $message = 'Error! Empty plugin key.';
             }
 
             break;
 
         case UPDATE_UpdateExecutor::URI_VAR_ACTION_VAL_UPDATE_ALL_PLUGINS:
 
-            try
-            {
+            try {
                 $count = $updater->updateAllPlugins();
                 $status = UPDATE_UpdateExecutor::STATUS_SUCCESS;
                 $message = "Update Complete! {$count} plugins successfully updated.";
-            }
-            catch ( LogicUpToDateException $ex )
-            {
+            } catch (LogicUpToDateException $ex) {
                 $status = UPDATE_UpdateExecutor::STATUS_UP_TO_DATE;
-                $message = "Error! All plugins are up to date.";
-            }
-            catch ( LogicException $ex )
-            {
+                $message = 'Error! All plugins are up to date.';
+            } catch (LogicException $ex) {
                 $status = UPDATE_UpdateExecutor::STATUS_FAIL;
-                $message = "Error! No plugins for update.";
+                $message = 'Error! No plugins for update.';
             }
 
             break;
@@ -124,18 +107,17 @@ else
             //TODO implement
             break;
 
-        default :
-            $message = "Error! Action is not defined.";
+        default:
+            $message = 'Error! Action is not defined.';
             $status = UPDATE_UpdateExecutor::STATUS_FAIL;
     }
 }
 
-if ( !empty($_GET[UPDATE_UpdateExecutor::URI_VAR_BACK_URI]) )
-{
+if (!empty($_GET[UPDATE_UpdateExecutor::URI_VAR_BACK_URI])) {
     $url = build_url_query_string(OW_URL_HOME . urldecode(trim($_GET[UPDATE_UpdateExecutor::URI_VAR_BACK_URI])),
-        array_merge($_GET, array("mode" => $status)));
-    Header("HTTP/1.1 301 Moved Permanently");
-    Header("Location: {$url}");
+        array_merge($_GET, ['mode' => $status]));
+    header('HTTP/1.1 301 Moved Permanently');
+    header("Location: {$url}");
     exit;
 }
 
@@ -149,7 +131,7 @@ echo '
   <body style="font:18px Tahoma;">
   <div style="width:400px;margin:300px auto 0;font:14px Tahoma;">
   <h3 style="color:#CF3513;font:bold 20px Tahoma;">Update Request</h3>
-  ' . $message . ' <br />
+  ' . htmlspecialchars($message) . ' <br />
   Go to <a style="color:#3366CC;" href="' . OW_URL_HOME . '">Index Page</a>&nbsp; or &nbsp;<a style="color:#3366CC;" href="' . OW_URL_HOME . 'admin">Admin Panel</a>
   </div>
   </body>
@@ -160,23 +142,22 @@ echo '
 
 /* functions */
 
-function build_url_query_string( $url, array $paramsToUpdate = [], $anchor = null )
+function build_url_query_string($url, array $paramsToUpdate = [], $anchor = null)
 {
     $requestUrlArray = parse_url($url);
 
     $currentParams = [];
 
-    if ( isset($requestUrlArray['query']) )
-    {
+    if (isset($requestUrlArray['query'])) {
         parse_str($requestUrlArray['query'], $currentParams);
     }
 
     $currentParams = array_merge($currentParams, $paramsToUpdate);
 
-    return $requestUrlArray['scheme'] . '://' . $requestUrlArray['host'] . $requestUrlArray['path'] . '?' . http_build_query($currentParams) . ( $anchor === null ? '' : '#' . trim($anchor) );
+    return $requestUrlArray['scheme'] . '://' . $requestUrlArray['host'] . $requestUrlArray['path'] . '?' . http_build_query($currentParams) . ($anchor === null ? '' : '#' . trim($anchor));
 }
 
-function printVar( $var )
+function printVar($var)
 {
     UTIL_Debug::varDump($var);
 }
