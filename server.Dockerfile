@@ -1,17 +1,8 @@
-ARG BASE_DIR=/var/www/html
-
-# FROM composer:latest AS deps-install-base
-
-# ARG BASE_DIR
-# ARG IS_DEV
-
-# COPY . $BASE_DIR
-# RUN cd $BASE_DIR && composer install
-
 FROM php:8.3-apache
 
-ARG BASE_DIR
+ARG dir_to_copy='.'
 
+COPY ${dir_to_copy} /var/www/html
 COPY php.ini /usr/local/etc/php/conf.d/
 
 RUN --mount=type=cache,target=/var/cache/apt \
