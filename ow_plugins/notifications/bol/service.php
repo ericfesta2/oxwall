@@ -2,9 +2,9 @@
 
 class NOTIFICATIONS_BOL_Service
 {
-    const SCHEDULE_IMMEDIATELY = 'immediately';
-    const SCHEDULE_AUTO = 'auto';
-    const SCHEDULE_NEVER = 'never';
+    public const SCHEDULE_IMMEDIATELY = 'immediately';
+    public const SCHEDULE_AUTO = 'auto';
+    public const SCHEDULE_NEVER = 'never';
 
     private static $classInstance;
 
@@ -15,8 +15,7 @@ class NOTIFICATIONS_BOL_Service
      */
     public static function getInstance()
     {
-        if ( null === self::$classInstance )
-        {
+        if (null === self::$classInstance) {
             self::$classInstance = new self();
         }
 
@@ -53,7 +52,7 @@ class NOTIFICATIONS_BOL_Service
      */
     private $notificationDao;
 
-    private $defaultRuleList = array();
+    private $defaultRuleList = [];
 
     public function __construct()
     {
@@ -66,14 +65,12 @@ class NOTIFICATIONS_BOL_Service
 
     public function collectActionList()
     {
-        if ( empty($this->defaultRuleList) )
-        {
+        if (empty($this->defaultRuleList)) {
             $event = new BASE_CLASS_EventCollector('notifications.collect_actions');
             OW::getEventManager()->trigger($event);
 
             $eventData = $event->getData();
-            foreach ( $eventData as $item )
-            {
+            foreach ($eventData as $item) {
                 $this->defaultRuleList[$item['action']] = $item;
             }
         }
@@ -81,24 +78,23 @@ class NOTIFICATIONS_BOL_Service
         return $this->defaultRuleList;
     }
 
-    public function findRuleList( $userId, $actions = null )
+    public function findRuleList($userId, $actions = null)
     {
-        $out = array();
+        $out = [];
         $list = $this->ruleDao->findRuleList($userId, $actions);
-        foreach ( $list as $item )
-        {
+        foreach ($list as $item) {
             $out[$item->action] = $item;
         }
 
         return $out;
     }
 
-    public function saveRule( NOTIFICATIONS_BOL_Rule $rule )
+    public function saveRule(NOTIFICATIONS_BOL_Rule $rule)
     {
         $this->ruleDao->save($rule);
     }
 
-    public function findUserIdByUnsubscribeCode( $code )
+    public function findUserIdByUnsubscribeCode($code)
     {
         $dto = $this->unsubscribeDao->findByCode($code);
 
@@ -116,7 +112,7 @@ class NOTIFICATIONS_BOL_Service
         $this->unsubscribeDao->deleteExpired($time);
     }
 
-    public function generateUnsubscribeCode( BOL_User $user )
+    public function generateUnsubscribeCode(BOL_User $user)
     {
         $code = md5($user->email);
         $dto = new NOTIFICATIONS_BOL_Unsubscribe();
@@ -129,41 +125,34 @@ class NOTIFICATIONS_BOL_Service
         return $code;
     }
 
-    
-    public function isNotificationPermited( $userId, $action )
+
+    public function isNotificationPermited($userId, $action)
     {
         $defaultRules = $this->collectActionList();
         $rules = $this->findRuleList($userId);
-        
-        if ( isset($rules[$action]) )
-        {
+
+        if (isset($rules[$action])) {
             return (bool) $rules[$action]->checked;
         }
-        
+
         return !empty($defaultRules[$action]['selected']);
     }
-    
-    public function sendPermittedNotifications( $userId, $notificationList )
+
+    public function sendPermittedNotifications($userId, $notificationList)
     {
         $defaultRules = $this->collectActionList();
         $rules = $this->findRuleList($userId);
 
-        $listToSend = array();
-        foreach ( $notificationList as $notification )
-        {
+        $listToSend = [];
+        foreach ($notificationList as $notification) {
             $action = $notification['action'];
 
-            if ( isset($rules[$action]) )
-            {
-                if ( !$rules[$action]->checked )
-                {
+            if (isset($rules[$action])) {
+                if (!$rules[$action]->checked) {
                     continue;
                 }
-            }
-            else
-            {
-                if ( empty($defaultRules[$action]['selected']) )
-                {
+            } else {
+                if (empty($defaultRules[$action]['selected'])) {
                     continue;
                 }
             }
@@ -174,17 +163,15 @@ class NOTIFICATIONS_BOL_Service
         $this->sendNotifications($userId, $listToSend, false);
     }
 
-    public function sendNotifications( $userId, $notifications )
+    public function sendNotifications($userId, $notifications)
     {
-        if ( empty($notifications) )
-        {
+        if (empty($notifications)) {
             return;
         }
 
         $cmp = new NOTIFICATIONS_CMP_Notification($userId);
 
-        foreach ( $notifications as $item )
-        {
+        foreach ($notifications as $item) {
             $data = $item['data'];
             $params = $item;
             $onEvent = new OW_Event('notifications.on_item_send', $params, $data);
@@ -198,13 +185,12 @@ class NOTIFICATIONS_BOL_Service
         $this->sendProcess($userId, $cmp);
     }
 
-    private function sendProcess( $userId, NOTIFICATIONS_CMP_Notification $cmp )
+    private function sendProcess($userId, NOTIFICATIONS_CMP_Notification $cmp)
     {
         $userService = BOL_UserService::getInstance();
         $user = $userService->findUserById($userId);
 
-        if ( empty($user) )
-        {
+        if (empty($user)) {
             return false;
         }
 
@@ -218,8 +204,7 @@ class NOTIFICATIONS_BOL_Service
 
         $subject = $cmp->getSubject();
 
-        try
-        {
+        try {
             $mail = OW::getMailer()->createMail()
                 ->addRecipientEmail($email)
                 ->setTextContent($txt)
@@ -227,36 +212,34 @@ class NOTIFICATIONS_BOL_Service
                 ->setSubject($subject);
 
             OW::getMailer()->send($mail);
-        }
-        catch ( Exception $e )
-        {
+        } catch (Exception $e) {
             //Skip invalid notification
         }
     }
 
 
 
-    public function findNotificationList( $userId, $beforeStamp, $ignoreIds, $count )
+    public function findNotificationList($userId, $beforeStamp, $ignoreIds, $count)
     {
         return $this->notificationDao->findNotificationList($userId, $beforeStamp, $ignoreIds, $count);
     }
 
-    public function findNewNotificationList( $userId, $afterStamp )
+    public function findNewNotificationList($userId, $afterStamp)
     {
         return $this->notificationDao->findNewNotificationList($userId, $afterStamp);
     }
 
-    public function findNotificationListForSend( $userIdList )
+    public function findNotificationListForSend($userIdList)
     {
         return $this->notificationDao->findNotificationListForSend($userIdList);
     }
 
-    public function findNotificationCount( $userId, $viewed = null, $exclude = null )
+    public function findNotificationCount($userId, $viewed = null, $exclude = null)
     {
         return $this->notificationDao->findNotificationCount($userId, $viewed, $exclude);
     }
 
-    public function saveNotification( NOTIFICATIONS_BOL_Notification $notification )
+    public function saveNotification(NOTIFICATIONS_BOL_Notification $notification)
     {
         $this->notificationDao->saveNotification($notification);
     }
@@ -268,27 +251,27 @@ class NOTIFICATIONS_BOL_Service
      * @param int $userId
      * @return NOTIFICATIONS_BOL_Notification
      */
-    public function findNotification( $entityType, $entityId, $userId )
+    public function findNotification($entityType, $entityId, $userId)
     {
         return $this->notificationDao->findNotification($entityType, $entityId, $userId);
     }
 
-    public function markNotificationsViewedByIds( $idList, $viewed = true )
+    public function markNotificationsViewedByIds($idList, $viewed = true)
     {
         $this->notificationDao->markViewedByIds($idList, $viewed);
     }
 
-    public function markNotificationsViewedByUserId( $userId, $viewed = true )
+    public function markNotificationsViewedByUserId($userId, $viewed = true)
     {
         $this->notificationDao->markViewedByUserId($userId, $viewed);
     }
 
-    public function markNotificationsSentByIds( $idList, $sent = true )
+    public function markNotificationsSentByIds($idList, $sent = true)
     {
         $this->notificationDao->markSentByIds($idList, $sent);
     }
 
-    public function deleteNotification( $entityType, $entityId, $userId )
+    public function deleteNotification($entityType, $entityId, $userId)
     {
         $this->notificationDao->deleteNotification($entityType, $entityId, $userId);
     }
@@ -298,17 +281,17 @@ class NOTIFICATIONS_BOL_Service
         $this->notificationDao->deleteExpired();
     }
 
-    public function deleteNotificationByEntity( $entityType, $entityId )
+    public function deleteNotificationByEntity($entityType, $entityId)
     {
         $this->notificationDao->deleteNotificationByEntity($entityType, $entityId);
     }
 
-    public function deleteNotificationByPluginKey( $pluginKey )
+    public function deleteNotificationByPluginKey($pluginKey)
     {
         $this->notificationDao->deleteNotificationByPluginKey($pluginKey);
     }
 
-    public function setNotificationStatusByPluginKey( $pluginKey, $status )
+    public function setNotificationStatusByPluginKey($pluginKey, $status)
     {
         $this->notificationDao->setNotificationStatusByPluginKey($pluginKey, $status);
     }
@@ -318,24 +301,21 @@ class NOTIFICATIONS_BOL_Service
         return self::SCHEDULE_AUTO;
     }
 
-    public function getSchedule( $userId )
+    public function getSchedule($userId)
     {
         $entity = $this->scheduleDao->findByUserId($userId);
 
         return $entity === null ? $this->getDefaultSchedule() : $entity->schedule;
     }
 
-    public function setSchedule( $userId, $schedule )
+    public function setSchedule($userId, $schedule)
     {
         $entity = $this->scheduleDao->findByUserId($userId);
 
-        if ( $entity === null )
-        {
+        if ($entity === null) {
             $entity = new NOTIFICATIONS_BOL_Schedule();
             $entity->userId = $userId;
-        }
-        else if ( $entity->schedule == $schedule )
-        {
+        } elseif ($entity->schedule === $schedule) {
             return false;
         }
 
@@ -346,7 +326,7 @@ class NOTIFICATIONS_BOL_Service
         return true;
     }
 
-    public function fillSendQueue( $period = null )
+    public function fillSendQueue($period)
     {
         $this->sendQueueDao->fillData($period, $this->getDefaultSchedule());
     }
@@ -356,19 +336,17 @@ class NOTIFICATIONS_BOL_Service
         return $this->sendQueueDao->countAll();
     }
 
-    public function findUserIdListForSend( $count )
+    public function findUserIdListForSend($count)
     {
         $list = $this->sendQueueDao->findList($count);
 
-        if ( empty($list) )
-        {
-            return array();
+        if (empty($list)) {
+            return [];
         }
 
-        $userIds = array();
-        $ids = array();
-        foreach ( $list as $item )
-        {
+        $userIds = [];
+        $ids = [];
+        foreach ($list as $item) {
             $ids[] = $item->id;
             $userIds[] = $item->userId;
         }
