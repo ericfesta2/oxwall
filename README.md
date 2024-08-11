@@ -22,6 +22,8 @@ This fork of Oxwall is maintained by a longtime enthusiast unaffiliated with the
 up-to-date with modern technologies and standards. While the goal of this project is to maintain Oxwall's compatibility
 with a variety of web hosts, it raises the minimum supported version of PHP to 8.3 and MySQL to 8.0.
 
+The original Oxwall repository can be found here: https://github.com/oxwall/oxwall
+
 COMPATIBILITY WITH LEGACY OXWALL
 ================================
 
