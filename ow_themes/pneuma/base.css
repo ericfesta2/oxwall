@@ -1850,6 +1850,9 @@ select:focus,
 .toolbar ul li a:hover {
     border: 0;
 }
+.ow_chat_block form .ow_chat_mailchat_inputarea .jhtmlarea {
+    padding: 6px;
+}
 .jhtmlarea .toolbar ul {
     height: 24px;
 }
@@ -4384,7 +4387,7 @@ span.ow_chat_item_text,
 }
 .ow_chat_mailchat_buttons {
     border: 0;
-    background-color: #fff;
+    margin: 0;
 }
 .ow_chat_mailchat_buttons .ow_attachment_btn span.ow_button,
 .ow_chat_mailchat_buttons .ow_attachment_btn span.ow_button span {
@@ -4410,6 +4413,9 @@ span.ow_chat_item_text,
 .ow_chat_dialog_wrap .ow_attachments .buttons {
     background-color: #fff;
 }
+.ow_mailchat_new_message .ow_chat_mailchat_inputarea {
+    padding: 0;
+}
 .ow_chat_mailchat_inputarea .toolbar ul li a {
     background-image: url(images/wysiwyg.png);
     border: 0;
@@ -4420,6 +4426,9 @@ span.ow_chat_item_text,
 }
 .ow_chat_dialog .ow_chat_subject_block input {
     font-size: 16px;
+}
+.ow_chat_dialog .ow_chat_subject_block input:hover, .ow_chat_dialog .ow_chat_subject_block input:focus {
+    box-shadow: none;
 }
 .toolbar ul li a {
     border-radius: 0;
@@ -5963,6 +5972,7 @@ h1.page_title{
     .ow_mailbox_message_input .jhtmlarea {
         width: 100% !important;
         box-sizing: border-box;
+        padding: 6px;
     }
     .ow_mailbox_form div.jhtmlarea {
         padding: 0;
