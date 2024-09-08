@@ -18,12 +18,14 @@ jobs:
       - run: cd $GITHUB_WORKSPACE
       - run: mv ow_install_default ow_install
       - run: mv ow_includes/config.php.default ow_includes/config.php
+      # TODO exclude ow_unittest from archive
       - run: mkdir ow_smarty/template_c && touch ow_smarty/template_c/.blank
       - run: cp .gitignore .gitignore.bak
       - run: sed -i -n '/^# FOR RELEASES:$/q;p' .gitignore
       - run: git add . && git config user.name 'Oxwall Pipeline' && git config user.email '<>'
       - run: git commit -m 'Temporary commit for packaging ignored artifacts'
-      - run: git archive HEAD --output oxwall-"${GITHUB_REF##*/}".zip
+      - run: echo "OW_RELEASE_TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
+      - run: git archive HEAD --output oxwall-"$OW_RELEASE_TAG".zip
       - run: mv .gitignore.bak .gitignore
       - name: Package Release
         uses: softprops/action-gh-release@v2
@@ -31,3 +33,16 @@ jobs:
           files: |
             oxwall-*.zip
           token: ${{ secrets.CREATE_RELEASE_TOKEN }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: https://ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./server.Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.actor }}/oxwall:${{ env.OW_RELEASE_TAG }}

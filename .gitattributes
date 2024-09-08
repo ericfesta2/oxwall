@@ -11,3 +11,4 @@ docker-compose.yml export-ignore
 LICENSE export-ignore
 ow_install_default export-ignore
 phpunitgen.php export-ignore
+ow_unittest export-ignore
