@@ -13,3 +13,7 @@ LICENSE
 ow_install_default
 phpunitgen.php
 ow_unittest
+/output.log
+docker_tag
+Dockerfile-php-build
+DOCKER_ENV

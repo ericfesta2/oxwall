@@ -2,8 +2,8 @@ FROM php:8.3-apache
 
 ARG dir_to_copy='.'
 
-COPY ${dir_to_copy} /var/www/html
-COPY php.ini /usr/local/etc/php/conf.d/
+COPY --chown=www-data:www-data ${dir_to_copy} /var/www/html
+COPY --chown=www-data:www-data php.ini /usr/local/etc/php/conf.d/
 
 RUN --mount=type=cache,target=/var/cache/apt \
     apt-get update && apt-get install -y \
