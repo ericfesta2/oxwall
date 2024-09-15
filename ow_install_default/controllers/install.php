@@ -1,7 +1,15 @@
 <?php
 
+enum SetupSetting: string
+{
+    case NEW_SITE = 'new_site';
+    case EXISTING_DB = 'existing_db';
+}
+
 final class INSTALL_CTRL_Install extends INSTALL_ActionController
 {
+    private const string SETUP_SETTING_KEY = 'init_setup_setting';
+
     #[\Override]
     public function init(array $dispatchAttrs = [], bool $dbReady = false)
     {
@@ -123,13 +131,45 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
         $checkRequirements = array_filter($fails);
 
         if (empty($checkRequirements)) {
-            $this->redirect(OW::getRouter()->urlForRoute('site'));
+            $this->redirect(OW::getRouter()->urlForRoute('basics'));
+        }
+    }
+
+    public function main()
+    {
+        $this->setPageHeading('Welcome to Oxwall');
+        INSTALL::getStepIndicator()->activate('basics');
+
+        $errors = [];
+
+        if (OW::getRequest()->isPost()) {
+            $data = $_POST;
+            $data = array_filter($data, 'trim');
+            $setupType = $data[self::SETUP_SETTING_KEY];
+
+            if (empty($setupType) || !in_array($setupType, array_column(SetupSetting::cases(), 'value'))) {
+                $errors[] = self::SETUP_SETTING_KEY;
+            }
+
+            $this->processData($data);
+
+            if (empty($errors)) {
+                $this->redirect(
+                    OW::getRouter()->urlForRoute($setupType === SetupSetting::NEW_SITE->value ? 'site' : 'db')
+                );
+            }
+
+            foreach ($errors as $flag) {
+                INSTALL::getFeedback()->errorFlag($flag);
+            }
+
+            $this->redirect();
         }
     }
 
     public function site()
     {
-        $this->setPageHeading('Install Oxwall');
+        $this->setPageHeading('Site Settings');
         $this->setPageTitle('Site');
         INSTALL::getStepIndicator()->activate('site');
 
@@ -138,6 +178,11 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
         $fieldData['site_path'] = OW_DIR_ROOT;
 
         $sessionData = INSTALL::getStorage()->getAll();
+
+        if ($sessionData[self::SETUP_SETTING_KEY] === SetupSetting::EXISTING_DB->value) {
+            $this->redirect(OW::getRouter()->urlForRoute('db'));
+        }
+
         $fieldData = array_merge($fieldData, $sessionData);
 
         $this->assign('data', $fieldData);
@@ -205,8 +250,6 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
             $data = $_POST;
             $data = array_filter($data, 'trim');
 
-            $success = true;
-
             if (empty($data['db_host']) || !preg_match('/^[^:]+?(\:\d+)?$/', $data['db_host'])) {
                 $errors[] = 'db_host';
             }
@@ -240,9 +283,15 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
                     $existingTables = $dbo->queryForColumnList("SHOW TABLES LIKE '{$data['db_prefix']}base_%'");
 
                     if (!empty($existingTables)) {
-                        INSTALL::getFeedback()->errorMessage('This database should be empty _especially_ if you try to reinstall Oxwall.');
+                        // If setting up a new site, having existing database tables is an error;
+                        // otherwise, proceed to the site installation
+                        if ($sessionData[self::SETUP_SETTING_KEY] !== SetupSetting::EXISTING_DB->value) {
+                            INSTALL::getFeedback()->errorMessage(
+                                'This database should be empty _especially_ if you try to reinstall Oxwall.'
+                            );
 
-                        $this->redirect();
+                            $this->redirect();
+                        }
                     }
                 } catch (InvalidArgumentException $e) {
                     INSTALL::getFeedback()->errorMessage('Could not connect to Database<div class="feedback_error">Error: ' . $e->getMessage() . '</div>');
@@ -302,12 +351,14 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
                 $this->redirect(OW::getRouter()->urlForRoute('install'));
             }
 
-            try {
-                $this->sqlImport(INSTALL_DIR_FILES . 'install.sql');
-            } catch (Exception $e) {
-                INSTALL::getFeedback()->errorMessage($e->getMessage());
+            if (INSTALL::getStorage()->get(self::SETUP_SETTING_KEY) === SetupSetting::EXISTING_DB->value) {
+                try {
+                    $this->sqlImport(INSTALL_DIR_FILES . 'install.sql');
+                } catch (Exception $e) {
+                    INSTALL::getFeedback()->errorMessage($e->getMessage());
 
-                $this->redirect(OW::getRouter()->urlForRoute('install'));
+                    $this->redirect(OW::getRouter()->urlForRoute('install'));
+                }
             }
 
             try {

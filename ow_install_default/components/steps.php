@@ -13,6 +13,7 @@ final class INSTALL_CMP_Steps extends INSTALL_Component
     {
         parent::__construct();
 
+        $this->add('basics', 'The Basics');
         $this->add('site', 'Site');
         $this->add('db', 'Database');
         $this->add('install', 'Install');

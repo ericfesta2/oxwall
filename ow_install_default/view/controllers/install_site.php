@@ -1,5 +1,3 @@
-<h2 class="setupSectHeading">Site Settings</h2>
-
 <?php echo install_tpl_feedback() ?>
 <form method="post">
 	<table class="form">

@@ -1,6 +1,7 @@
 <?php
 
 OW::getRouter()->addRoute(new OW_Route('requirements', 'install', 'INSTALL_CTRL_Install', 'requirements'));
+OW::getRouter()->addRoute(new OW_Route('basics', 'install/main', 'INSTALL_CTRL_Install', 'main'));
 OW::getRouter()->addRoute(new OW_Route('site', 'install/site', 'INSTALL_CTRL_Install', 'site'));
 OW::getRouter()->addRoute(new OW_Route('db', 'install/data-base', 'INSTALL_CTRL_Install', 'db'));
 
@@ -12,8 +13,7 @@ OW::getRouter()->addRoute(new OW_Route('finish', 'install/security', 'INSTALL_CT
 
 function install_tpl_feedback_flag($flag, string $class = 'error'): string
 {
-    if ( INSTALL::getFeedback()->getFlag($flag) )
-    {
+    if (INSTALL::getFeedback()->getFlag($flag)) {
         return $class;
     }
 

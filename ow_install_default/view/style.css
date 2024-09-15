@@ -63,10 +63,9 @@ p
 
 .setupSectHeading
 {
-    margin: 0;
-    color: #626262;
-    border-bottom: 1px solid #E9EAEB;
-    padding-bottom: 20px;
+    text-align: center;
+    margin: 12px 0;
+    color: #000;
 }
 
 div.wrapper
@@ -89,15 +88,12 @@ div.body_top {
 }
 
 div.logo_container {
-    float: right;
-	background: transparent url('img/oxwall-logo.png') no-repeat left top;
-	left: 35px;
-	top: 0px;
-	height: 46px;
-	width: 111px;
-    margin-top: 18px;
+	background: transparent url('img/ow_logo.png') no-repeat center;
+    background-size: cover;
+    margin: 18px auto;
+	height: 120px;
+	width: 120px;
 }
-
 
 .body_top h1
 {
@@ -126,14 +122,13 @@ div.logo_container {
 
 .steps
 {
-    top: 10px;
     padding-top: 10px;
     color: #c8cacd;
     text-align: center;
     font-size: 18px;
     line-height: 50px;
     border-top: solid 1px #E9EAEB;
-    width: 565px;
+    width: 600px;
     height: 45px;
     margin: auto;
 }
@@ -153,8 +148,23 @@ div.logo_container {
 
 .steps .active
 {
-    color: #f93;
+    color: #FB5E09;
     background-image: url('img/arrow-active.png');
+}
+
+.initSetupSetting {
+    display: block;
+    width: 400px;
+    background-color: #F1F2F5;
+    margin: 20px 0;
+    padding: 12px 16px;
+    border-radius: 4px;
+    transition: background-color .3s;
+    cursor: pointer;
+}
+
+.initSetupSetting:hover {
+    background-color: #E8E8E8;
 }
 
 .form
