@@ -1,5 +1,3 @@
-<h2 class="setupSectHeading">Database Configuration</h2>
-
 <?php echo install_tpl_feedback() ?>
 <form method="post">
     <p style="color: #626262; text-align: center">Please create a database and enter its details here.</p>

@@ -233,7 +233,8 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
 
     public function db()
     {
-        $this->setPageTitle('Database');
+        $this->setPageHeading('Database Configuration');
+        $this->setPageTitle('Database Configuration');
         INSTALL::getStepIndicator()->activate('db');
 
         $fieldData = [];
@@ -351,7 +352,7 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
                 $this->redirect(OW::getRouter()->urlForRoute('install'));
             }
 
-            if (INSTALL::getStorage()->get(self::SETUP_SETTING_KEY) === SetupSetting::EXISTING_DB->value) {
+            if (INSTALL::getStorage()->get(self::SETUP_SETTING_KEY) === SetupSetting::NEW_SITE->value) {
                 try {
                     $this->sqlImport(INSTALL_DIR_FILES . 'install.sql');
                 } catch (Exception $e) {
