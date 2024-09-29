@@ -1,5 +1,3 @@
-<h2 class="setupSectHeading">Install Plugins</h2>
-
 <table style="font-size: 15px;" class="form">
 <p style="color: #626262; text-align: center;">We thought you'd also like to throw in some plugins while you're at it:</p>
 

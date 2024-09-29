@@ -1,7 +1,6 @@
-<h2 class="setupSectHeading">Finalize Installation</h2>
 <?php echo install_tpl_feedback() ?>
 
-<?php if ( $_assign_vars['dirs'] ): ?>
+<?php if ($_assign_vars['dirs']): ?>
     <div class="feedback_msg error">
         &bull; You need to set recursive "write" permissions for these folders: (<a target="_blank" href="https://docs.oxwall.org/install:index#writable-folders"> <b>?</b></a>)
     </div>

@@ -20,7 +20,7 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
 
     public function requirements()
     {
-        $this->setPageHeading('Install Oxwall');
+        $this->setPageTitle('Hosting Requirements');
 
         $lines = file(INSTALL_DIR_FILES . 'requirements.txt');
         $ruleLines = [];
@@ -137,7 +137,8 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
 
     public function main()
     {
-        $this->setPageHeading('Welcome to Oxwall');
+        $this->setPageTitle('Welcome to Oxwall');
+
         INSTALL::getStepIndicator()->activate('basics');
 
         $errors = [];
@@ -169,8 +170,7 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
 
     public function site()
     {
-        $this->setPageHeading('Site Settings');
-        $this->setPageTitle('Site');
+        $this->setPageTitle('Site Settings');
         INSTALL::getStepIndicator()->activate('site');
 
         $fieldData = [];
@@ -233,8 +233,8 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
 
     public function db()
     {
-        $this->setPageHeading('Database Configuration');
         $this->setPageTitle('Database Configuration');
+
         INSTALL::getStepIndicator()->activate('db');
 
         $fieldData = [];
@@ -315,6 +315,8 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
 
     public function install(array $params = [])
     {
+        $this->setPageTitle('Finalize Installation');
+
         $configFile = OW_DIR_INC . 'config.php';
 
         $dirs = [
@@ -442,6 +444,8 @@ final class INSTALL_CTRL_Install extends INSTALL_ActionController
 
     public function plugins()
     {
+        $this->setPageTitle('Install Plugins');
+
         // get all plugin list
         $avaliablePlugins = $this->getPluginsForInstall();
 

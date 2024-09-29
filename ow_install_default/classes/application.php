@@ -49,7 +49,7 @@ final readonly class INSTALL_Application
         $viewRenderer->assignVars([
             'pageBody' => $content,
             'pageTitle' => $controller->getPageTitle(),
-            'pageHeading' => $controller->getPageHeading(),
+            'pageHeading' => $controller->getPageTitle(),
             'pageSteps' => INSTALL::getStepIndicator()->render(),
             'pageStylesheetUrl' => INSTALL_URL_VIEW . 'style.css'
         ]);

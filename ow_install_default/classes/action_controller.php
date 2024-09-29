@@ -3,13 +3,14 @@
 class INSTALL_ActionController extends INSTALL_Renderable
 {
     private string $title = 'Install Oxwall';
-    private string $heading = 'Installation Process';
 
     public function __construct()
     {
     }
 
-    public function init(array $dispatchAttrs = [], bool $dbReady = false) {}
+    public function init(array $dispatchAttrs = [], bool $dbReady = false)
+    {
+    }
 
     protected function setPageTitle(string $title)
     {
@@ -19,16 +20,6 @@ class INSTALL_ActionController extends INSTALL_Renderable
     public function getPageTitle(): string
     {
         return $this->title;
-    }
-
-    protected function setPageHeading(string $heading)
-    {
-        $this->heading = $heading;
-    }
-
-    public function getPageHeading(): string
-    {
-        return $this->heading;
     }
 
     /**
