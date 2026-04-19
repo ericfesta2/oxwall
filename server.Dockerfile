@@ -26,4 +26,6 @@ RUN --mount=type=cache,target=/var/cache/apt \
     crontab -l | { cat; echo '* * * * * curl localhost/ow_cron/run.php'; } | crontab - && \
     cron
 
-CMD ["apache2-foreground"]
+EXPOSE 80
+
+ENTRYPOINT ["sh", "-c", "mkdir /var/www/html/ow_smarty/template_c && apache2-foreground"]
